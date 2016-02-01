@@ -1,6 +1,3 @@
-Emmersive App
------------------
-
 ## Web interface setup
 Install webpack  
 `npm install -g webpack`  
