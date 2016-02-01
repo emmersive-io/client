@@ -1,0 +1,67 @@
+html {
+    font-family: "Helvetica Neue", Helvetica, Noto, Roboto, Arial, sans-serif;
+    color: var(--text);
+}
+
+[hidden] {
+    display: none !important;
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+a.button {
+    line-height: 44px;
+    text-align: center;
+}
+
+a.button, button {
+    background: var(--button-color);
+    border: none;
+    color: var(--text-inverted);
+    padding: 0 10px;
+    min-width: 44px;
+    min-height: 44px;
+
+    &.button--full {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+    }
+}
+
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="text"] {
+    height: 44px;
+    border: 1px solid var(--input-border);
+    padding: 0 10px;
+}
+
+textarea {
+    min-height: 44px;
+    border: 1px solid var(--input-border);
+    padding: 10px;
+    resize: none;
+}
+
+.bullet-separator:before {
+    content: '•';
+    margin: 0 5px;
+    color: var(--light-text);
+}
+
+.button--icon {
+    background: none;
+    border: none;
+    color: var(--text);
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}

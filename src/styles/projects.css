@@ -1,0 +1,22 @@
+.project {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    margin: 20px 0;
+    cursor: pointer;
+}
+
+.project__image {
+    width: 100%;
+}
+
+.project__content {
+    padding: 20px;
+}
+
+.project__title {
+    margin: 0 0 10px 0;
+    font-weight: 200;
+}
+
+.project__description {
+    margin: 0;
+}

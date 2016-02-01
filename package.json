@@ -1,0 +1,40 @@
+{
+    "name": "emmersive",
+    "version": "0.1.0",
+    "description": "emmersive",
+    "dependencies": {
+        "es6-promise": "^3",
+        "firebase": "^2",
+        "moment": "^2",
+        "whatwg-fetch": "*"
+    },
+    "devDependencies": {
+        "autoprefixer": "*",
+        "clean-webpack-plugin": "*",
+        "css-loader": "*",
+        "extract-text-webpack-plugin": "*",
+        "file-loader": "*",
+        "html-loader": "*",
+        "html-webpack-plugin": "*",
+        "postcss-custom-properties": "*",
+        "postcss-import": "*",
+        "postcss-loader": "*",
+        "postcss-nested": "*",
+        "style-loader": "*"
+    },
+    "scripts":{
+        "publish": "webpack -p && cordova build android",
+        "start": "webpack -d --watch --progress | http-server ./www"
+    },
+    "cordovaPlugins": [
+        "cordova-plugin-device",
+        "cordova-plugin-console",
+        "cordova-plugin-whitelist",
+        "cordova-plugin-splashscreen",
+        "cordova-plugin-statusbar"
+    ],
+    "cordovaPlatforms": [
+        "ios",
+        "android"
+    ]
+}

@@ -1,0 +1,11 @@
+@import "styles/normalize.css";
+@import "styles/font-awesome.css";
+
+@import "styles/colors.css";
+@import "styles/animation.css";
+@import "styles/basicElements.css";
+
+@import "styles/header.css";
+@import "styles/layout.css";
+@import "styles/projects.css";
+@import "styles/tasks.css";
