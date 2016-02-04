@@ -1,12 +1,12 @@
-Emmersive App
------------------
-
 ## Web interface setup
 Install webpack  
 `npm install -g webpack`  
 
 Install a server, if you don't have one or aren't going to use [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html)  
 `npm install -g http-server`  
+
+Install application dependencies  
+`npm install`
 
 Run a debug build and starts a server at localhost:8080 using `http-server`  
 `npm start`  
