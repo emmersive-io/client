@@ -3,6 +3,7 @@
 require("./styles.css");
 require('./core/polyfills');
 require('./site/cordova');
+require('./core/platform');
 
 var Site = require('./site/site');
 new Site({

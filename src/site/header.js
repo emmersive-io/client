@@ -61,7 +61,7 @@ Header.prototype.onScroll = function () {
 
         minHeaderHeight = 92;
         heightOffset = this.tabOffset - 92;
-        this.headerTabs.classList.toggle('fixed', this.tabOffset - scrollTop <= 44);
+        this.element.classList.toggle('header--fixed-tabs', this.tabOffset - scrollTop <= 44);
     }
     else {
         heightOffset = 58;

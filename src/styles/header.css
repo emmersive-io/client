@@ -60,24 +60,29 @@
 
 .header__description {
     color: #000;
+    margin: 10px 0;
 }
 
 .header__tabs {
     position: relative;
     display: flex;
     justify-content: center;
-    border-bottom: 1px solid var(--input-border);
-    margin-bottom: 20px;
     padding-bottom: 10px;
     z-index: 1;
 }
 
-.header__tabs.fixed {
+.header--fixed-tabs .header__tabs {
     position: fixed;
     top: 44px;
     left: 20px;
     right: 20px;
     border: none;
+}
+
+.header--fixed-tabs:after {
+    content: ' ';
+    display: block;
+    height: 58px;
 }
 
 .header__tab {

@@ -1,4 +1,4 @@
-.project {
+.project-card {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     margin: 20px 0;
     cursor: pointer;
@@ -19,4 +19,82 @@
 
 .project__description {
     margin: 0;
+}
+
+.project__entry-field {
+    padding: 0 20px;
+}
+
+.project__entry-field input {
+    width: 100%;
+}
+
+.list-item--image {
+    display: block;
+    position: relative;
+    min-height: 50px;
+    padding: 7px 0 0 60px;
+    margin: 20px;
+}
+
+.profile-image {
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    left: 0;
+    top: 0;
+}
+
+.profile-image--small {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.item__date {
+    font-size: 12px;
+    color: #787878;
+}
+
+.item__date:after {
+    content: '...';
+}
+
+.item__description {
+    margin: 5px 0;
+}
+
+.user__name {
+    font-size: 16px;
+    margin: 0;
+}
+
+.user__email {
+    font-size: 12px;
+    color: #000;
+}
+
+.project-tasks .project__entry-field {
+    margin-bottom: 20px;
+}
+
+.checkbox-card {
+    padding: 10px 20px 10px 50px;
+    border-top: 1px solid #cacacd;
+}
+
+.task__header {
+    font-size: 12px;
+}
+
+.task__content {
+    position: relative;
+}
+
+.task__checkbox {
+    position: absolute;
+    top: 0;
+    left: -30px;
+    width: 16px;
+    height: 16px;
 }

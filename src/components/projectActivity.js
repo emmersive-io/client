@@ -1,42 +1,44 @@
-var projects = require('../firebase/projects');
+var moment = require('moment');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/tabActivity.html');
 var itemTemplate = require('../templates/activityItem.html');
-var defaultUserImage = require('../images/profile.png');
+var defaultUserImage = require('../images/profile-red.png');
 
-
-function ProjectActivityPage(projectId) {
-    this.title = 'Projects';
+function ProjectActivity(project) {
     this.element = renderTemplate(template);
-    projects.getActivity(projectId, this.renderActivity.bind(this));
+    var listElement = this.element.querySelector('ul');
+    this.getTasks(project).forEach(function (item) {
+        listElement.appendChild(item.element);
+    });
 }
 
-ProjectActivityPage.prototype = {
-    templateMap: {
-        date: '.activity__date',
-        description: '.activity__description',
-        image: '.activity__image',
-        name: '.activity__user',
-        userProfilePage: {target: '.activity__user', prop: 'href'}
-    },
+ProjectActivity.prototype.getTasks = function (project) {
+    var items = [];
+    for (var id in project.activities) {
+        var item = project.activities[id];
+        var user = project.people[item.created_by] || {};
 
-    renderActivity: function (activity) {
-        var list = document.createElement('ul');
-        list.className = 'activity-list';
-
-        for (var id in activity) {
-            var item = activity[id];
-            list.appendChild(renderTemplate(itemTemplate, {
-                image: item.userImage || defaultUserImage,
+        items.push({
+            date: item.created_at,
+            element: renderTemplate(itemTemplate, {
+                name: user.name,
                 description: item.description,
-                date: item.created,
-                name: item.name,
-                userProfilePage: '#profile/' + id
-            }, this.itemTemplateMap));
-        }
-
-        this.element.appendChild(list);
+                date: moment(item.created_at).fromNow(),
+                image: item.userImage || defaultUserImage,
+                userProfilePage: user.name && '#profile/' + item.created_by
+            }, {
+                name: '.user-name',
+                date: '.item__date',
+                image: '.profile-image',
+                description: '.item__description',
+                userProfilePage: {target: '.user-name', prop: 'href'}
+            })
+        });
     }
+
+    return items.sort(function (item1, item2) {
+        return item2.date - item1.date;
+    });
 };
 
-module.exports = ProjectActivityPage;
+module.exports = ProjectActivity;

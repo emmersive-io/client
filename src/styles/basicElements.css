@@ -32,6 +32,10 @@ a.button, button {
     }
 }
 
+button:focus {
+    outline: 0;
+}
+
 input[type="email"],
 input[type="password"],
 input[type="search"],
@@ -39,6 +43,10 @@ input[type="text"] {
     height: 44px;
     border: 1px solid var(--input-border);
     padding: 0 10px;
+
+    &:read-only{
+        border-color: transparent;
+    }
 }
 
 textarea {

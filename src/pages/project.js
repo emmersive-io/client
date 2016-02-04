@@ -1,17 +1,24 @@
 var projectRef = require('../firebase/projects');
+var ActivityTab = require('../components/projectActivity');
+var PeopleTab = require('../components/projectPeople');
+var TaskTab = require('../components/projectTasks');
 
 
 function ProjectPage(header) {
     this.header = header;
     this.element = document.createElement('div');
     this.element.className = 'project-page';
-    this.element.style.height = '800px';
 }
 
 ProjectPage.prototype.onProjectDataReceived = function (project) {
     this.project = project;
-    var rootPath = '#projects/' + this.projectId;
+    this.tabs = {
+        activity: new ActivityTab(project),
+        people: new PeopleTab(project),
+        tasks: new TaskTab(project)
+    };
 
+    var rootPath = '#projects/' + this.projectId;
     this.header.update({
         title: project.name,
         description: project.description,
@@ -21,16 +28,19 @@ ProjectPage.prototype.onProjectDataReceived = function (project) {
             {title: 'People', href: rootPath + '/people'}
         ]
     });
+
+    this.setTabContent();
 };
 
 ProjectPage.prototype.onRoute = function (root, projectId, tab) {
     if (/^activity$|^people$|^tasks$/.test(tab)) {
+        this.tabName = tab;
         if (this.project && this.projectId === projectId) {
-            this.setTabContent(tab);
+            this.setTabContent();
         }
         else {
             this.projectId = projectId;
-            projectRef.getById(projectId, this.onProjectDataReceived.bind(this));
+            projectRef.get(projectId).then(this.onProjectDataReceived.bind(this));
         }
     }
     else {
@@ -39,8 +49,13 @@ ProjectPage.prototype.onRoute = function (root, projectId, tab) {
     }
 };
 
-ProjectPage.prototype.setTabContent = function (tab) {
+ProjectPage.prototype.setTabContent = function () {
+    if (this.tab) {
+        this.tab.element.remove();
+    }
 
+    this.tab = this.tabs[this.tabName];
+    this.element.appendChild(this.tab.element);
 };
 
 module.exports = ProjectPage;

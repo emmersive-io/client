@@ -17,14 +17,13 @@ LoginPage.prototype.onFormSubmit = function (e) {
     var email = elements.email.value.trim();
     var password = elements.password.value.trim();
 
-    auth.login(email, password, function (error) {
-        if (error) {
-            animate(e.target, 'anim--shake');
-        }
-        else {
+    if (email && password) {
+        auth.login(email, password).then(function () {
             location.assign('');
-        }
-    });
+        }, function () {
+            animate(e.target, 'anim--shake');
+        });
+    }
 };
 
 module.exports = LoginPage;

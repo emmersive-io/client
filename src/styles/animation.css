@@ -1,6 +1,48 @@
+.anim--in-left, .anim--in-right, .anim--out-left, .anim--out-right {
+    position: absolute;
+    top: 0;
+    width: 100vw
+}
+
+.anim--in-left {
+    animation: slide-in-left .2s ease;
+}
+
+.anim--in-right {
+    animation: slide-in-right .2s ease;
+}
+
+.anim--out-left {
+    animation: slide-out-left .2s ease;
+}
+
+.anim--out-right {
+    animation: slide-out-right .2s ease;
+}
+
 .anim--shake {
     outline-color: red;
     animation: shake .5s linear;
+}
+
+@keyframes slide-in-left {
+    from { left: 100%; }
+    to { left: 0; }
+}
+
+@keyframes slide-in-right {
+    from { left: -100%; }
+    to { left: 0; }
+}
+
+@keyframes slide-out-left {
+    from { left: 0; }
+    to { left: -100%; }
+}
+
+@keyframes slide-out-right {
+    from { left: 0; }
+    to { left: 100%; }
 }
 
 @keyframes shake {

@@ -24,7 +24,7 @@
     },
     "scripts":{
         "publish": "webpack -p && cordova build android",
-        "start": "webpack -d --watch --progress | http-server ./www"
+        "start": "webpack -d --watch --progress | http-server ./www -c-1"
     },
     "cordovaPlugins": [
         "cordova-plugin-device",

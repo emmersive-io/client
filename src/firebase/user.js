@@ -1,31 +1,38 @@
 var firebase = require('./connection');
+var userRef = firebase.child('users');
 
 module.exports = {
     changePassword: function (email, oldPassword, newPassword) {
-        firebase.changePassword({
+        return firebase.changePassword({
             email: email,
             oldPassword: oldPassword,
             newPassword: newPassword
-        }, function (error) {
-            if (error) {
-                switch (error.code) {
-                    case "INVALID_PASSWORD":
-                        console.log("The specified user account password is incorrect.");
-                        break;
-                    case "INVALID_USER":
-                        console.log("The specified user account does not exist.");
-                        break;
-                    default:
-                        console.log("Error changing password:", error);
-                }
+        });
+    },
+
+    get: function (userIds) {
+        if (!Array.isArray(userIds)) {
+            userIds = [userIds];
+        }
+
+        var requests = [];
+        for (var i = 0; i < userIds.length; i++) {
+            requests.push(userRef.child(userIds[i]).once('value'));
+        }
+
+        return Promise.all(requests).then(function (array) {
+            if (array.length > 1) {
+                return array.reduce(function (obj, snapshot) {
+                    obj[snapshot.key()] = snapshot.val();
+                    return obj;
+                }, {});
             }
-            else {
-                alert("User password changed successfully!");
-            }
+
+            return array[0].val();
         });
     },
 
     resetPassword: function () {
-        firebase.resetPassword();
+        return firebase.resetPassword();
     }
 };

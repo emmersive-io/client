@@ -1,11 +1,6 @@
-<form ng-submit="create_task()">
-    <label class="item item-input item-stacked-label">
-        <input type="text" placeholder="Add a task" ng-model="task.description">
-    </label>
-</form>
-<div ng-repeat="task in project.tasks | orderObjectBy:'created_at':true" class="tasks">
-    <ion-checkbox class="checkbox-emmersive" ng-change="testit(task)" ng-model="task.status" ng-true-value="'open'" ng-false-value="'closed'">
-        <a href="/#/app/profile/{{task.created_by}}" style="font-weight:bold;text-decoration:none"><principal id="{{task.created_by}}"></principal></a><br>
-        {{task.description}}
-    </ion-checkbox>
+<div class="project-tasks">
+    <div class="project__entry-field">
+        <input type="text" placeholder="Add a task" aria-label="Add a task"/>
+    </div>
+    <ul class="task-list"></ul>
 </div>

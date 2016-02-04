@@ -9,8 +9,11 @@ var defaultProjectImage = require('../images/default.png');
 function ProjectsPage(header) {
     header.update({title: 'Find a project'});
     this.element = renderTemplate(template);
+    this.projects = [];
+
     this.element.addEventListener('click', this.onProjectClick.bind(this), false);
-    projects.getAll(this.renderProjects.bind(this));
+    this.element.addEventListener('input', this.onSearchChanged.bind(this), false);
+    projects.getAll().then(this.getProjects.bind(this));
 }
 
 ProjectsPage.prototype = {
@@ -21,29 +24,41 @@ ProjectsPage.prototype = {
         name: '.project__title'
     },
 
+    getProjects: function (projects) {
+        this.projects.length = 0;
+        var fragment = document.createDocumentFragment();
+
+        for (var id in projects) {
+            var project = projects[id];
+            var element = renderTemplate(itemTemplate, {
+                id: id,
+                name: project.name,
+                description: project.description,
+                image: project.image || defaultProjectImage
+            }, this.itemTemplateMap);
+
+            this.projects.push(Object.assign(project, {id: id, element: element}));
+            fragment.appendChild(element);
+        }
+
+        this.element.querySelector('.project-list').appendChild(fragment);
+    },
+
     onProjectClick: function (e) {
-        var element = e.target.closest('.project');
+        var element = e.target.closest('.project-card');
         var id = element && element.dataset.id;
         if (id) {
             location.assign('#projects/' + id);
         }
     },
 
-    renderProjects: function (projects) {
-        var projectList = document.createElement('ul');
-        projectList.className = 'project-list';
+    onSearchChanged: function (e) {
+        var filterText = e.target.value;
 
-        for (var id in projects) {
-            var project = projects[id];
-            projectList.appendChild(renderTemplate(itemTemplate, {
-                id: id,
-                name: project.name,
-                description: project.description,
-                image: project.image || defaultProjectImage
-            }, this.itemTemplateMap));
+        for (var i = 0; i < this.projects.length; i++) {
+            var project = this.projects[i];
+            project.element.hidden = (filterText && project.name.indexOf(filterText) < 0);
         }
-
-        this.element.appendChild(projectList);
     }
 };
 

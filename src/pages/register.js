@@ -20,13 +20,10 @@ RegisterPage.prototype.onFormSubmit = function (e) {
     var password2 = elements.password2.value.trim();
 
     if (name && email && password && password === password2) {
-        auth.createUser(name, email, password, function (error) {
-            if (error) {
-                animate(e.target, 'anim--shake');
-            }
-            else {
-                location.assign('');
-            }
+        auth.createUser(name, email, password).then(function () {
+            location.assign('');
+        }, function () {
+            animate(e.target, 'anim--shake');
         });
     }
     else {

@@ -60,9 +60,13 @@ Router.prototype.getRouteHandler = function (obj, path) {
 };
 
 Router.prototype.onHashChanged = function () {
-    var path = location.hash.substring(1).split('/');
-    var handler = this.getRouteHandler(this.routeMap, path.slice()) || this.defaultRoute;
-    this.onRouteChanged(handler, path);
+    setTimeout(function () {
+        var pathString = location.hash.substring(1);
+        var path = pathString ? pathString.split('/') : [];
+
+        var handler = this.getRouteHandler(this.routeMap, path.slice()) || this.defaultRoute;
+        this.onRouteChanged(handler, path);
+    }.bind(this), 0);
 };
 
 module.exports = Router;
