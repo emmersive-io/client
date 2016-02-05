@@ -41,6 +41,16 @@ Run an emulator
 `cordova emulate ios`
 `cordova emulate android`
 
+##Deploying to firebase
+Install [firebase tools](https://www.firebase.com/docs/hosting/quickstart.html)
+`npm install -g firebase-tools`
+
+Optimize the codebase
+`webpack -p`
+
+Upload to firebase
+`firebase deploy`
+
 #### Other Dependencies
 * Node.js 4.x
 * Android
