@@ -30,20 +30,20 @@
     opacity: 0;
 }
 
-.header button {
+.header__button-left, .header__button-right {
     position: absolute;
     color: var(--text-inverted);
     font-size: 24px;
     height: 44px;
-    width: 60px;
+    width: 44px;
     top: 0;
 }
 
-.header__back {
+.header__button-left {
     left: 0;
 }
 
-.header__menu {
+.header__button-right {
     right: 0;
 }
 

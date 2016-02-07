@@ -12,8 +12,13 @@ function Header() {
     this.headerDescription = this.element.querySelector('.header__description');
     this.headerTabs = this.element.querySelector('.header__tabs');
 
-    this.backButton = this.element.querySelector('.header__back');
+    this.backButton = this.element.querySelector('.header__button-left');
+    this.actionButton = this.element.querySelector('.header__button-right');
+
     this.backButton.addEventListener('click', function () {history.back();}, false);
+    this.actionButton.addEventListener('click', function () {
+        location.assign(this.options.action.href);
+    }.bind(this), false);
 
     this.handleScroll();
 }
@@ -31,6 +36,10 @@ Header.prototype.onScroll = function () {
     var scrollTop = document.body.scrollTop;
     var bannerScroll = Math.min(scrollTop, bannerScrollMax);
     var bannerProgress = 1 - ((bannerScrollMax - bannerScroll) / bannerScrollMax);
+
+    if (this.tabs && !this.tabOffset) {
+        this.tabOffset = this.headerTabs.offsetTop;
+    }
 
     if (bannerProgress !== this.bannerProgress) {
         var overlayOpacity = bannerProgress * 0.8;
@@ -55,10 +64,6 @@ Header.prototype.onScroll = function () {
     }
 
     if (this.tabs) {
-        if (!this.tabOffset) {
-            this.tabOffset = this.headerTabs.offsetTop;
-        }
-
         minHeaderHeight = 92;
         heightOffset = this.tabOffset - 92;
         this.element.classList.toggle('header--fixed-tabs', this.tabOffset - scrollTop <= 44);
@@ -117,13 +122,21 @@ Header.prototype.setTitle = function (title) {
 };
 
 Header.prototype.update = function (options) {
-    options = options || {};
+    this.options = options || {};
 
-    this.setTabs(options.tabs);
-    this.setTitle(options.title);
-    this.setDescription(options.description);
+    this.backButton.hidden = this.options.showBackButton === false;
+    if (this.options.action) {
+        this.actionButton.hidden = false;
+        this.actionButton.firstElementChild.className = this.options.action.icon;
+    }
+    else {
+        this.actionButton.hidden = true;
+    }
 
-    this.backButton.style.display = (options.showBackButton === false) ? 'none' : '';
+    this.setTabs(this.options.tabs);
+    this.setTitle(this.options.title);
+    this.setDescription(this.options.description);
+
     this.tabOffset = null;
     this.onScroll();
 };

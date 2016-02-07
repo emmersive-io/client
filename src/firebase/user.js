@@ -28,7 +28,8 @@ module.exports = {
                 }, {});
             }
 
-            return array[0].val();
+            var snapshot = array[0];
+            return Object.assign(snapshot.val(), {id: snapshot.key()});
         });
     },
 

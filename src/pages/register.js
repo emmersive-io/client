@@ -21,7 +21,7 @@ RegisterPage.prototype.onFormSubmit = function (e) {
 
     if (name && email && password && password === password2) {
         auth.createUser(name, email, password).then(function () {
-            location.assign('');
+            location.assign('#');
         }, function () {
             animate(e.target, 'anim--shake');
         });

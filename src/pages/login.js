@@ -7,7 +7,7 @@ function LoginPage(header) {
     header.update();
 
     this.element = renderTemplate(template);
-    this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
+    this.element.firstElementChild.addEventListener('submit', this.onFormSubmit.bind(this), false);
 }
 
 LoginPage.prototype.onFormSubmit = function (e) {
@@ -19,7 +19,7 @@ LoginPage.prototype.onFormSubmit = function (e) {
 
     if (email && password) {
         auth.login(email, password).then(function () {
-            location.assign('');
+            location.assign('#');
         }, function () {
             animate(e.target, 'anim--shake');
         });
