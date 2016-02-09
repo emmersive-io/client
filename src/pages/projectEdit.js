@@ -1,6 +1,6 @@
 var projects = require('../firebase/projects');
 var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/projectEdit.html');
+var template = require('../templates/project.html');
 
 function NewProjectPage(header) {
     header.update({title: 'Create project'});

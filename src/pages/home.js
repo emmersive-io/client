@@ -25,6 +25,12 @@ function HomePage(header) {
             users.get(user.uid),
             projects.getByUser(user.uid)
         ]).then(this.render.bind(this));
+
+        this.element.querySelector('.button--create-project').addEventListener('click', function () {
+            projects.create(user.uid).then(function (projectId) {
+                location.assign('#projects/' + projectId);
+            });
+        }, false);
     }
     else {
         this.element.classList.add('logged-out');

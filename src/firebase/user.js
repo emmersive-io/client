@@ -10,26 +10,23 @@ module.exports = {
         });
     },
 
-    get: function (userIds) {
-        if (!Array.isArray(userIds)) {
-            userIds = [userIds];
-        }
+    get: function (userId) {
+        return userRef.child(userId).once('value').then(function (snapshot) {
+            return Object.assign(snapshot.val(), {id: snapshot.key()});
+        });
+    },
 
+    getHash: function (users) {
         var requests = [];
-        for (var i = 0; i < userIds.length; i++) {
-            requests.push(userRef.child(userIds[i]).once('value'));
+        for (var i = 0; i < users.length; i++) {
+            requests.push(userRef.child(users[i]).once('value'));
         }
 
         return Promise.all(requests).then(function (array) {
-            if (array.length > 1) {
-                return array.reduce(function (obj, snapshot) {
-                    obj[snapshot.key()] = snapshot.val();
-                    return obj;
-                }, {});
-            }
-
-            var snapshot = array[0];
-            return Object.assign(snapshot.val(), {id: snapshot.key()});
+            return array.reduce(function (obj, snapshot) {
+                obj[snapshot.key()] = snapshot.val();
+                return obj;
+            }, {});
         });
     },
 

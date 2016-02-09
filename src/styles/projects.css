@@ -21,14 +21,6 @@
     margin: 0;
 }
 
-.project__entry-field {
-    padding: 0 20px;
-}
-
-.project__entry-field input {
-    width: 100%;
-}
-
 .list-item--image {
     display: block;
     position: relative;
@@ -46,9 +38,9 @@
 }
 
 .profile-image--small {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
+    width: 24px;
+    height: 24px;
+    margin-right: 5px;
 }
 
 .item__date {
@@ -80,7 +72,7 @@
 
 .checkbox-card {
     padding: 10px 20px 10px 50px;
-    border-top: 1px solid #cacacd;
+    border-bottom: 1px solid var(--input-border);
 }
 
 .task__header {
@@ -97,4 +89,58 @@
     left: -30px;
     width: 16px;
     height: 16px;
+}
+
+.project__details {
+    padding: 20px;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.project__section {
+    display: block;
+    position: relative;
+    color: #000;
+    padding: 20px 40px 20px 20px;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.section__nav-arrow {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.section__title {
+    margin-bottom: 4px;
+}
+
+.section__description {
+    color: var(--medium-text);
+    font-size: 12px;
+}
+
+.section__user {
+    color: var(--red);
+}
+
+.task--new {
+    padding: 0 20px 0 50px;
+}
+
+.activity--new {
+    display: flex;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top: 1px solid var(--input-border);
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
+}
+
+.activity--new input {
+    padding-left: 20px;
+    margin: 0;
+    border: none;
+    border-right: 1px solid var(--input-border);
 }

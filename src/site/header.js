@@ -17,7 +17,12 @@ function Header() {
 
     this.backButton.addEventListener('click', function () {history.back();}, false);
     this.actionButton.addEventListener('click', function () {
-        location.assign(this.options.action.href);
+        if (this.options.action.onClick) {
+            this.options.action.onClick();
+        }
+        else {
+            location.assign(this.options.action.href);
+        }
     }.bind(this), false);
 
     this.handleScroll();

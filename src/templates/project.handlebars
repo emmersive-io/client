@@ -1,0 +1,29 @@
+<div class="project">
+    <div class="project__details">
+        <img class="project__image" src="{{image}}"/>
+        <input class="project__name" type="text" placeholder="Untitled Project" aria-label="project name" value="{{name}}"/>
+        <textarea class="project__description" placeholder="Add a short description">{{description}}</textarea>
+    </div>
+    <a class="project__section project__activity" href="#projects/{{id}}/activity">
+        <div class="section__title">{{activityLabel}}</div>
+        <div class="section__description">
+            {{#if activityUser}}
+                <span class="section__user">{{activityUser.name}}</span>
+            {{/if}}
+            {{activityDescription}}
+        </div>
+        <span class="section__nav-arrow fa fa-chevron-right"></span>
+    </a>
+    <a class="project__section project__tasks" href="#projects/{{id}}/tasks">
+        <div class="section__title">{{taskLabel}}</div>
+        <div class="section__description">{{taskDescription}}</div>
+        <span class="section__nav-arrow fa fa-chevron-right"></span>
+    </a>
+    <a class="project__section project__contributors" href="#projects/{{id}}/people">
+        <div class="section__title">{{userCount}} users have contributed</div>
+        {{#each people}}
+            <img title="{{name}}" class="profile-image--small" src="{{image}}"/>
+        {{/each}}
+        <span class="section__nav-arrow fa fa-chevron-right"></span>
+    </a>
+</div>

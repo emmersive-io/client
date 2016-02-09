@@ -17,14 +17,14 @@ Site.prototype.createHeader = function () {
     document.body.appendChild(this.container);
 };
 
-Site.prototype.getDirection = function () {
-    if (this.lastPath) {
-        var length = this.path.length;
-        var oldLength = this.lastPath.length;
+Site.prototype.getDirection = function (path, oldPath) {
+    if (oldPath) {
+        var length = path.length;
+        var oldLength = oldPath.length;
         var minLength = Math.min(length, oldLength);
 
         for (var i = 0; i < minLength; i++) {
-            if (this.path[i] !== this.lastPath[i]) {
+            if (path[i] !== oldPath[i]) {
                 return true;
             }
         }
@@ -33,37 +33,49 @@ Site.prototype.getDirection = function () {
     }
 };
 
-Site.prototype.onRouteChanged = function (Page, path) {
-    this.lastPath = this.path;
-    this.path = path;
+Site.prototype.showPage = function (path, page) {
+    if (page !== this.page) {
+        return;
+    }
 
+    this.container.appendChild(page.element);
+    if (this.lastPage) {
+        var animateForward = this.getDirection(path, this.path);
+        var pageAnim = animateForward ? 'anim--in-left' : 'anim--in-right';
+        var lastPageAnim = animateForward ? 'anim--out-left' : 'anim--out-right';
+
+        animate(this.page.element, pageAnim);
+        animate(this.lastPage.element, lastPageAnim, function (element) {
+            element.remove();
+        });
+    }
+
+    this.lastPath = this.path;
+    this.lastPage = this.page;
+    this.path = path;
+};
+
+Site.prototype.onRouteChanged = function (Page, path) {
     if (!this.header) {
         this.createHeader();
     }
 
+    var page = this.page;
     if (!(this.page instanceof Page)) {
-        var page = new Page({
+        page = new Page({
             update: this.header.update.bind(this.header)
         });
-
-        this.container.appendChild(page.element);
-
-        if (this.page) {
-            var animateForward = this.getDirection();
-            var pageAnim = animateForward ? 'anim--in-left' : 'anim--in-right';
-            var lastPageAnim = animateForward ? 'anim--out-left' : 'anim--out-right';
-
-            animate(page.element, pageAnim);
-            animate(this.page.element, lastPageAnim, function (element) {
-                element.remove();
-            });
-        }
-
-        this.page = page;
     }
 
-    if (this.page.onRoute) {
-        this.page.onRoute.apply(this.page, path);
+    var promise = page.onRoute && page.onRoute.apply(page, path);
+    if (page !== this.page) {
+        this.page = page;
+        if (promise && promise.then) {
+            promise.then(this.showPage.bind(this, path, page));
+        }
+        else {
+            this.showPage(path, page);
+        }
     }
 };
 

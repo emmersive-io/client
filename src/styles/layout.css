@@ -108,3 +108,7 @@
     }
 }
 
+.hidden {
+    position: absolute;
+    left: 100vw;
+}

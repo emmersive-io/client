@@ -5,6 +5,7 @@
     "dependencies": {
         "es6-promise": "^3",
         "firebase": "^2",
+        "handlebars" : "4",
         "moment": "^2",
         "whatwg-fetch": "*"
     },
@@ -14,6 +15,7 @@
         "css-loader": "*",
         "extract-text-webpack-plugin": "*",
         "file-loader": "*",
+        "handlebars-loader": "",
         "html-loader": "*",
         "html-webpack-plugin": "*",
         "postcss-custom-properties": "*",

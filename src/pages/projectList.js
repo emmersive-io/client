@@ -6,10 +6,20 @@ var ProjectListItem = require('../components/projectListItem');
 
 
 function ProjectsPage(header) {
-    header.update({title: 'Find a project'});
-    this.element = renderTemplate(template);
-    this.listItems = [];
+    header.update({
+        title: 'Find a project',
+        action: {
+            icon: 'fa fa-plus',
+            onClick: function () {
+                projects.create().then(function (projectId) {
+                    location.assign('#projects/' + projectId);
+                });
+            }
+        }
+    });
 
+    this.listItems = [];
+    this.element = renderTemplate(template);
     this.element.addEventListener('input', this.onSearchChanged.bind(this), false);
     projects.getAll().then(this.getProjects.bind(this));
 }
@@ -20,7 +30,7 @@ ProjectsPage.prototype = {
         for (var id in projects) {
             var listItem = new ProjectListItem(id, projects[id]);
             this.listItems.push(listItem);
-            fragment.appendChild(listItem.element);
+            fragment.insertBefore(listItem.element, fragment.firstElementChild);
         }
 
         this.element.querySelector('.project-list').appendChild(fragment);
