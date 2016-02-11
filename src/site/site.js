@@ -57,7 +57,7 @@ Site.prototype.showPage = function (path, page) {
 };
 
 Site.prototype.onRouteChanged = function (Page, path) {
-    if (!auth.isLoggedIn() && location.hash.indexOf('#login') !== 0) {
+    if (location.hash.indexOf('#login') !== 0 && !auth.isLoggedIn()) {
         location.assign('#login');
         return;
     }

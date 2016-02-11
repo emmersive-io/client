@@ -47,8 +47,8 @@ ProjectActivity.prototype.onRoute = function (root, projectId) {
         this.newActivity = this.element.querySelector('.activity--new');
         this.newActivity.addEventListener('submit', this.onNewActivity.bind(this), false);
 
-        for (var id in project.activities) {
-            this.activityList.insertAdjacentHTML('beforebegin', this.getActivityHTML(project.activities[id]));
+        for (var i = 0; i < project.activities.length; i++) {
+            this.activityList.insertAdjacentHTML('beforebegin', this.getActivityHTML(project.activities[i]));
         }
     }.bind(this));
 };

@@ -49,7 +49,7 @@ HomePage.prototype.render = function (results) {
     userSection.querySelector('.user__email').textContent = user.email;
     userSection.querySelector('.profile-image').src = user.image || profileImageRed;
 
-    if (projects.length) {
+    if (projects && projects.length) {
         var fragment = document.createDocumentFragment();
         for (var i = 0; i < projects.length; i++) {
             var project = projects[i];

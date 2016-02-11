@@ -3,20 +3,55 @@ var connection = require('./connection');
 
 var auth = require('./auth');
 var projectsRef = connection.child('projects');
+var userRef = connection.child('users');
 var user = require('./user');
+
+function getRequests(ref, keyHash) {
+    var keys = keyHash ? Object.keys(keyHash) : [];
+    return Promise.all(keys.map(function (key) {
+        return ref.child(key).once('value');
+    }));
+}
+
+function getAsHash(ref, keyHash) {
+    return getRequests(ref, keyHash).then(function (array) {
+        return array.reduce(function (obj, snapshot) {
+            obj[snapshot.key()] = snapshot.val();
+            return obj;
+        }, {});
+    });
+}
+
+function getAsArray(ref, keyHash) {
+    return getRequests(ref, keyHash).then(function (array) {
+        return array.map(function (snapshot) {
+            var value = snapshot.val();
+            if (value) {
+                value.id = snapshot.key();
+            }
+
+            return value;
+        });
+    });
+}
 
 module.exports = {
     create: function () {
         var userId = auth.get().uid;
         var projectId = projectsRef.push().key();
 
+        var project = {
+            created_at: Firebase.ServerValue.TIMESTAMP,
+            updated_at: Firebase.ServerValue.TIMESTAMP,
+            created_by: userId,
+            people: {}
+        };
+
+        project.people[userId] = true;
+
         var data = {};
         data['users/' + userId + '/projects/' + projectId] = true;
-        data['projects/' + projectId] = {
-            created_at: Firebase.ServerValue.TIMESTAMP,
-            created_by: userId,
-            people: [userId]
-        };
+        data['projects/' + projectId] = project;
 
         return connection.update(data).then(function () {
             return projectId;
@@ -25,31 +60,45 @@ module.exports = {
 
     createActivity: function (projectId, content) {
         var userId = auth.get().uid;
-        var ref = projectsRef.child(projectId).child('activities');
+        var activityRef = connection.child('activities').child(projectId);
 
-        return ref.push({
+        return activityRef.push({
             created_at: Firebase.ServerValue.TIMESTAMP,
             created_by: userId,
             description: content
         }).then(function (snapshot) {
-            return ref.child(snapshot.key()).once('value').then(function (snapshot) {
-                return snapshot.val();
+            var activityId = snapshot.key();
+            var projectRef = projectsRef.child(projectId);
+
+            return Promise.all([
+                activityRef.child(activityId).once('value'),
+                projectRef.child('activities').child(activityId).set(true),
+                projectRef.child('updated_at').set(Firebase.ServerValue.TIMESTAMP)
+            ]).then(function (snapshot) {
+                return snapshot[0].val();
             });
         });
     },
 
     createTask: function (projectId, content) {
         var userId = auth.get().uid;
-        var projectTasksRef = projectsRef.child(projectId).child('tasks');
+        var taskRef = connection.child('tasks').child(projectId);
 
-        return projectTasksRef.push({
+        return taskRef.push({
             created_at: Firebase.ServerValue.TIMESTAMP,
             created_by: userId,
             description: content,
             status: 'open'
         }).then(function (snapshot) {
-            return projectTasksRef.child(snapshot.key()).once('value').then(function (snapshot) {
-                return snapshot.val();
+            var taskId = snapshot.key();
+            var projectRef = projectsRef.child(projectId);
+
+            return Promise.all([
+                taskRef.child(snapshot.key()).once('value'),
+                projectRef.child('tasks').child(taskId).set(true),
+                projectRef.child('updated_at').set(Firebase.ServerValue.TIMESTAMP)
+            ]).then(function (snapshot) {
+                return snapshot[0].val();
             });
         });
     },
@@ -57,10 +106,20 @@ module.exports = {
     get: function (projectId) {
         return projectsRef.child(projectId).once('value').then(function (snapshot) {
             var project = snapshot.val();
-            return user.getHash(project.people).then(function (users) {
-                project.people = users;
-                return project;
-            });
+            if (project) {
+                // Gathering all information for now, until the UI is updated
+                var getActivity = getAsArray(connection.child('activities').child(projectId), project.activities);
+                var getPeople = getAsHash(connection.child('users'), project.people);
+                var getTasks = getAsArray(connection.child('tasks').child(projectId), project.tasks);
+
+                return Promise.all([
+                    getActivity.then(function (activities) { project.activities = activities; }),
+                    getPeople.then(function (users) { project.people = users; }),
+                    getTasks.then(function (tasks) { project.tasks = tasks; })
+                ]).then(function () {
+                    return project;
+                });
+            }
         });
     },
 
@@ -74,21 +133,37 @@ module.exports = {
         var userProjectsRef = connection.child('users').child(userId).child('projects');
         return userProjectsRef.once('value').then(function (snapshot) {
             var projects = snapshot.val();
-            var requests = Object.keys(projects).map(function (projectId) {
-                return projectsRef.child(projectId).once('value');
-            });
-
-            return Promise.all(requests).then(function (array) {
-                return array.map(function (snapshot) {
-                    var project = snapshot.val();
-                    project.id = snapshot.key();
-                    return project;
+            if (projects) {
+                var requests = Object.keys(projects).map(function (projectId) {
+                    return projectsRef.child(projectId).once('value');
                 });
-            });
+
+                return Promise.all(requests).then(function (array) {
+                    return array.map(function (snapshot) {
+                        var project = snapshot.val();
+                        project.id = snapshot.key();
+                        return project;
+                    });
+                });
+            }
+        });
+    },
+
+    removeProject: function (projectId) {
+        return projectsRef.child(projectId).child('people').once('value').then(function (snapshot) {
+            var requests = [projectsRef.child('projectId').remove()];
+            var users = snapshot.val();
+            for (var userId in snapshot) {
+                requests.push(userRef.child(userId).projects(projectId).remove());
+            }
+
+            return Promise.all(requests);
         });
     },
 
     update: function (projectId, data) {
-        return projectsRef.child(projectId).update(data);
+        return projectsRef.child(projectId).update(Object.assign(data, {
+            updated_at: Firebase.ServerValue.TIMESTAMP
+        }));
     }
 };

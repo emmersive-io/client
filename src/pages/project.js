@@ -22,7 +22,7 @@ ProjectPage.prototype.onBlur = function (e) {
 
     if (field) {
         var projectData = {};
-        projectData[field] = e.target.value;
+        projectData[field] = e.target.value.trim();
         projectRef.update(this.project.id, projectData);
     }
 };
@@ -44,9 +44,8 @@ ProjectPage.prototype.onRoute = function (root, projectId) {
             }
         }
 
-        var activityIds = project.activities && Object.keys(project.activities);
-        if (activityIds && activityIds.length) {
-            var lastActivity = project.activities[activityIds.pop()];
+        if (project.activities && project.activities.length) {
+            var lastActivity = project.activities.pop();
             project.activityUser = project.people[lastActivity.created_by];
             project.activityLabel = 'Active ' + moment(lastActivity.created_at).fromNow();
             project.activityDescription = lastActivity.description;
@@ -58,19 +57,21 @@ ProjectPage.prototype.onRoute = function (root, projectId) {
 
         var openTasks = 0;
         var completedTasks = 0;
-        for (var taskId in project.tasks) {
-            if (project.tasks[taskId].status === 'open') {
-                openTasks++;
-            }
-            else {
-                completedTasks++;
+        for (var i = 0; i < project.tasks.length; i++) {
+            var task = project.tasks[i];
+            if (task) {
+                if (task.status === 'open') {
+                    openTasks++;
+                }
+                else {
+                    completedTasks++;
+                }
             }
         }
 
         if (openTasks || completedTasks) {
             project.taskLabel = openTasks ? openTasks + ' open tasks' : 'All tasks complete';
             project.taskDescription = completedTasks ? completedTasks + ' completed tasks' : 'No tasks have been completed';
-
         }
         else {
             project.taskLabel = 'No Tasks';

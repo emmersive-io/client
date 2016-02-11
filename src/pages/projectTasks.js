@@ -56,8 +56,8 @@ ProjectTask.prototype.onRoute = function (root, projectId) {
         this.newTask = this.element.querySelector('.task--new');
         this.newTask.addEventListener('submit', this.onNewTask.bind(this), false);
 
-        for (var id in project.tasks) {
-            this.taskList.insertAdjacentHTML('beforeend', this.getTaskHTML(project.tasks[id]));
+        for (var i = 0; i < project.tasks.length; i++) {
+            this.taskList.insertAdjacentHTML('beforeend', this.getTaskHTML(project.tasks[i]));
         }
     }.bind(this));
 };
