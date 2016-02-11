@@ -1,5 +1,6 @@
 'use strict';
 
+var auth = require('../firebase/auth');
 var animate = require('../core/animate');
 var Header = require('./header');
 var Router = require('../core/router');
@@ -56,6 +57,11 @@ Site.prototype.showPage = function (path, page) {
 };
 
 Site.prototype.onRouteChanged = function (Page, path) {
+    if (!auth.isLoggedIn() && location.hash.indexOf('#login') !== 0) {
+        location.assign('#login');
+        return;
+    }
+
     if (!this.header) {
         this.createHeader();
     }

@@ -63,6 +63,7 @@ module.exports = {
             });
         });
     },
+
     getAll: function () {
         return projectsRef.orderByChild('created_at').once('value').then(function (snapshot) {
             return snapshot.val();

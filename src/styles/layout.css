@@ -17,6 +17,10 @@
         margin: 8px 0;
     }
 
+    .secondary-actions {
+        text-align: center;
+    }
+
     input:first-of-type:not(:first-child) {
         margin-top: 16px;
     }
