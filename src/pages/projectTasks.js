@@ -12,7 +12,7 @@ function ProjectTask(header) {
 }
 
 ProjectTask.prototype.getTaskHTML = function (task) {
-    task.user = this.project.people[task.created_by];
+    task.user = this.project.people[task.created_by] || {};
     task.dateDescription = 'created ' + moment(task.created_at).fromNow();
     task.isComplete = (task.status !== 'open');
 
