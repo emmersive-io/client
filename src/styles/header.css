@@ -1,122 +1,77 @@
 .header {
-    padding: 140px 20px 0 20px;
-}
-
-.header__banner-container {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
-    height: 140px;
+    width: 100%;
+    height: 64px;
+    padding-top: 10px;
+    background: var(--brand);
+    color: var(--text-inverted);
     overflow: hidden;
     z-index: 1;
 }
 
-.header__banner {
-    background: url(./images/header-logo.png) no-repeat center center #da392a;
-    background-size: 220px;
-    width: calc(100% + 20px);
-    height: calc(100% + 20px);
-    margin: -10px;
+.header[data-style="hidden"] {
+    display: none;
 }
 
-.header__banner-overlay {
+.header[data-style="transparent"] {
+    background: transparent;
+}
+
+.header[data-style="transparent-dark"] {
+    background: transparent;
+    color: var(--text);
+}
+
+.header[data-style="transparent-dark"] button {
+    color: var(--text);
+}
+
+.header button {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: #000;
-    opacity: 0;
+    background: none;
+    top: 10px;
 }
 
-.header__button-left, .header__button-right {
-    position: absolute;
-    color: var(--text-inverted);
-    font-size: 24px;
-    height: 44px;
-    width: 44px;
-    top: 0;
-}
-
-.header__button-left {
+.header__button--back {
     left: 0;
 }
 
-.header__button-right {
-    right: 0;
+.header__button--basement {
+    display: inline-flex;
+    align-items: center;
+    font-size: 16px;
+    left: -14px;
 }
 
-.header__content {
-    position: relative;
-    padding: 0 20px;
+.header__logo {
+    width: 32px;
+    margin-left: 10px;
+}
+
+.header__button--action {
+    right: 10px;
+    border: 1px solid #fff;
+    border-radius: 4px;
+}
+
+.header__button--action:empty {
+    display: none;
 }
 
 .header__title {
-    font-size: 26px;
-    font-weight: normal;
-    margin: 20px 0 10px 0;
-}
-
-.header__description {
-    color: #000;
-    margin: 10px 0;
-}
-
-.header__tabs {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    padding-bottom: 10px;
-    z-index: 1;
-}
-
-.header--fixed-tabs .header__tabs {
-    position: fixed;
-    top: 44px;
-    left: 20px;
-    right: 20px;
-    border: none;
-}
-
-.header--fixed-tabs:after {
-    content: ' ';
-    display: block;
-    height: 58px;
-}
-
-.header__tab {
-    flex: 1 0 33%;
-    text-align: center;
-    max-width: 150px;
-    padding: 10px 2px;
-    cursor: pointer;
-}
-
-.header__tab-label {
-    background: #fff;
-    border: 1px solid var(--input-border);
-    border-radius: 4px;
-    color: var(--red);
-    font-size: 14px;
-    padding: 5px;
-}
-
-.header__tab.selected .header__tab-label {
-    color: var(--text-inverted);
-    border-color: var(--red);
-    background: var(--red);
-}
-
-.header__banner-container .header__title {
-    position: absolute;
+    margin: 0;
     font-size: 18px;
     line-height: 44px;
-    font-weight: normal;
-    margin: 0 60px;
     text-align: center;
-    color: var(--text-inverted);
-    top: 140px;
-    left: 0;
-    right: 0;
+    font-weight: normal;
+}
+
+.header:not([data-left-action="back"]) .header__button--back {
+    display: none;
+}
+
+.header[data-left-action="back"] .header__button--basement {
+    display: none;
 }

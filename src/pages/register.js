@@ -4,7 +4,7 @@ var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/register.html');
 
 function RegisterPage(header) {
-    header.update();
+    header.update({leftAction: 'back', style: 'transparent-dark'});
     this.element = renderTemplate(template);
     this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
 }

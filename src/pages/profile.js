@@ -1,22 +1,20 @@
 var auth = require('../firebase/auth');
 var userRef = require('../firebase/user');
-
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/profile.html');
 
 
 function ProfilePage(header) {
-    header.update();
-
+    header.update({title: 'Profile', leftAction: 'back'});
     this.element = renderTemplate(template);
     this.element.addEventListener('click', this.onClick.bind(this), false);
 }
 
 ProfilePage.prototype.onClick = function (e) {
     var button = e.target.closest('button');
-    if (button.classList.contains('button--log-out')) {
+    if (button && button.classList.contains('button--log-out')) {
         auth.logOut();
-        location.assign('#');
+        location.assign('#login');
     }
 };
 

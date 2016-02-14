@@ -3,66 +3,33 @@ var projects = require('../firebase/projects');
 var users = require('../firebase/user');
 
 var ProjectListItem = require('../components/projectListItem');
-var profileImageRed = require('../images/profile-red.png');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/home.html');
 
 
 function HomePage(header) {
-    var user = auth.get();
-    this.element = renderTemplate(template);
-
-    header.update({
-        showBackButton: false,
-        action: user && {
-            icon: 'fa fa-cog',
-            href: '#profile/' + user.uid
-        }
-    });
-
-    if (user) {
-        Promise.all([
-            users.get(user.uid),
-            projects.getByUser(user.uid)
-        ]).then(this.render.bind(this));
-
-        this.element.querySelector('.button--create-project').addEventListener('click', function () {
-            projects.create(user.uid).then(function (projectId) {
-                location.assign('#projects/' + projectId);
-            });
-        }, false);
-    }
-    else {
-        this.element.classList.add('logged-out');
-    }
+    this.header = header;
 }
 
-HomePage.prototype.render = function (results) {
-    var user = results[0];
-    var projects = results[1];
+HomePage.prototype.onRoute = function () {
+    var user = auth.get();
+    return projects.getByUser(user.uid).then(function (projects) {
+        this.header.update({title: 'My Projects'});
+        this.element = renderTemplate(template);
 
-    var userSection = this.element.querySelector('.user-section');
-    var projectList = this.element.querySelector('.project-list');
+        if (projects && projects.length) {
+            var fragment = document.createDocumentFragment();
+            for (var i = 0; i < projects.length; i++) {
+                var project = projects[i];
+                fragment.appendChild(new ProjectListItem(project.id, project).element);
+            }
 
-    userSection.href = '#profile/' + user.id;
-    userSection.querySelector('.user__name').textContent = user.name;
-    userSection.querySelector('.user__email').textContent = user.email;
-    userSection.querySelector('.profile-image').src = user.image || profileImageRed;
-
-    if (projects && projects.length) {
-        var fragment = document.createDocumentFragment();
-        for (var i = 0; i < projects.length; i++) {
-            var project = projects[i];
-            fragment.appendChild(new ProjectListItem(project.id, project).element);
+            this.element.querySelector('.project-list').appendChild(fragment);
         }
-
-        projectList.appendChild(fragment);
-    }
-    else {
-        projectList.hidden = true;
-    }
-
-    this.element.classList.add('logged-in');
+        else {
+            this.element.querySelector('.button--create-project').hidden = false;
+        }
+    }.bind(this));
 };
 
 module.exports = HomePage;

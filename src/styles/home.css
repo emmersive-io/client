@@ -1,22 +1,6 @@
-.home:not(.logged-in) {
-    .user-section, .button--create-project, .my-projects{
-        display: none;
-    }
-}
-
-.home:not(.logged-out) .login-section {
-    display: none;
-}
-
 .home .list-item--image {
     margin: 10px 0 20px 0;
     box-sizing: content-box;
     border-bottom: 1px solid var(--input-border);
     padding-bottom: 10px;
-}
-
-.group-header {
-    font-weight: normal;
-    border-bottom: 1px solidvar(--input-border);
-    padding-bottom: 4px;
 }

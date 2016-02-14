@@ -36,16 +36,16 @@ function getAsArray(ref, keyHash) {
 }
 
 module.exports = {
-    create: function () {
+    create: function (projectData) {
         var userId = auth.get().uid;
         var projectId = projectsRef.push().key();
 
-        var project = {
+        var project = Object.assign({
             created_at: Firebase.ServerValue.TIMESTAMP,
             updated_at: Firebase.ServerValue.TIMESTAMP,
             created_by: userId,
             people: {}
-        };
+        }, projectData);
 
         project.people[userId] = true;
 
@@ -140,7 +140,7 @@ module.exports = {
 
                 return Promise.all(requests).then(function (array) {
                     return array.map(function (snapshot) {
-                        var project = snapshot.val();
+                        var project = snapshot.val() || {};
                         project.id = snapshot.key();
                         return project;
                     });
@@ -149,12 +149,28 @@ module.exports = {
         });
     },
 
+    joinProject: function (projectId) {
+        var user = auth.get();
+        return Promise.all([
+            userRef.child(user.uid).child('projects').child(projectId).set(true),
+            projectsRef.child(projectId).child('people').child(user.uid).set(true)
+        ]);
+    },
+
+    leaveProject: function (projectId) {
+        var user = auth.get();
+        return Promise.all([
+            userRef.child(user.uid).child('projects').child(projectId).remove(),
+            projectsRef.child(projectId).child('people').child(user.uid).remove()
+        ]);
+    },
+
     removeProject: function (projectId) {
         return projectsRef.child(projectId).child('people').once('value').then(function (snapshot) {
-            var requests = [projectsRef.child('projectId').remove()];
+            var requests = [projectsRef.child(projectId).remove()];
             var users = snapshot.val();
-            for (var userId in snapshot) {
-                requests.push(userRef.child(userId).projects(projectId).remove());
+            for (var userId in users) {
+                requests.push(userRef.child(userId).child('projects').child(projectId).remove());
             }
 
             return Promise.all(requests);

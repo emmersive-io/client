@@ -1,18 +1,14 @@
 var projectRef = require('../firebase/projects');
 var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/tabPeople.handlebars');
+var template = require('../templates/userList.handlebars');
 var defaultUserImage = require('../images/profile-red.png');
 
 
-function ProjectPeople(header) {
-    this.header = header;
-}
+function UserList() {}
 
-ProjectPeople.prototype.onRoute = function (root, projectId) {
+UserList.prototype.render = function (projectId) {
     return projectRef.get(projectId).then(function (project) {
         this.project = project;
-        this.header.update({title: project.name});
-
         for (var userId in project.people) {
             var user = project.people[userId] || {};
             user.id = userId;
@@ -26,4 +22,4 @@ ProjectPeople.prototype.onRoute = function (root, projectId) {
     }.bind(this));
 };
 
-module.exports = ProjectPeople;
+module.exports = UserList;

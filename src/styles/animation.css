@@ -1,24 +1,16 @@
 .anim--in-left, .anim--in-right, .anim--out-left, .anim--out-right {
-    position: absolute;
+    position: fixed;
+    width: 100vw;
     top: 0;
-    width: 100vw
 }
 
-.anim--in-left {
-    animation: slide-in-left .2s ease;
-}
+.anim--in-left { animation: slide-in-left .2s ease-out; }
+.anim--in-right { animation: slide-in-right .2s ease-out; }
+.anim--out-left { animation: slide-out-left .2s ease-out; }
+.anim--out-right { animation: slide-out-right .2s ease-out; }
 
-.anim--in-right {
-    animation: slide-in-right .2s ease;
-}
-
-.anim--out-left {
-    animation: slide-out-left .2s ease;
-}
-
-.anim--out-right {
-    animation: slide-out-right .2s ease;
-}
+.anim--fade-in { animation: fade-in .2s ease-out; }
+.anim--fade-out { animation: fade-out .2s ease-out; }
 
 .anim--shake {
     outline-color: red;
@@ -43,6 +35,16 @@
 @keyframes slide-out-right {
     from { left: 0; }
     to { left: 100%; }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fade-in {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 @keyframes shake {

@@ -1,23 +1,50 @@
-var projects = require('../firebase/projects');
+var projectRef = require('../firebase/projects');
 var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/project.html');
+var template = require('../templates/projectEdit.handlebars');
 
-function NewProjectPage(header) {
-    header.update({title: 'Create project'});
 
-    this.element = renderTemplate(template, {
-        submitAction: 'Create Project'
-    }, this.templateMap);
+function ProjectEditPage(header) {
+    this.header = header;
 }
 
-NewProjectPage.prototype = {
-    templateMap: {
-        submitAction: '.project--submit'
-    },
+ProjectEditPage.prototype.onBlur = function (e) {
+    var field;
+    if (e.target.classList.contains('project__name')) {
+        field = 'name';
+    }
+    else if (e.target.classList.contains('project__description')) {
+        field = 'description';
+    }
 
-    onFormSubmit: function (e) {
-        e.preventDefault();
+    if (field) {
+        var projectData = {};
+        projectData[field] = e.target.value.trim();
+        projectRef.update(this.projectId, projectData);
     }
 };
 
-module.exports = NewProjectPage;
+ProjectEditPage.prototype.onClick = function (e) {
+    var button = e.target.closest('button');
+    if (button && confirm('Are you sure you want to delete the project?')) {
+        projectRef.removeProject(this.projectId).then(function () {
+            location.assign('#projects')
+        });
+    }
+};
+
+ProjectEditPage.prototype.onRoute = function (root, projectId) {
+    return projectRef.get(projectId).then(function (project) {
+        this.projectId = projectId;
+
+        this.header.update({leftAction: 'back'});
+        this.element = renderTemplate(template({
+            action: 'Delete Project',
+            project: project
+        }));
+
+        this.element.addEventListener('blur', this.onBlur.bind(this), true);
+        this.element.addEventListener('click', this.onClick.bind(this), false);
+    }.bind(this));
+};
+
+module.exports = ProjectEditPage;

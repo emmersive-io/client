@@ -1,29 +1,27 @@
 <div class="project">
     <div class="project__details">
-        <img class="project__image" src="{{image}}"/>
-        <input class="project__name" type="text" placeholder="Untitled Project" aria-label="project name" value="{{name}}"/>
-        <textarea class="project__description" placeholder="Add a short description">{{description}}</textarea>
+        <h2 class="project__name">{{name}}</h2>
+        <a class="project__owner" href="#profile/{{created_by}}">
+            <img class="profile-image--small" src="{{ownerImage}}"/>
+            <span class="project__user-name">{{ownerName}}</span>
+        </a>
     </div>
-    <a class="project__section project__activity" href="#projects/{{id}}/activity">
-        <div class="section__title">{{activityLabel}}</div>
-        <div class="section__description">
-            {{#if activityUser}}
-                <span class="section__user">{{activityUser.name}}</span>
-            {{/if}}
-            {{activityDescription}}
-        </div>
-        <span class="section__nav-arrow fa fa-chevron-right"></span>
-    </a>
-    <a class="project__section project__tasks" href="#projects/{{id}}/tasks">
-        <div class="section__title">{{taskLabel}}</div>
-        <div class="section__description">{{taskDescription}}</div>
-        <span class="section__nav-arrow fa fa-chevron-right"></span>
-    </a>
-    <a class="project__section project__contributors" href="#projects/{{id}}/people">
-        <div class="section__title">{{userCount}} users have contributed</div>
-        {{#each people}}
-            <img title="{{name}}" class="profile-image--small" src="{{image}}"/>
-        {{/each}}
-        <span class="section__nav-arrow fa fa-chevron-right"></span>
-    </a>
+    <div class="project__sections">
+        <a class="project__section" href="#projects/{{id}}/activity">
+            <span class="fa fa-comment" aria-hidden="true"></span>
+            <span>Team Chat</span>
+        </a>
+        <a class="project__section" href="#projects/{{id}}/tasks">
+            <span class="fa fa-tasks" aria-hidden="true"></span>
+            <span>Tasks</span>
+        </a>
+        <a class="project__section" href="#projects/{{id}}/people">
+            <span class="fa fa-users" aria-hidden="true"></span>
+            <span>Team Members</span>
+        </a>
+        <a class="project__section" href="#projects/{{id}}/meetups">
+            <span class="fa fa-calendar-check-o" aria-hidden="true"></span>
+            <span>Meet up</span>
+        </a>
+    </div>
 </div>

@@ -4,8 +4,9 @@ var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/resetPassword.html');
 var passwordResetTemplate = require('../templates/passwordResetMessage.html');
 
+
 function ResetPasswordPage(header) {
-    header.update();
+    header.update({leftAction: 'back', style: 'transparent-dark'});
     this.element = renderTemplate(template);
     this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
 }

@@ -1,86 +1,116 @@
-var moment = require('moment');
+var auth = require('../firebase/auth');
 var projectRef = require('../firebase/projects');
 var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/project.handlebars');
 
-var defaultProjectImage = require('../images/default.png');
-var defaultUserImage = require('../images/profile-red.png');
+
+var template = require('../templates/project.handlebars');
+var overlayTemplate = require('../templates/projectOverlay.html');
+var defaultUserImage = require('../images/profile-inverted.png');
+
+var sections = {
+    activity: require('../components/activityList'),
+    meetups: require('../components/meetupList'),
+    people: require('../components/userList'),
+    tasks: require('../components/taskList')
+};
 
 
 function ProjectPage(header) {
     this.header = header;
 }
 
-ProjectPage.prototype.onBlur = function (e) {
-    var field;
-    if (e.target.classList.contains('project__name')) {
-        field = 'name';
-    }
-    else if (e.target.classList.contains('project__description')) {
-        field = 'description';
-    }
+ProjectPage.prototype.loadSection = function (sectionName) {
+    var SectionType = sections[sectionName];
+    if (SectionType) {
+        this.overlay = renderTemplate(overlayTemplate);
+        this.section = new SectionType(this.project.id);
 
-    if (field) {
-        var projectData = {};
-        projectData[field] = e.target.value.trim();
-        projectRef.update(this.project.id, projectData);
+        var overlayContent = this.overlay.querySelector('.overlay__content');
+        if (this.section.element) {
+            overlayContent.appendChild(this.section.element);
+        }
+        else {
+            this.section.render(this.project.id).then(function () {
+                overlayContent.appendChild(this.section.element);
+            }.bind(this));
+        }
+
+        this.overlay.addEventListener('click', this.onOverlayCloseClick.bind(this), false);
+        this.element.appendChild(this.overlay);
     }
 };
 
-ProjectPage.prototype.onRoute = function (root, projectId) {
-    return projectRef.get(projectId).then(function (project) {
-        this.project = project;
-        this.header.update();
+ProjectPage.prototype.onLeaveProject = function () {
+    projectRef.leaveProject(this.project.id);
+    this.project.people[this.user.uid] = false;
+    this.updateHeader();
+};
 
-        project.id = projectId;
-        project.userCount = Object.keys(project.people).length;
-        project.image = project.image || defaultProjectImage;
+ProjectPage.prototype.onJoinProject = function () {
+    projectRef.joinProject(this.project.id);
+    this.project.people[this.user.uid] = true;
+    this.updateHeader();
+};
 
-        var user;
-        for (var userId in project.people) {
-            user = project.people[userId] || {};
-            if (!user.image) {
-                user.image = defaultUserImage;
+ProjectPage.prototype.onOverlayCloseClick = function (e) {
+    var button = e.target.closest('.overlay__close');
+    if (button) {
+        history.back();
+    }
+};
+
+ProjectPage.prototype.onRoute = function (root, projectId, section) {
+    if (this.overlay) {
+        this.overlay.remove();
+        this.overlay = null;
+    }
+
+    if (this.project) {
+        if (section) {
+            return this.loadSection(section);
+        }
+    }
+    else {
+        return projectRef.get(projectId).then(function (project) {
+            this.user = auth.get();
+            this.project = project;
+            project.id = projectId;
+            this.updateHeader();
+
+            var owner = project.people[project.created_by];
+            project.ownerImage = owner.image || defaultUserImage;
+            project.ownerName = owner.name;
+
+            this.element = renderTemplate(template(project));
+            if (project.image) {
+                this.element.querySelector('.project__details').style.backgroundImage = 'url(' + project.image + ')';
             }
-        }
 
-        if (project.activities && project.activities.length) {
-            var lastActivity = project.activities.pop();
-            project.activityUser = project.people[lastActivity.created_by];
-            project.activityLabel = 'Active ' + moment(lastActivity.created_at).fromNow();
-            project.activityDescription = lastActivity.description;
-        }
-        else {
-            project.activityLabel = 'No Activity';
-            project.activityDescription = 'Start a conversation!';
-        }
+            return this.loadSection(section);
+        }.bind(this));
+    }
+};
 
-        var openTasks = 0;
-        var completedTasks = 0;
-        for (var i = 0; i < project.tasks.length; i++) {
-            var task = project.tasks[i];
-            if (task) {
-                if (task.status === 'open') {
-                    openTasks++;
-                }
-                else {
-                    completedTasks++;
-                }
-            }
-        }
+ProjectPage.prototype.updateHeader = function () {
+    var headerOptions = {
+        style: 'transparent',
+        leftAction: 'back'
+    };
 
-        if (openTasks || completedTasks) {
-            project.taskLabel = openTasks ? openTasks + ' open tasks' : 'All tasks complete';
-            project.taskDescription = completedTasks ? completedTasks + ' completed tasks' : 'No tasks have been completed';
-        }
-        else {
-            project.taskLabel = 'No Tasks';
-            project.taskDescription = 'Write some and get to work!';
-        }
+    if (this.project.created_by === this.user.uid) {
+        headerOptions.action = 'Edit Project';
+        headerOptions.onAction = '#projects/' + this.project.id + '/edit';
+    }
+    else if (this.project.people[this.user.uid]) {
+        headerOptions.action = 'Leave Project';
+        headerOptions.onAction = this.onLeaveProject.bind(this);
+    }
+    else {
+        headerOptions.action = 'Join Project';
+        headerOptions.onAction = this.onJoinProject.bind(this);
+    }
 
-        this.element = renderTemplate(template(project));
-        this.element.addEventListener('blur', this.onBlur.bind(this), true);
-    }.bind(this));
+    this.header.update(headerOptions);
 };
 
 module.exports = ProjectPage;

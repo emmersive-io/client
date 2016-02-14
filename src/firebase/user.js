@@ -12,7 +12,8 @@ module.exports = {
 
     get: function (userId) {
         return userRef.child(userId).once('value').then(function (snapshot) {
-            return Object.assign(snapshot.val(), {id: snapshot.key()});
+            var user = snapshot.val();
+            return user && Object.assign(user, {id: snapshot.key()});
         });
     },
 

@@ -2,8 +2,15 @@
     box-sizing: border-box;
 }
 
+body{
+    overflow-x: hidden;
+}
+
 .container {
     position: relative;
+    min-height: 100vh;
+    width: 100%;
+    left: 0;
 }
 
 .form--full {
@@ -34,8 +41,12 @@
     }
 }
 
+.profile .image--center{
+    margin-top: 64px;
+}
+
 .form--full-center {
-    min-height: calc(100vh - 140px);
+    min-height: 100vh;
     margin: 0 auto;
     width: 280px;
 }
@@ -85,8 +96,12 @@
      }
 }
 
-.home, .projects, .project--edit {
-    padding: 10px 20px;
+.projects, .project--edit {
+    padding: 76px 20px 20px 20px;
+}
+
+.home{
+    padding: 64px 20px 20px 20px
 }
 
 .projects input[type="search"] {
@@ -106,6 +121,16 @@
     display: none;
 }
 
+.zero-state--center{
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 20px;
+    color: var(--medium-text);
+}
+
 .profile:not(.profile--current) {
     .user-actions, .sub-text {
         display: none;
@@ -113,6 +138,6 @@
 }
 
 .hidden {
-    position: absolute;
+    position: fixed;
     left: 100vw;
 }

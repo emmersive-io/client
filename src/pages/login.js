@@ -4,8 +4,7 @@ var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/login.html');
 
 function LoginPage(header) {
-    header.update({showBackButton: false});
-
+    header.update({style: 'hidden'});
     this.element = renderTemplate(template);
     this.element.firstElementChild.addEventListener('submit', this.onFormSubmit.bind(this), false);
 }

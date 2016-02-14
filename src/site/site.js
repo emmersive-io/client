@@ -5,6 +5,7 @@ var animate = require('../core/animate');
 var Header = require('./header');
 var Router = require('../core/router');
 
+
 function Site(routeMap) {
     this.router = new Router(routeMap, this.onRouteChanged.bind(this));
 }
@@ -57,7 +58,8 @@ Site.prototype.showPage = function (path, page) {
 };
 
 Site.prototype.onRouteChanged = function (Page, path) {
-    if (location.hash.indexOf('#login') !== 0 && !auth.isLoggedIn()) {
+    var isLogin = location.hash.indexOf('#login') === 0;
+    if (!isLogin && !auth.isLoggedIn()) {
         location.assign('#login');
         return;
     }
@@ -67,17 +69,15 @@ Site.prototype.onRouteChanged = function (Page, path) {
     }
 
     var page = this.page;
-    if (!(this.page instanceof Page)) {
-        page = new Page({
-            update: this.header.update.bind(this.header)
-        });
+    if (!(page instanceof Page)) {
+        page = new Page(this.header);
     }
 
-    var promise = page.onRoute && page.onRoute.apply(page, path);
+    var onRoute = page.onRoute && page.onRoute.apply(page, path);
     if (page !== this.page) {
         this.page = page;
-        if (promise && promise.then) {
-            promise.then(this.showPage.bind(this, path, page));
+        if (onRoute && onRoute.then) {
+            onRoute.then(this.showPage.bind(this, path, page));
         }
         else {
             this.showPage(path, page);
