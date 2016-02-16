@@ -1,7 +1,5 @@
-var auth = require('../firebase/auth');
-var projectRef = require('../firebase/projects');
+var connection = require('../firebase/connection');
 var renderTemplate = require('../core/renderTemplate');
-
 
 var template = require('../templates/project.handlebars');
 var overlayTemplate = require('../templates/projectOverlay.html');
@@ -41,13 +39,13 @@ ProjectPage.prototype.loadSection = function (sectionName) {
 };
 
 ProjectPage.prototype.onLeaveProject = function () {
-    projectRef.leaveProject(this.project.id);
+    connection.leaveProject(this.project.id);
     this.project.people[this.user.uid] = false;
     this.updateHeader();
 };
 
 ProjectPage.prototype.onJoinProject = function () {
-    projectRef.joinProject(this.project.id);
+    connection.joinProject(this.project.id);
     this.project.people[this.user.uid] = true;
     this.updateHeader();
 };
@@ -71,15 +69,15 @@ ProjectPage.prototype.onRoute = function (root, projectId, section) {
         }
     }
     else {
-        return projectRef.get(projectId).then(function (project) {
-            this.user = auth.get();
+        return connection.getProject(projectId).then(function (project) {
+            this.user = connection.getAuth();
             this.project = project;
-            project.id = projectId;
             this.updateHeader();
 
             var owner = project.people[project.created_by];
-            project.ownerImage = owner.image || defaultUserImage;
-            project.ownerName = owner.name;
+            if (!project.created_by.image) {
+                project.created_by.image = defaultUserImage;
+            }
 
             this.element = renderTemplate(template(project));
             if (project.image) {

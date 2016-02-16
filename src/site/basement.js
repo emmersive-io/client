@@ -1,7 +1,4 @@
-var auth = require('../firebase/auth');
-var projectRef = require('../firebase/projects');
-var userRef = require('../firebase/user');
-
+var connection = require('../firebase/connection');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/basement.html');
 var defaultUserImage = require('../images/profile-inverted.png');
@@ -17,14 +14,14 @@ function Basement() {
 }
 
 Basement.prototype.render = function () {
-    var user = auth.get();
-    userRef.get(user.uid).then(function (user) {
+    var user = connection.getAuth();
+    connection.getUser(user.uid).then(function (user) {
         this.element.querySelector('.basement__user-name').textContent = user.name;
         this.element.querySelector('.basement__header-logo').src = user.image || defaultUserImage;
         this.element.querySelector('.basement__header-button').href = '#profile/' + user.id;
     }.bind(this));
 
-    projectRef.getByUser(user.uid).then(function (projects) {
+    connection.getProjectsForUser(user.uid).then(function (projects) {
         if (projects) {
             var fragment = document.createDocumentFragment();
             for (var i = 0; i < projects.length; i++) {

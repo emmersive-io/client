@@ -1,6 +1,6 @@
 'use strict';
 
-var auth = require('../firebase/auth');
+var connection = require('../firebase/connection');
 var animate = require('../core/animate');
 var Header = require('./header');
 var Router = require('../core/router');
@@ -59,7 +59,7 @@ Site.prototype.showPage = function (path, page) {
 
 Site.prototype.onRouteChanged = function (Page, path) {
     var isLogin = location.hash.indexOf('#login') === 0;
-    if (!isLogin && !auth.isLoggedIn()) {
+    if (!isLogin && !connection.isLoggedIn()) {
         location.assign('#login');
         return;
     }

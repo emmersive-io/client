@@ -1,4 +1,4 @@
-var auth = require('../firebase/auth');
+var connection = require('../firebase/connection');
 var animate = require('../core/animate');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/resetPassword.html');
@@ -16,7 +16,7 @@ ResetPasswordPage.prototype.onFormSubmit = function (e) {
 
     var email = e.target.elements.email.value.trim();
     if (email) {
-        auth.resetPassword(email);
+        connection.resetPassword(email);
         e.target.innerHTML = passwordResetTemplate;
     }
     else {

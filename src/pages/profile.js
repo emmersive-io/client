@@ -1,5 +1,4 @@
-var auth = require('../firebase/auth');
-var userRef = require('../firebase/user');
+var connection = require('../firebase/connection');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/profile.html');
 
@@ -13,18 +12,17 @@ function ProfilePage(header) {
 ProfilePage.prototype.onClick = function (e) {
     var button = e.target.closest('button');
     if (button && button.classList.contains('button--log-out')) {
-        auth.logOut();
+        connection.logOut();
         location.assign('#login');
     }
 };
 
 ProfilePage.prototype.onRoute = function (root, userId) {
     this.userId = userId;
-    var currentUser = auth.get();
+    var currentUser = connection.getAuth();
 
     if (currentUser && currentUser.uid === userId) {
         this.element.classList.add('profile--current');
-
     }
     else {
         var inputs = this.element.getElementsByTagName('input');
@@ -33,7 +31,7 @@ ProfilePage.prototype.onRoute = function (root, userId) {
         }
     }
 
-    userRef.get(userId).then(function (user) {
+    connection.getUser(userId).then(function (user) {
         this.element.querySelector('[name="name"]').value = user.name;
         this.element.querySelector('[name="email"]').value = user.email;
     }.bind(this));

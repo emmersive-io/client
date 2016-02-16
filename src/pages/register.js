@@ -1,4 +1,4 @@
-var auth = require('../firebase/auth');
+var connection = require('../firebase/connection');
 var animate = require('../core/animate');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/register.html');
@@ -20,7 +20,7 @@ RegisterPage.prototype.onFormSubmit = function (e) {
     var password2 = elements.password2.value.trim();
 
     if (name && email && password && password === password2) {
-        auth.createUser(name, email, password).then(function () {
+        connection.createUser(name, email, password).then(function () {
             location.assign('#');
         }, function () {
             animate(e.target, 'anim--shake');

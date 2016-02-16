@@ -1,4 +1,4 @@
-var projects = require('../firebase/projects');
+var connection = require('../firebase/connection');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/allProjects.html');
 var ProjectListItem = require('../components/projectListItem');
@@ -9,15 +9,15 @@ function ProjectsPage(header) {
 }
 
 ProjectsPage.prototype.onRoute = function () {
-    return projects.getAll().then(function (projects) {
+    return connection.getAllProjects().then(function (projects) {
         this.header.update({title: 'Find a project'});
         this.element = renderTemplate(template);
         this.element.addEventListener('input', this.onSearchChanged.bind(this), false);
 
         this.listItems = [];
         var fragment = document.createDocumentFragment();
-        for (var id in projects) {
-            var listItem = new ProjectListItem(id, projects[id]);
+        for (var i = 0; i < projects.length; i++) {
+            var listItem = new ProjectListItem(projects[i]);
             fragment.insertBefore(listItem.element, fragment.firstElementChild);
             this.listItems.push(listItem);
         }

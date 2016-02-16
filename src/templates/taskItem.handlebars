@@ -1,11 +1,11 @@
 <li class="checkbox-card">
     <div class="task__header">
-        <a class="user-name" href="#profile/{{created_by}}">{{user.name}}</a>
+        <a class="user-name" href="#profile/{{created_by.id}}">{{created_by.name}}</a>
         <span class="item__date">{{dateDescription}}</span>
     </div>
     <div class="task__content">
         <input type="checkbox" class="task__checkbox" {{#if isComplete}}checked{{/if}} />
         <p class="item__description">{{description}}</p>
-        <img class="profile-image--small" src="{{user.image}}"/>
+        <img class="profile-image--small" src="{{created_by.image}}"/>
     </div>
 </li>

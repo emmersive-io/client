@@ -1,22 +1,15 @@
 var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/projectItem.html');
+var template = require('../templates/projectItem.handlebars');
 var defaultProjectImage = require('../images/default.png');
 
-module.exports = function (id, project) {
-    this.project = project;
-    this.element = renderTemplate(template, {
-        id: id,
-        name: project.name,
-        description: project.description,
-        image: project.image || defaultProjectImage
-    }, {
-        id: {prop: 'data-id'},
-        name: '.project__title',
-        description: '.project__description',
-        image: {target: '.project__image', hideIfNull: true}
-    });
+module.exports = function (project) {
+    if (!project.image) {
+        project.image = defaultProjectImage;
+    }
 
+    this.project = project;
+    this.element = renderTemplate(template(project));
     this.element.addEventListener('click', function () {
-        location.assign('#projects/' + id);
+        location.assign('#projects/' + project.id);
     }, false);
 };

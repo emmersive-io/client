@@ -2,8 +2,8 @@
     <div class="project__details">
         <h2 class="project__name">{{name}}</h2>
         <a class="project__owner" href="#profile/{{created_by}}">
-            <img class="profile-image--small" src="{{ownerImage}}"/>
-            <span class="project__user-name">{{ownerName}}</span>
+            <img class="profile-image--small" src="{{created_by.image}}"/>
+            <span class="project__user-name">{{created_by.name}}</span>
         </a>
     </div>
     <div class="project__sections">

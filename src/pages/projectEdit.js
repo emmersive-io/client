@@ -1,4 +1,4 @@
-var projectRef = require('../firebase/projects');
+var connection = require('../firebase/connection');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/projectEdit.handlebars');
 
@@ -19,23 +19,22 @@ ProjectEditPage.prototype.onBlur = function (e) {
     if (field) {
         var projectData = {};
         projectData[field] = e.target.value.trim();
-        projectRef.update(this.projectId, projectData);
+        connection.updateProject(this.project.id, projectData);
     }
 };
 
 ProjectEditPage.prototype.onClick = function (e) {
     var button = e.target.closest('button');
     if (button && confirm('Are you sure you want to delete the project?')) {
-        projectRef.removeProject(this.projectId).then(function () {
+        connection.removeProject(this.project.id).then(function () {
             location.assign('#projects')
         });
     }
 };
 
 ProjectEditPage.prototype.onRoute = function (root, projectId) {
-    return projectRef.get(projectId).then(function (project) {
-        this.projectId = projectId;
-
+    return connection.getProject(projectId).then(function (project) {
+        this.project = project;
         this.header.update({leftAction: 'back'});
         this.element = renderTemplate(template({
             action: 'Delete Project',

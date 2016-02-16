@@ -225,3 +225,7 @@
 .project-tasks{
     padding: 20px 0;
 }
+
+.activity-list, .task-list {
+    margin-bottom: 64px;
+}
