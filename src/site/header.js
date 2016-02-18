@@ -41,8 +41,14 @@ Header.prototype.update = function (options) {
     document.body.classList.remove('show-basement');
     this.headerTitle.textContent = this.options.title || '';
     this.rightButton.textContent = this.options.action || '';
-    this.element.setAttribute('data-style', this.options.style || '');
     this.element.setAttribute('data-left-action', this.options.leftAction || '');
+
+    if (this.options.style) {
+        this.element.setAttribute('data-style', this.options.style);
+    }
+    else {
+        this.element.removeAttribute('data-style');
+    }
 };
 
 module.exports = Header;

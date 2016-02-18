@@ -35,7 +35,11 @@ ProjectEditPage.prototype.onClick = function (e) {
 ProjectEditPage.prototype.onRoute = function (root, projectId) {
     return connection.getProject(projectId).then(function (project) {
         this.project = project;
-        this.header.update({leftAction: 'back'});
+        this.header.update({
+            title: 'Edit Project',
+            leftAction: 'back'
+        });
+
         this.element = renderTemplate(template({
             action: 'Delete Project',
             project: project

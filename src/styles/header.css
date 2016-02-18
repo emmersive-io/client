@@ -1,8 +1,5 @@
 .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
+    position: relative;
     height: 64px;
     padding-top: 10px;
     background: var(--brand);
@@ -15,12 +12,15 @@
     display: none;
 }
 
-.header[data-style="transparent"] {
+.header[data-style="transparent"], .header[data-style="transparent-dark"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
     background: transparent;
 }
 
 .header[data-style="transparent-dark"] {
-    background: transparent;
     color: var(--text);
 }
 
@@ -28,7 +28,7 @@
     color: var(--text);
 }
 
-.header button {
+.header--main button {
     position: absolute;
     background: none;
     top: 10px;
@@ -39,15 +39,19 @@
 }
 
 .header__button--basement {
-    display: inline-flex;
-    align-items: center;
     font-size: 16px;
     left: -14px;
+}
+
+.header__button--basement .fa{
+    line-height: 32px;
+    vertical-align: middle;
 }
 
 .header__logo {
     width: 32px;
     margin-left: 10px;
+    vertical-align: middle;
 }
 
 .header__button--action {

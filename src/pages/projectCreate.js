@@ -6,7 +6,10 @@ var template = require('../templates/projectEdit.handlebars');
 
 function ProjectCreatePage(header) {
     this.header = header;
-    this.header.update({leftAction: 'back'});
+    this.header.update({
+        title: 'Create Project',
+        leftAction: 'back'
+    });
 
     this.element = renderTemplate(template({action: 'Create Project'}));
     this.element.addEventListener('click', function (e) {

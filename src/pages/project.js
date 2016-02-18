@@ -34,7 +34,7 @@ ProjectPage.prototype.loadSection = function (sectionName) {
         }
 
         this.overlay.addEventListener('click', this.onOverlayCloseClick.bind(this), false);
-        this.element.appendChild(this.overlay);
+        document.body.appendChild(this.overlay);
     }
 };
 
@@ -58,11 +58,7 @@ ProjectPage.prototype.onOverlayCloseClick = function (e) {
 };
 
 ProjectPage.prototype.onRoute = function (root, projectId, section) {
-    if (this.overlay) {
-        this.overlay.remove();
-        this.overlay = null;
-    }
-
+    this.onRemove();
     if (this.project) {
         if (section) {
             return this.loadSection(section);
@@ -74,7 +70,6 @@ ProjectPage.prototype.onRoute = function (root, projectId, section) {
             this.project = project;
             this.updateHeader();
 
-            var owner = project.people[project.created_by];
             if (!project.created_by.image) {
                 project.created_by.image = defaultUserImage;
             }
@@ -89,13 +84,20 @@ ProjectPage.prototype.onRoute = function (root, projectId, section) {
     }
 };
 
+ProjectPage.prototype.onRemove = function () {
+    if (this.overlay) {
+        this.overlay.remove();
+        this.overlay = null;
+    }
+};
+
 ProjectPage.prototype.updateHeader = function () {
     var headerOptions = {
         style: 'transparent',
         leftAction: 'back'
     };
 
-    if (this.project.created_by === this.user.uid) {
+    if (this.project.created_by.id === this.user.uid) {
         headerOptions.action = 'Edit Project';
         headerOptions.onAction = '#projects/' + this.project.id + '/edit';
     }

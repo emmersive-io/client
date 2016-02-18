@@ -3,6 +3,20 @@ html {
     color: var(--text);
 }
 
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.hidden {
+    position: fixed;
+    left: 100vw;
+}
+
 [hidden] {
     display: none !important;
 }
@@ -12,24 +26,19 @@ a {
     text-decoration: none;
 }
 
-a.button {
-    line-height: 44px;
-    text-align: center;
-}
-
-a.button, button {
+button {
     background: var(--button-color);
     border: none;
     color: var(--text-inverted);
     padding: 0 10px;
     min-width: 44px;
     min-height: 44px;
+}
 
-    &.button--full {
-        display: block;
-        width: 100%;
-        margin: 10px 0;
-    }
+button.button--full {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
 }
 
 button:focus {
@@ -55,9 +64,14 @@ input[type="text"] {
 }
 
 textarea {
-    min-height: 44px;
     padding: 10px;
     resize: none;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .bullet-separator:before {
@@ -66,8 +80,56 @@ textarea {
     color: var(--light-text);
 }
 
-ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+[data-href] {
+    cursor: pointer;
+}
+
+.section-header {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    color: var(--medium-text);
+    text-transform: uppercase;
+    margin: 20px 0;
+    font-size: 12px;
+}
+
+.section-header.span {
+    display: inline-block;
+    background: var(--text-inverted);
+    padding: 0 10px;
+}
+
+.section-header:before {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: var(--input-border);
+    z-index: -1;
+}
+
+.text-truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.zero-state-message {
+    margin: 60px auto;
+    max-width: 230px;
+    text-align: center;
+    color: var(--medium-text);
+}
+
+.zero-state--center {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 20px;
+    color: var(--medium-text);
 }

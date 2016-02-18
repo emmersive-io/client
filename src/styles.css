@@ -6,7 +6,6 @@
 @import "styles/basicElements.css";
 @import "styles/layout.css";
 
-@import "styles/basement.css";
 @import "styles/header.css";
-@import "styles/home.css";
+@import "styles/basement.css";
 @import "styles/projects.css";

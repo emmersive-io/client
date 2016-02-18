@@ -1,12 +1,12 @@
 <div class="project">
     <div class="project__details">
         <h2 class="project__name">{{name}}</h2>
-        <a class="project__owner" href="#profile/{{created_by}}">
+        <a class="project__owner" href="#profile/{{created_by.id}}">
             <img class="profile-image--small" src="{{created_by.image}}"/>
             <span class="project__user-name">{{created_by.name}}</span>
         </a>
     </div>
-    <div class="project__sections">
+    <ul class="project__sections">
         <a class="project__section" href="#projects/{{id}}/activity">
             <span class="fa fa-comment" aria-hidden="true"></span>
             <span>Team Chat</span>
@@ -23,5 +23,5 @@
             <span class="fa fa-calendar-check-o" aria-hidden="true"></span>
             <span>Meet up</span>
         </a>
-    </div>
+    </ul>
 </div>

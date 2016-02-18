@@ -29,7 +29,7 @@ module.exports = {
     postcss: function (webpack) {
         return [
             require('postcss-import')({addDependencyTo: webpack}),
-            require("postcss-custom-properties"),
+            require('postcss-custom-properties'),
             require('postcss-nested'),
             require('autoprefixer')({browsers: ['last 2 versions']})
         ];

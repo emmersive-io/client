@@ -18,7 +18,7 @@ Basement.prototype.render = function () {
     connection.getUser(user.uid).then(function (user) {
         this.element.querySelector('.basement__user-name').textContent = user.name;
         this.element.querySelector('.basement__header-logo').src = user.image || defaultUserImage;
-        this.element.querySelector('.basement__header-button').href = '#profile/' + user.id;
+        this.element.querySelector('.basement__header-button').setAttribute('data-href', '#profile/' + user.id);
     }.bind(this));
 
     connection.getProjectsForUser(user.uid).then(function (projects) {

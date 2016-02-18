@@ -4,20 +4,13 @@ var connection = require('../firebase/connection');
 var animate = require('../core/animate');
 var Header = require('./header');
 var Router = require('../core/router');
+var renderTemplate = require('../core/renderTemplate');
+var template = require('../templates/site.html');
 
 
 function Site(routeMap) {
-    this.router = new Router(routeMap, this.onRouteChanged.bind(this));
+    new Router(routeMap, this.onRouteChanged.bind(this));
 }
-
-Site.prototype.createHeader = function () {
-    this.header = new Header();
-    this.container = document.createElement('div');
-    this.container.className = 'container';
-
-    document.body.appendChild(this.header.element);
-    document.body.appendChild(this.container);
-};
 
 Site.prototype.getDirection = function (path, oldPath) {
     if (oldPath) {
@@ -35,37 +28,16 @@ Site.prototype.getDirection = function (path, oldPath) {
     }
 };
 
-Site.prototype.showPage = function (path, page) {
-    if (page !== this.page) {
-        return;
-    }
-
-    this.container.appendChild(page.element);
-    if (this.lastPage) {
-        var animateForward = this.getDirection(path, this.path);
-        var pageAnim = animateForward ? 'anim--in-left' : 'anim--in-right';
-        var lastPageAnim = animateForward ? 'anim--out-left' : 'anim--out-right';
-
-        animate(this.page.element, pageAnim);
-        animate(this.lastPage.element, lastPageAnim, function (element) {
-            element.remove();
-        });
-    }
-
-    this.lastPath = this.path;
-    this.lastPage = this.page;
-    this.path = path;
-};
-
 Site.prototype.onRouteChanged = function (Page, path) {
-    var isLogin = location.hash.indexOf('#login') === 0;
-    if (!isLogin && !connection.isLoggedIn()) {
-        location.assign('#login');
+    var isLoggedIn = connection.isLoggedIn();
+    var isLoginScreen = location.hash.indexOf('#login') === 0;
+    if (isLoggedIn === isLoginScreen) {
+        location.assign(isLoggedIn ? '#' : '#login');
         return;
     }
 
-    if (!this.header) {
-        this.createHeader();
+    if (!this.element) {
+        this.render();
     }
 
     var page = this.page;
@@ -83,6 +55,39 @@ Site.prototype.onRouteChanged = function (Page, path) {
             this.showPage(path, page);
         }
     }
+};
+
+Site.prototype.render = function () {
+    this.element = renderTemplate(template);
+    this.header = new Header();
+    this.element.insertBefore(this.header.element, this.element.firstElementChild);
+    this.container = this.element.querySelector('.content');
+    document.body.appendChild(this.element);
+};
+
+Site.prototype.showPage = function (path, page) {
+    if (page !== this.page) {
+        return;
+    }
+
+    this.container.appendChild(page.element);
+    if (this.lastPage) {
+        var animateForward = this.getDirection(path, this.path);
+        var pageAnim = animateForward ? 'anim--in-left' : 'anim--in-right';
+        var lastPageAnim = animateForward ? 'anim--out-left' : 'anim--out-right';
+
+        var lastPage = this.lastPage;
+        animate(this.page.element, pageAnim);
+        animate(this.lastPage.element, lastPageAnim, function (element) {
+            element.remove();
+            if (lastPage.onRemove) {
+                lastPage.onRemove();
+            }
+        });
+    }
+
+    this.lastPage = this.page;
+    this.path = path;
 };
 
 module.exports = Site;

@@ -24,11 +24,6 @@ function TaskList(projectId) {
 TaskList.prototype.getTaskHTML = function (task) {
     task.dateDescription = 'created ' + moment(task.created_at).fromNow();
     task.isComplete = (task.status !== 'open');
-
-    if (!task.created_by.image) {
-        task.created_by.image = defaultUserImage
-    }
-
     return itemTemplate(task);
 };
 

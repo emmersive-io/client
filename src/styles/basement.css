@@ -1,16 +1,12 @@
-.basement {
-    position: fixed;
-    top: 0;
-    bottom: 0;
+.page--basement {
     left: -85%;
     width: 85%;
-    background: #2d2d2d;
+    background: var(--basement-background);
 }
 
-.basement__header {
+.header--basement {
     display: flex;
     align-items: center;
-    height: 64px;
     padding: 0 20px;
     background: #202020;
     color: var(--text-inverted);
@@ -25,23 +21,23 @@
     padding: 0 10px;
 }
 
-a.basement__header-button {
+.header--basement button {
     background: none;
     font-size: 24px;
 }
 
-.basement__contents {
+.content--basement {
     padding: 10px 20px;
 }
 
-.basement__contents .button--full .fa {
+.content--basement .button--full .fa {
     margin-right: 5px;
 }
 
 .basement__section-header {
     font-weight: bold;
     font-size: 16px;
-    color: #969696;
+    color: var(--basement-section-header);
     margin: 20px 0 0 0;
 }
 
@@ -55,18 +51,5 @@ a.basement__header-button {
     display: block;
     padding: 20px 0;
     color: var(--text-inverted);
-    border-bottom: 1px solid #4d4d4d;
-}
-
-.basement, .header, .container {
-    transition: left .2s ease-out;
-}
-
-.show-basement {
-    .basement { left: 0; }
-    .header { left: 85%; }
-    .container {
-        left: 85%;
-        box-shadow: -10px 0 10px 0 rgba(0, 0, 0, 0.5);
-    }
+    border-bottom: 1px solid var(--basement-item-border);
 }

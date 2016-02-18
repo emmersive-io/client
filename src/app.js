@@ -2,8 +2,11 @@
 
 require("./styles.css");
 require('./core/polyfills');
-require('./site/cordova');
 require('./core/platform');
+require('./core/elementHrefs');
+require('./core/sizeTextarea');
+require('./site/cordova');
+
 
 var Site = require('./site/site');
 new Site({

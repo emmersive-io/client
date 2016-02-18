@@ -1,12 +1,10 @@
 var connection = require('../firebase/connection');
 var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/profile.html');
-
+var template = require('../templates/profile.handlebars');
+var defaultUserImage = require('../images/profile.png');
 
 function ProfilePage(header) {
-    header.update({title: 'Profile', leftAction: 'back'});
-    this.element = renderTemplate(template);
-    this.element.addEventListener('click', this.onClick.bind(this), false);
+    this.header = header;
 }
 
 ProfilePage.prototype.onClick = function (e) {
@@ -18,22 +16,31 @@ ProfilePage.prototype.onClick = function (e) {
 };
 
 ProfilePage.prototype.onRoute = function (root, userId) {
-    this.userId = userId;
-    var currentUser = connection.getAuth();
+    return connection.getUser(userId).then(function (user) {
+        this.header.update({
+            title: 'Profile',
+            leftAction: 'back'
+        });
 
-    if (currentUser && currentUser.uid === userId) {
-        this.element.classList.add('profile--current');
-    }
-    else {
-        var inputs = this.element.getElementsByTagName('input');
-        for (var i = 0; i < inputs.length; i++) {
-            inputs[i].readOnly = true;
+        if (!user.image){
+            user.image = defaultUserImage;
         }
-    }
 
-    connection.getUser(userId).then(function (user) {
-        this.element.querySelector('[name="name"]').value = user.name;
-        this.element.querySelector('[name="email"]').value = user.email;
+        var isCurrentUser = connection.getAuth().uid === userId;
+        this.element = renderTemplate(template({
+            isCurrentUser: isCurrentUser,
+            user: user
+        }));
+
+        if (isCurrentUser) {
+            this.element.addEventListener('click', this.onClick.bind(this), false);
+        }
+        else {
+            var inputs = this.element.getElementsByTagName('input');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].readOnly = true;
+            }
+        }
     }.bind(this));
 };
 
