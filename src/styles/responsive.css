@@ -1,0 +1,9 @@
+@media (min-width: 470px) {
+    .page--basement {
+        width: 400px;
+    }
+
+    .show-basement .page--main {
+        left: 400px;
+    }
+}
