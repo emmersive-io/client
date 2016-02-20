@@ -43,15 +43,13 @@ module.exports = {
 
     toArray: function (snapshot) {
         var array = [];
-        var obj = snapshot.val();
-
-        for (var key in obj) {
-            var item = obj[key];
+        snapshot.forEach(function (itemSnapshot) {
+            var item = itemSnapshot.val();
             if (item) {
-                item.id = key;
+                item.id = itemSnapshot.key();
                 array.push(item);
             }
-        }
+        });
 
         return array;
     },

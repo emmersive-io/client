@@ -105,7 +105,7 @@ module.exports = {
     },
 
     getAllProjects: function () {
-        return connection.child('projects').once('value').then(transform.toArray);
+        return connection.child('projects').orderByChild('updated_at').once('value').then(transform.toArray);
     },
 
     getProject: function (projectId) {
@@ -141,7 +141,7 @@ module.exports = {
 
     getProjectsForUser: function () {
         var userId = connection.getAuth().uid;
-        return connection.child('users/' + userId + '/projects').once('value').then(function (snapshot) {
+        return connection.child('users/' + userId + '/projects').orderByChild('updated_at').once('value').then(function (snapshot) {
             return transform.requestAsArray(connection.child('projects'), snapshot);
         });
     },
