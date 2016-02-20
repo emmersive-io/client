@@ -19,7 +19,7 @@ LoginPage.prototype.onFormSubmit = function (e) {
     if (email && password) {
         connection.login(email, password).then(function () {
             location.assign('#');
-        }, function () {
+        }).catch(function () {
             animate(e.target, 'anim--shake');
         });
     }

@@ -170,6 +170,14 @@ module.exports = {
         connection.unauth();
     },
 
+    onLoggedOut: function (callback) {
+        connection.onAuth(function (authData) {
+            if (!authData) {
+                callback();
+            }
+        });
+    },
+
     removeProject: function (projectId) {
         return this.getProjectPeople(projectId).then(function (users) {
             var data = users.reduce(function (obj, user) {

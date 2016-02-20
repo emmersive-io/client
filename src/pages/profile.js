@@ -11,7 +11,6 @@ ProfilePage.prototype.onClick = function (e) {
     var button = e.target.closest('button');
     if (button && button.classList.contains('button--log-out')) {
         connection.logOut();
-        location.assign('#login');
     }
 };
 
@@ -22,7 +21,7 @@ ProfilePage.prototype.onRoute = function (root, userId) {
             leftAction: 'back'
         });
 
-        if (!user.image){
+        if (!user.image) {
             user.image = defaultUserImage;
         }
 

@@ -22,7 +22,7 @@ RegisterPage.prototype.onFormSubmit = function (e) {
     if (name && email && password && password === password2) {
         connection.createUser(name, email, password).then(function () {
             location.assign('#');
-        }, function () {
+        }).catch(function () {
             animate(e.target, 'anim--shake');
         });
     }

@@ -10,6 +10,9 @@ var template = require('../templates/site.html');
 
 function Site(routeMap) {
     new Router(routeMap, this.onRouteChanged.bind(this));
+    connection.onLoggedOut(function () {
+        location.assign('#login');
+    });
 }
 
 Site.prototype.getDirection = function (path, oldPath) {
