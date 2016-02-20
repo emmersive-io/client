@@ -182,6 +182,7 @@ module.exports = {
         return this.getProjectPeople(projectId).then(function (users) {
             var data = users.reduce(function (obj, user) {
                 obj['users/' + user.id + '/' + projectId] = null;
+                return obj;
             }, {});
 
             data['projects/' + projectId] = null;
