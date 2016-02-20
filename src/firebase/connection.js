@@ -179,13 +179,16 @@ module.exports = {
     },
 
     removeProject: function (projectId) {
-        return this.getProjectPeople(projectId).then(function (users) {
-            var data = users.reduce(function (obj, user) {
-                obj['users/' + user.id + '/' + projectId] = null;
-                return obj;
-            }, {});
-
+        return connection.child('projects/' + projectId).once('value').then(function (snapshot) {
+            var data = {};
+            var project = snapshot.val();
+            data['archive/projects/' + projectId] = project;
             data['projects/' + projectId] = null;
+
+            for (var userId in project.people) {
+                data['users/' + userId + '/projects/' + projectId] = null;
+            }
+
             return connection.update(data);
         });
     },
