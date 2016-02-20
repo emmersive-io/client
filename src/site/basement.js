@@ -7,7 +7,7 @@ var defaultUserImage = require('../images/profile-inverted.png');
 function Basement() {
     this.element = renderTemplate(template);
     this.element.addEventListener('click', function (e) {
-        if (e.target.closest('a')) {
+        if (e.target.closest('[data-href]')) {
             document.body.classList.remove('show-basement');
         }
     }, false);
