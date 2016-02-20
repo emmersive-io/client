@@ -43,9 +43,11 @@ if (!Object.assign) { // Needed for IE/Safari < 9
     };
 }
 
-// IE 10/11 don't support toggle's second param
+// IE 10/11 don't support classlist.toggle's second param
 var test = document.createElement('div');
-if (!test.classList.toggle('test', true)) {
+test.classList.toggle('test', false);
+
+if (test.classList.contains('test')) {
     Element.prototype.classList.toggle = function (name, isTrue) {
         if (isTrue === undefined) {
             this.classList.toggle(name);

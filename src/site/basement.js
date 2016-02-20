@@ -22,22 +22,22 @@ Basement.prototype.render = function () {
     }.bind(this));
 
     connection.getProjectsForUser(user.uid).then(function (projects) {
+        var projectList = this.element.querySelector('.basement__project-list');
+        while (projectList.lastElementChild) {
+            projectList.lastElementChild.remove();
+        }
+
         if (projects) {
             var fragment = document.createDocumentFragment();
             for (var i = 0; i < projects.length; i++) {
-                var element = document.createElement('a');
-                element.className = 'basement__project';
-
                 var project = projects[i];
-                element.textContent = project.name;
-                element.href = '#projects/' + project.id;
-
-                fragment.appendChild(element);
-            }
-
-            var projectList = this.element.querySelector('.basement__project-list');
-            while (projectList.lastElementChild) {
-                projectList.lastElementChild.remove();
+                if (project) {
+                    var element = document.createElement('a');
+                    element.className = 'basement__project';
+                    element.textContent = project.name;
+                    element.href = '#projects/' + project.id;
+                    fragment.appendChild(element);
+                }
             }
 
             projectList.appendChild(fragment);

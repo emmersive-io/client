@@ -25,7 +25,8 @@ Header.prototype.onClick = function (e) {
             }
         }
         else if (button.classList.contains('header__button--basement')) {
-            if (document.body.classList.toggle('show-basement')) {
+            document.body.classList.toggle('show-basement');
+            if (document.body.classList.contains('show-basement')) {
                 this.basement.render();
             }
         }
