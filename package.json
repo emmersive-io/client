@@ -12,6 +12,7 @@
     "devDependencies": {
         "autoprefixer": "*",
         "clean-webpack-plugin": "*",
+        "copy-webpack-plugin": "*",
         "css-loader": "*",
         "extract-text-webpack-plugin": "*",
         "file-loader": "*",

@@ -1,0 +1,28 @@
+{
+    "name": "Emmersive",
+    "background_color": "#ffffff",
+    "theme_color": "#ed3824",
+    "start_url": "index.html",
+    "display": "standalone",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "resources/icon-48.png",
+            "sizes": "48x48",
+            "type": "image/png",
+            "density": 1.0
+        },
+        {
+            "src": "resources/icon-96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "density": 2.0
+        },
+        {
+            "src": "resources/icon-144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "density": 3.0
+        }
+    ]
+}
