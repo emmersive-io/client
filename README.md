@@ -1,3 +1,4 @@
+[![Build Status](https://semaphoreci.com/api/v1/projects/cae233af-d75e-4ed0-ae50-5c2b95957111/704855/badge.svg)](https://semaphoreci.com/bruceio/client)
 ## Web interface setup
 Install webpack  
 `npm install -g webpack`  
