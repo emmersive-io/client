@@ -6,12 +6,12 @@
             <span class="project__user-name">{{created_by.name}}</span>
         </a>
     </div>
-    <ul class="project__sections">
+    <div class="project__sections">
         <a class="project__section" href="#projects/{{id}}/activity">
             <span class="fa fa-comment" aria-hidden="true"></span>
             <span>Team Chat</span>
         </a>
-        <a class="project__section" href="#projects/{{id}}/tasks">
+        <a class="project__section" href="#projects/{{id}}/tasks" {{#if taskCount}}data-count="{{taskCount}}"{{/if}}>
             <span class="fa fa-tasks" aria-hidden="true"></span>
             <span>Tasks</span>
         </a>
@@ -23,5 +23,5 @@
             <span class="fa fa-calendar-check-o" aria-hidden="true"></span>
             <span>Meet up</span>
         </a>
-    </ul>
+    </div>
 </div>

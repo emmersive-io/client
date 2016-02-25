@@ -16,7 +16,10 @@ HomePage.prototype.onRoute = function () {
         if (projects && projects.length) {
             var fragment = document.createDocumentFragment();
             for (var i = 0; i < projects.length; i++) {
-                fragment.appendChild(new ProjectListItem(projects[i]).element);
+                var project = projects[i];
+                if (project) {
+                    fragment.appendChild(new ProjectListItem(project).element);
+                }
             }
 
             this.element.querySelector('.project-list').appendChild(fragment);

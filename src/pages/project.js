@@ -70,6 +70,7 @@ ProjectPage.prototype.onRoute = function (root, projectId, section) {
             this.project = project;
             this.updateHeader();
 
+            project.taskCount = project.tasks && Object.keys(project.tasks).length;
             if (!project.created_by.image) {
                 project.created_by.image = defaultUserImage;
             }

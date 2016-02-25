@@ -17,9 +17,12 @@ ProjectsPage.prototype.onRoute = function () {
         this.listItems = [];
         var fragment = document.createDocumentFragment();
         for (var i = 0; i < projects.length; i++) {
-            var listItem = new ProjectListItem(projects[i]);
-            fragment.insertBefore(listItem.element, fragment.firstElementChild);
-            this.listItems.push(listItem);
+            var project = projects[i];
+            if (project) {
+                var listItem = new ProjectListItem(projects[i]);
+                fragment.insertBefore(listItem.element, fragment.firstElementChild);
+                this.listItems.push(listItem);
+            }
         }
 
         this.element.querySelector('.project-list').appendChild(fragment);
