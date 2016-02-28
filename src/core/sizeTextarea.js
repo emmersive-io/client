@@ -14,9 +14,14 @@ document.addEventListener('input', function (e) {
     }
 }, false);
 
-module.export = function (element) {
-    var textareas = element.getElementsByTagName('textarea');
-    for (var i = 0; i < textareas.length; i++) {
-        sizeToContent(textareas[i]);
+module.exports = function (element) {
+    if (element.tagName === 'TEXTAREA') {
+        sizeToContent(element);
+    }
+    else {
+        var textareas = element.getElementsByTagName('textarea');
+        for (var i = 0; i < textareas.length; i++) {
+            sizeToContent(textareas[i]);
+        }
     }
 };

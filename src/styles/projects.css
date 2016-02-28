@@ -83,10 +83,17 @@
 
 .task__checkbox {
     position: absolute;
-    top: 0;
+    top: 5px;
     left: -30px;
     width: 16px;
     height: 16px;
+}
+
+.task__description {
+    margin: 5px 0;
+    border: none;
+    padding: 0;
+    outline: none;
 }
 
 .project__details {
@@ -263,7 +270,7 @@
 }
 
 @media (orientation: landscape) {
-    .project__section{
+    .project__section {
         height: 50vw;
         max-height: 25vh;
     }
