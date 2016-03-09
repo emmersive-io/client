@@ -118,10 +118,8 @@ module.exports = {
     },
 
     getProjectActivity: function (projectId) {
-        return connection.child('projects/' + projectId + '/activities').once('value').then(function (snapshot) {
-            return transform.requestAsArray(connection.child('activities/' + projectId), snapshot);
-        }).then(function (activities) {
-            return transform.fillUserData(connection.child('users'), activities, 'created_by');
+        return connection.child('activities/' + projectId).once('value').then(function (snapshot) {
+            return transform.fillUserData(connection.child('users'), transform.toArray(snapshot), 'created_by');
         });
     },
 
@@ -132,10 +130,8 @@ module.exports = {
     },
 
     getProjectTasks: function (projectId) {
-        return connection.child('projects/' + projectId + '/tasks').once('value').then(function (snapshot) {
-            return transform.requestAsArray(connection.child('tasks/' + projectId), snapshot);
-        }).then(function (tasks) {
-            return transform.fillUserData(connection.child('users'), tasks, 'created_by');
+        return connection.child('tasks/' + projectId).once('value').then(function (snapshot) {
+            return transform.fillUserData(connection.child('users'), transform.toArray(snapshot), 'created_by');
         });
     },
 
@@ -201,5 +197,9 @@ module.exports = {
         return connection.child('projects/' + projectId).update(Object.assign(data, {
             updated_at: Firebase.ServerValue.TIMESTAMP
         }));
+    },
+
+    updateTask: function(projectId, taskId, data){
+        return connection.child('tasks/' + projectId + '/' + taskId).update(data);
     }
 };
