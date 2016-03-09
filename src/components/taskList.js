@@ -9,8 +9,7 @@ var sizeTextarea = require('../core/sizeTextarea');
 function TaskList(projectId) {
     this.projectId = projectId;
     this.element = renderTemplate(template);
-    this.element.addEventListener('blur', this.onFocusChanged.bind(this), true);
-    this.element.addEventListener('focus', this.onFocusChanged.bind(this), true);
+    this.element.addEventListener('change', this.onStatusChanged.bind(this), true);
 
     connection.getProjectTasks(projectId).then(function (tasks) {
         this.taskList = this.element.querySelector('ul');
@@ -31,13 +30,18 @@ TaskList.prototype.getTaskHTML = function (task) {
     return itemTemplate(task);
 };
 
-TaskList.prototype.onFocusChanged = function (e) {
-    if (e.target.tagName === 'TEXTAREA') {
-        var taskElement = e.target.closest('.checkbox-card');
-        if (taskElement) {
-            taskElement.classList.toggle('focused', e.target === document.activeElement);
-            sizeTextarea(e.target);
+TaskList.prototype.onStatusChanged = function (e) {
+    var taskElement = e.target.closest('.checkbox-card');
+    if (taskElement) {
+        var data = {};
+        if (e.target.tagName === 'INPUT') {
+            data.status = e.target.checked ? 'closed' : 'open';
         }
+        else {
+            data.description = e.target.value;
+        }
+
+        connection.updateTask(this.projectId, taskElement.dataset.id, data);
     }
 };
 
