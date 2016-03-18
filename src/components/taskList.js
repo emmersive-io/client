@@ -34,11 +34,15 @@ TaskList.prototype.onStatusChanged = function (e) {
     var taskElement = e.target.closest('.checkbox-card');
     if (taskElement) {
         var data = {};
+        var userId = connection.getAuth().uid;
+
         if (e.target.tagName === 'INPUT') {
             data.status = e.target.checked ? 'closed' : 'open';
+            data.updated_status = userId;
         }
         else {
             data.description = e.target.value;
+            data.updated_by = userId;
         }
 
         connection.updateTask(this.projectId, taskElement.dataset.id, data);

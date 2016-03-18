@@ -203,7 +203,9 @@ module.exports = {
 
     updateTask: function (projectId, taskId, taskData) {
         return Promise.all([
-            connection.child('tasks/' + projectId + '/' + taskId).update(taskData),
+            connection.child('tasks/' + projectId + '/' + taskId).update(Object.assign(taskData, {
+                'updated_at': Firebase.ServerValue.TIMESTAMP
+            })),
             connection.child('projects/' + projectId).update({
                 'updated_at': Firebase.ServerValue.TIMESTAMP,
                 'updated_tasks': Firebase.ServerValue.TIMESTAMP
