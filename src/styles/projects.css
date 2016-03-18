@@ -200,19 +200,13 @@
     width: 50%;
 }
 
-.project__section[data-count]:before {
-    content: attr(data-count);
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 60px;
-    height: 60px;
-    padding: 30px 0 0 20px;
-    font-size: 20px;
-    color: var(--text-inverted);
-    box-sizing: border-box;
-    text-align: center;
-    background: linear-gradient(135deg, transparent 0%, transparent 48%, var(--brand) 50%, var(--brand) 100%);
+.indicator--new {
+    display: inline-block;
+    background: var(--brand);
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
+    margin: 0 4px 2px 0;
 }
 
 .project__section:nth-child(odd) {

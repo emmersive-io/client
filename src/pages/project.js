@@ -68,12 +68,15 @@ ProjectPage.prototype.onRoute = function (root, projectId, section) {
         return connection.getProject(projectId).then(function (project) {
             this.user = connection.getAuth();
             this.project = project;
-            this.updateHeader();
-
-            project.taskCount = project.tasks && Object.keys(project.tasks).length;
             if (!project.created_by.image) {
                 project.created_by.image = defaultUserImage;
             }
+
+            this.updateHeader();
+
+            project.newActivity = false;
+            project.newPeople = false;
+            project.newTasks = true;  // project.tasks && Object.keys(project.tasks).length;
 
             this.element = renderTemplate(template(project));
             if (project.image) {
