@@ -61,8 +61,8 @@ Site.prototype.onRouteChanged = function (Page, path) {
 };
 
 Site.prototype.render = function () {
-    this.element = renderTemplate(template);
     this.header = new Header();
+    this.element = renderTemplate(template);
     this.element.insertBefore(this.header.element, this.element.firstElementChild);
     this.container = this.element.querySelector('.content');
     document.body.appendChild(this.element);

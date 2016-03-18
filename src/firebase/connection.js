@@ -13,11 +13,12 @@ function createProjectItem(projectId, type, data) {
     }, data);
 
     return typeListRef.push(data).then(function (snapshot) {
-        var itemId = snapshot.key();
-        var projectRef = connection.child('projects/' + projectId);
-        projectRef.child(type).child(itemId).set(true);
-        projectRef.child('updated_at').set(Firebase.ServerValue.TIMESTAMP);
-        return typeListRef.child(itemId).once('value').then(function (snapshot) {
+        var data = {};
+        data.updated_at = Firebase.ServerValue.TIMESTAMP;
+        data['updated_' + type] = Firebase.ServerValue.TIMESTAMP;
+        connection.child('projects/' + projectId).update(data);
+
+        return typeListRef.child(snapshot.key()).once('value').then(function (snapshot) {
             var obj = transform.toObj(snapshot);
             return transform.fillUserData(connection.child('users'), obj, 'created_by');
         });
@@ -27,9 +28,10 @@ function createProjectItem(projectId, type, data) {
 function updateProjectParticipation(projectId, value) {
     var data = {};
     var userId = connection.getAuth().uid;
-    data['users/' + userId + '/projects/' + projectId] = value;
+    data['users/' + userId + '/projects/' + projectId] = value && {joined: true};
     data['projects/' + projectId + '/people/' + userId] = value;
     data['projects/' + projectId + '/updated_at'] = Firebase.ServerValue.TIMESTAMP;
+    data['projects/' + projectId + '/updated_people'] = Firebase.ServerValue.TIMESTAMP;
     return connection.update(data);
 }
 
@@ -66,7 +68,7 @@ module.exports = {
         people[userId] = true;
 
         var data = {};
-        data['users/' + userId + '/projects/' + projectId] = true;
+        data['users/' + userId + '/projects/' + projectId] = {joined: true};
         data['projects/' + projectId] = Object.assign({
             created_at: Firebase.ServerValue.TIMESTAMP,
             updated_at: Firebase.ServerValue.TIMESTAMP,
@@ -137,7 +139,7 @@ module.exports = {
 
     getProjectsForUser: function () {
         var userId = connection.getAuth().uid;
-        return connection.child('users/' + userId + '/projects').orderByChild('updated_at').once('value').then(function (snapshot) {
+        return connection.child('users/' + userId + '/projects').once('value').then(function (snapshot) {
             return transform.requestAsArray(connection.child('projects'), snapshot);
         });
     },
@@ -151,11 +153,11 @@ module.exports = {
     },
 
     joinProject: function (projectId) {
-        updateProjectParticipation(projectId, true);
+        return updateProjectParticipation(projectId, true);
     },
 
     leaveProject: function (projectId) {
-        updateProjectParticipation(projectId, null);
+        return updateProjectParticipation(projectId, null);
     },
 
     login: function (email, password) {
@@ -199,7 +201,20 @@ module.exports = {
         }));
     },
 
-    updateTask: function(projectId, taskId, data){
-        return connection.child('tasks/' + projectId + '/' + taskId).update(data);
+    updateTask: function (projectId, taskId, taskData) {
+        return Promise.all([
+            connection.child('tasks/' + projectId + '/' + taskId).update(taskData),
+            connection.child('projects/' + projectId).update({
+                'updated_at': Firebase.ServerValue.TIMESTAMP,
+                'updated_tasks': Firebase.ServerValue.TIMESTAMP
+            })
+        ]);
+    },
+
+    viewProject: function (projectId, type) {
+        var data = {};
+        var userId = connection.getAuth().uid;
+        data[type] = Firebase.ServerValue.TIMESTAMP;
+        return connection.child('users/' + userId + '/projects/' + projectId).update(data);
     }
 };

@@ -7,35 +7,33 @@
         </a>
     </div>
     <div class="project__sections">
-        <a class="project__section" href="#projects/{{id}}/activity">
+        <a class="project__section" href="#projects/{{id}}/activities">
             <span class="fa fa-comment" aria-hidden="true"></span>
-            {{#if newActivity}}
-                <span class="indicator--new"></span>
-            {{/if}}
-            <span class="project__section-title">Team Chat</span>
+            <span class="project__section-title">
+                {{#if newActivity}}<span class="indicator--new"></span>{{/if}}
+                Team Chat
+            </span>
         </a>
         <a class="project__section" href="#projects/{{id}}/tasks" {{#if taskCount}}data-count="{{taskCount}}"{{/if}}>
             <span class="fa fa-tasks" aria-hidden="true"></span>
             <span class="project__section-title">
-                {{#if newTasks}}
-                    <span class="indicator--new"></span>
-                {{/if}}
+                {{#if newTasks}}<span class="indicator--new"></span>{{/if}}
                 Tasks
             </span>
         </a>
         <a class="project__section" href="#projects/{{id}}/people">
             <span class="fa fa-users" aria-hidden="true"></span>
-            {{#if newPeople}}
-                <span class="indicator--new"></span>
-            {{/if}}
-            <span class="project__section-title">Team Members</span>
+            <span class="project__section-title">
+                {{#if newPeople}}<span class="indicator--new"></span>{{/if}}
+                Team Members
+            </span>
         </a>
         <a class="project__section" href="#projects/{{id}}/meetups">
             <span class="fa fa-calendar-check-o" aria-hidden="true"></span>
-            {{#if newMeetups}}
-                <span class="indicator--new"></span>
-            {{/if}}
-            <span class="project__section-title">Meet up</span>
+            <span class="project__section-title">
+                {{#if newMeetups}}<span class="indicator--new"></span>{{/if}}
+                Meet up
+            </span>
         </a>
     </div>
 </div>

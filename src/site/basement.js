@@ -28,6 +28,10 @@ Basement.prototype.render = function () {
         }
 
         if (projects) {
+            projects.sort(function (proj1, proj2) {
+                return proj1.name.localeCompare(proj2.name);
+            });
+
             var fragment = document.createDocumentFragment();
             for (var i = 0; i < projects.length; i++) {
                 var project = projects[i];
