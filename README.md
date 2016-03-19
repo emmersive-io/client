@@ -44,16 +44,16 @@ Run an emulator
 `cordova emulate android`
 
 ##Deploying to firebase
-Install [firebase tools](https://www.firebase.com/docs/hosting/quickstart.html)
+Install [firebase tools](https://www.firebase.com/docs/hosting/quickstart.html)  
 `npm install -g firebase-tools`
 
-Optimize the codebase
+Optimize the codebase  
 `webpack -p`
 
-Upload to firebase (production)
+Upload to firebase (production)  
 `firebase deploy`
 
-Upload to firebase (dev)
+Upload to firebase (dev)  
 `firebase deploy -f emmersive-dev`
 
 #### Other Dependencies
