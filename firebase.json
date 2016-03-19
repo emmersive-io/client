@@ -1,6 +1,7 @@
 {
   "firebase": "flickering-inferno-1351",
   "public": "www",
+  "rules" : "rules.json",
   "ignore": [
     "firebase.json",
     "**/.*",

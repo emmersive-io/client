@@ -1,7 +1,15 @@
 var Firebase = require('firebase');
-var connection = new Firebase('https://flickering-inferno-1351.firebaseio.com');
+// get the base connection to find the right env
+var base_connection = new Firebase("https://flickering-inferno-1351.firebaseio.com");
+var connection = loadConnection();
 var transform = require('./transform');
 
+
+function loadConnection(){
+    var loc = window.location.hostname.replace(/\./g,',');
+    connection.child('_admin/env'+loc);
+    return new Firebase();
+}
 
 function createProjectItem(projectId, type, data) {
     var userId = connection.getAuth().uid;
