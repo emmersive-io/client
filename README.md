@@ -49,8 +49,12 @@ Install [firebase tools](https://www.firebase.com/docs/hosting/quickstart.html)
 Optimize the codebase
 `webpack -p`
 
-Upload to firebase
+Upload to firebase (emmersive-dev)
 `firebase deploy`
+
+Upload to different environment in firebase
+`firebase deploy -f emmersive-stage` (staging)
+`firebase deploy -f flickering-infero-1351` (production)
 
 #### Other Dependencies
 * Node.js 4.x

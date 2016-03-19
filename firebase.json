@@ -1,5 +1,5 @@
 {
-  "firebase": "flickering-inferno-1351",
+  "firebase": "emmersive-dev",
   "public": "www",
   "rules" : "rules.json",
   "ignore": [
