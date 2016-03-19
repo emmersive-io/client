@@ -24,7 +24,7 @@ function getEnv(){
     var loc = window.location.hostname
     if (loc.search('.emmersive.io') != -1){
 	return 'prod';
-    } else if (loc.search('.firebaseapp.com') != -1){
+    } else if (loc.search('emmersive-stage.firebaseapp.com') != -1){
 	return 'staging';
     } else {
 	return 'dev';
