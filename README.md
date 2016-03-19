@@ -46,14 +46,14 @@ Run an emulator
 Install [firebase tools](https://www.firebase.com/docs/hosting/quickstart.html)
 `npm install -g firebase-tools`
 
-Optimize the codebase
+Optimize the codebase  
 `webpack -p`
 
-Upload to firebase (emmersive-dev)
-`firebase deploy`
+Upload to firebase  
+`firebase deploy` (to emmersive-dev)
 
-Upload to different environment in firebase
-`firebase deploy -f emmersive-stage` (staging)
+Upload to different environment in firebase  
+`firebase deploy -f emmersive-stage` (staging)  
 `firebase deploy -f flickering-infero-1351` (production)
 
 #### Other Dependencies
