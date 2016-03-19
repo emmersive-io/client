@@ -3,7 +3,6 @@ var ProjectListItem = require('../components/projectListItem');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/home.html');
 
-
 function HomePage(header) {
     this.header = header;
 }
