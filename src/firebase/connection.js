@@ -1,14 +1,15 @@
 var Firebase = require('firebase');
 // get the base connection to find the right env
-var base_connection = new Firebase("https://flickering-inferno-1351.firebaseio.com");
 var connection = loadConnection();
 var transform = require('./transform');
 
-
 function loadConnection(){
+    var base_connection = new Firebase("https://flickering-inferno-1351.firebaseio.com");
     var loc = window.location.hostname.replace(/\./g,',');
-    connection.child('_admin/env'+loc);
-    return new Firebase();
+    return base_connection.child('_admin/env').child(loc).once('value').then(function (snapshot){
+	var data = transform.toObj(snapshot);
+	return new Firebase(data.firebase_origin);
+    });
 }
 
 function createProjectItem(projectId, type, data) {
