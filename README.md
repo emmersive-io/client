@@ -1,4 +1,5 @@
 [![Build Status](https://semaphoreci.com/api/v1/projects/cae233af-d75e-4ed0-ae50-5c2b95957111/704855/badge.svg)](https://semaphoreci.com/bruceio/client)
+
 ## Web interface setup
 Install webpack  
 `npm install -g webpack`  
@@ -49,8 +50,11 @@ Install [firebase tools](https://www.firebase.com/docs/hosting/quickstart.html)
 Optimize the codebase
 `webpack -p`
 
-Upload to firebase
+Upload to firebase (production)
 `firebase deploy`
+
+Upload to firebase (dev)
+`firebase deploy -f emmersive-dev`
 
 #### Other Dependencies
 * Node.js 4.x

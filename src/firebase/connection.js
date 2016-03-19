@@ -1,36 +1,23 @@
 var Firebase = require('firebase');
-//var connection = new Firebase("https://flickering-inferno-1351.firebaseio.com");
-var connection = loadConnection();
-
 var transform = require('./transform');
 
-function loadConnection(){
-    var env = getEnv();
-    var origin = 'emmersive-dev';
-    switch(env) {
-    case 'prod':
-	origin = 'flickering-inferno-1351';
-	break;
-    case 'staging':
-	origin = 'emmersive-stage'
-	break;
-	
-    }
-    console.log(origin);
-    return new Firebase('https://'+origin+'.firebaseio.com');
-}
+var connection = function () {
+    var origin;
+    var hostName = location.hostname;
 
-function getEnv(){
-    var loc = window.location.hostname
-    if (loc.search('.emmersive.io') != -1){
-	return 'prod';
-    } else if (loc.search('.firebaseapp.com') != -1){
-	return 'staging';
-    } else {
-	return 'dev';
+    if (hostName.indexOf('.emmersive.io') != -1) {
+        origin = 'flickering-inferno-1351';
     }
-    
-}
+    else if (hostName.indexOf('.firebaseapp.com') != -1) {
+        origin = 'emmersive-stage';
+    }
+    else {
+        origin = 'dev';
+    }
+
+    return new Firebase('https://' + origin + '.firebaseio.com');
+}();
+
 
 function createProjectItem(projectId, type, data) {
     var userId = connection.getAuth().uid;
