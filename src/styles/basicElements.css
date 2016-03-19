@@ -94,7 +94,8 @@ ul {
     font-size: 12px;
 }
 
-.section-header.span {
+.section-header span {
+    position: relative;
     display: inline-block;
     background: var(--text-inverted);
     padding: 0 10px;
@@ -108,7 +109,6 @@ ul {
     top: 50%;
     height: 1px;
     background: var(--input-border);
-    z-index: -1;
 }
 
 .text-truncate {
