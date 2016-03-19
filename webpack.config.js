@@ -14,7 +14,7 @@ module.exports = {
     },
     module: {
         loaders: [
-            {test: /\.html$/, loader: 'html-loader'},
+            {test: /\.html$/, loader: 'html-loader?minimize=false'},
             {test: /\.(gif|jpg|png|svg|woff|woff2)$/, loader: 'file-loader'},
             {test: /\.handlebars$/, loader: 'handlebars-loader'},
             {
