@@ -42,14 +42,13 @@
 }
 
 .basement__project-list {
-    padding-left: 10px;
     margin-right: -20px;
     color: #fff;
 }
 
 .basement__project {
     display: block;
-    padding: 20px 20px 20px 0;
+    padding: 20px;
     color: var(--text-inverted);
     border-bottom: 1px solid var(--basement-item-border);
 }

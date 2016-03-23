@@ -53,6 +53,11 @@
     -webkit-overflow-scrolling: touch;
 }
 
+.ios .scrollable {
+    -webkit-transform: translateZ(0px);
+    transform: translateZ(0px);
+}
+
 .form-page {
     display: flex;
 }
@@ -88,12 +93,14 @@
     text-align: center;
 }
 
-.home, .projects, .project--edit  {
+.home, .projects, .project--edit {
     padding: 10px 20px
 }
 
 .profile:not(.profile--current) {
-    .user-actions, .profile__sub-text {
-        display: none;
-    }
+
+.user-actions, .profile__sub-text {
+    display: none;
+}
+
 }
