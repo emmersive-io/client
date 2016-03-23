@@ -18,6 +18,9 @@ function ActivityList(projectId) {
         for (var i = 0; i < activities.length; i++) {
             this.activityList.insertAdjacentHTML('beforeend', this.getActivityHTML(activities[i]));
         }
+
+        var scrollable = this.element.closest('.scrollable');
+        scrollable.scrollTop = scrollable.scrollHeight;
     }.bind(this));
 }
 

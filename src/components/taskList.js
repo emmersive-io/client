@@ -3,12 +3,13 @@ var connection = require('../firebase/connection');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/taskList.html');
 var itemTemplate = require('../templates/taskItem.handlebars');
-var defaultUserImage = require('../images/profile-red.png');
+var sizeTextarea = require('../core/sizeTextarea');
 
 
 function TaskList(projectId) {
     this.projectId = projectId;
     this.element = renderTemplate(template);
+    this.element.addEventListener('change', this.onStatusChanged.bind(this), true);
 
     connection.getProjectTasks(projectId).then(function (tasks) {
         this.taskList = this.element.querySelector('ul');
@@ -18,6 +19,8 @@ function TaskList(projectId) {
         for (var i = 0; i < tasks.length; i++) {
             this.taskList.insertAdjacentHTML('beforeend', this.getTaskHTML(tasks[i]));
         }
+
+        sizeTextarea(this.taskList);
     }.bind(this));
 }
 
@@ -25,6 +28,25 @@ TaskList.prototype.getTaskHTML = function (task) {
     task.dateDescription = 'created ' + moment(task.created_at).fromNow();
     task.isComplete = (task.status !== 'open');
     return itemTemplate(task);
+};
+
+TaskList.prototype.onStatusChanged = function (e) {
+    var taskElement = e.target.closest('.checkbox-card');
+    if (taskElement) {
+        var data = {};
+        var userId = connection.getAuth().uid;
+
+        if (e.target.tagName === 'INPUT') {
+            data.status = e.target.checked ? 'closed' : 'open';
+            data.updated_status = userId;
+        }
+        else {
+            data.description = e.target.value;
+            data.updated_by = userId;
+        }
+
+        connection.updateTask(this.projectId, taskElement.dataset.id, data);
+    }
 };
 
 TaskList.prototype.onNewTask = function (e) {

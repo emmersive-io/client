@@ -1,4 +1,5 @@
 [![Build Status](https://semaphoreci.com/api/v1/projects/cae233af-d75e-4ed0-ae50-5c2b95957111/704855/badge.svg)](https://semaphoreci.com/bruceio/client)
+
 ## Web interface setup
 Install webpack  
 `npm install -g webpack`  
@@ -43,18 +44,17 @@ Run an emulator
 `cordova emulate android`
 
 ##Deploying to firebase
-Install [firebase tools](https://www.firebase.com/docs/hosting/quickstart.html)
+Install [firebase tools](https://www.firebase.com/docs/hosting/quickstart.html)  
 `npm install -g firebase-tools`
 
 Optimize the codebase  
 `webpack -p`
 
-Upload to firebase  
-`firebase deploy` (to emmersive-dev)
+Upload to firebase (production)  
+`firebase deploy`
 
-Upload to different environment in firebase  
-`firebase deploy -f emmersive-stage` (staging)  
-`firebase deploy -f flickering-infero-1351` (production)
+Upload to firebase (dev)  
+`firebase deploy -f emmersive-dev`
 
 #### Other Dependencies
 * Node.js 4.x

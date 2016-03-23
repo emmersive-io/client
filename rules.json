@@ -1,6 +1,13 @@
 {
- "rules": {
-    ".read": true,
-    ".write": true
-}
+    "rules": {
+        "_admin": {
+            ".read": false,
+            ".write": false,
+            "env": {
+                "$hostname": {
+                    ".read": true
+                }
+            }
+        }
+    }
 }

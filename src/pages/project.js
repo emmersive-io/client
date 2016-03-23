@@ -6,11 +6,17 @@ var overlayTemplate = require('../templates/projectOverlay.html');
 var defaultUserImage = require('../images/profile-inverted.png');
 
 var sections = {
-    activity: require('../components/activityList'),
+    activities: require('../components/activityList'),
     meetups: require('../components/meetupList'),
     people: require('../components/userList'),
     tasks: require('../components/taskList')
 };
+
+function isNew(project, userProject, type) {
+    var lastView = userProject[type];
+    var lastContent = project['updated_' + type];
+    return lastContent && (!lastView || lastView < lastContent);
+}
 
 
 function ProjectPage(header) {
@@ -35,18 +41,20 @@ ProjectPage.prototype.loadSection = function (sectionName) {
 
         this.overlay.addEventListener('click', this.onOverlayCloseClick.bind(this), false);
         document.body.appendChild(this.overlay);
+
+        connection.viewProject(this.project.id, sectionName);
     }
 };
 
 ProjectPage.prototype.onLeaveProject = function () {
     connection.leaveProject(this.project.id);
-    this.project.people[this.user.uid] = false;
+    this.project.people[this.user.id] = false;
     this.updateHeader();
 };
 
 ProjectPage.prototype.onJoinProject = function () {
     connection.joinProject(this.project.id);
-    this.project.people[this.user.uid] = true;
+    this.project.people[this.user.id] = true;
     this.updateHeader();
 };
 
@@ -65,19 +73,29 @@ ProjectPage.prototype.onRoute = function (root, projectId, section) {
         }
     }
     else {
-        return connection.getProject(projectId).then(function (project) {
-            this.user = connection.getAuth();
-            this.project = project;
-            this.updateHeader();
+        return Promise.all([
+            connection.getUser(connection.getAuth().uid),
+            connection.getProject(projectId)
+        ]).then(function (data) {
+            this.user = data[0];
+            this.project = data[1];
 
-            project.taskCount = project.tasks && Object.keys(project.tasks).length;
-            if (!project.created_by.image) {
-                project.created_by.image = defaultUserImage;
+            if (!this.project.created_by.image) {
+                this.project.created_by.image = defaultUserImage;
             }
 
-            this.element = renderTemplate(template(project));
-            if (project.image) {
-                this.element.querySelector('.project__details').style.backgroundImage = 'url(' + project.image + ')';
+            var userProject = this.user.projects && this.user.projects[this.project.id];
+            if (userProject) {
+                this.project.newActivity = isNew(this.project, userProject, 'activities');
+                this.project.newMeetups = isNew(this.project, userProject, 'meetups');
+                this.project.newPeople = isNew(this.project, userProject, 'people');
+                this.project.newTasks = isNew(this.project, userProject, 'tasks');
+            }
+
+            this.updateHeader();
+            this.element = renderTemplate(template(this.project));
+            if (this.project.image) {
+                this.element.querySelector('.project__details').style.backgroundImage = 'url(' + this.project.image + ')';
             }
 
             return this.loadSection(section);
@@ -98,11 +116,11 @@ ProjectPage.prototype.updateHeader = function () {
         leftAction: 'back'
     };
 
-    if (this.project.created_by.id === this.user.uid) {
+    if (this.project.created_by.id === this.user.id) {
         headerOptions.action = 'Edit Project';
         headerOptions.onAction = '#projects/' + this.project.id + '/edit';
     }
-    else if (this.project.people[this.user.uid]) {
+    else if (this.project.people[this.user.id]) {
         headerOptions.action = 'Leave Project';
         headerOptions.onAction = this.onLeaveProject.bind(this);
     }
