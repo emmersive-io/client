@@ -1,5 +1,7 @@
-var moment = require('moment');
 var connection = require('../firebase/connection');
+var session = require('../firebase/session');
+
+var moment = require('moment');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/taskList.html');
 var itemTemplate = require('../templates/taskItem.handlebars');
@@ -34,7 +36,7 @@ TaskList.prototype.onStatusChanged = function (e) {
     var taskElement = e.target.closest('.checkbox-card');
     if (taskElement) {
         var data = {};
-        var userId = connection.getAuth().uid;
+        var userId = session.user.id;
 
         if (e.target.tagName === 'INPUT') {
             data.status = e.target.checked ? 'closed' : 'open';

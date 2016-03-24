@@ -1,4 +1,6 @@
 var connection = require('../firebase/connection');
+var session = require('../firebase/session');
+
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/basement.html');
 var defaultUserImage = require('../images/profile-inverted.png');
@@ -14,14 +16,12 @@ function Basement() {
 }
 
 Basement.prototype.render = function () {
-    var user = connection.getAuth();
-    connection.getUser(user.uid).then(function (user) {
-        this.element.querySelector('.basement__user-name').textContent = user.name;
-        this.element.querySelector('.basement__header-logo').src = user.image || defaultUserImage;
-        this.element.querySelector('.basement__header-button').setAttribute('data-href', '#profile/' + user.id);
-    }.bind(this));
+    var user = session.user;
+    this.element.querySelector('.basement__user-name').textContent = user.name;
+    this.element.querySelector('.basement__header-logo').src = user.image || defaultUserImage;
+    this.element.querySelector('.basement__header-button').setAttribute('data-href', '#profile/' + user.id);
 
-    connection.getProjectsForUser(user.uid).then(function (projects) {
+    connection.getProjectsForUser(user.id).then(function (projects) {
         var projectList = this.element.querySelector('.basement__project-list');
         while (projectList.lastElementChild) {
             projectList.lastElementChild.remove();

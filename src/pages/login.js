@@ -1,4 +1,4 @@
-var connection = require('../firebase/connection');
+var session = require('../firebase/session');
 var animate = require('../core/animate');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/login.html');
@@ -17,7 +17,7 @@ LoginPage.prototype.onFormSubmit = function (e) {
     var password = elements.password.value.trim();
 
     if (email && password) {
-        connection.login(email, password).then(function () {
+        session.login(email, password).then(function () {
             location.assign('#');
         }).catch(function () {
             animate(e.target, 'anim--shake');

@@ -1,4 +1,5 @@
 var connection = require('../firebase/connection');
+var session = require('../firebase/session');
 var renderTemplate = require('../core/renderTemplate');
 
 var template = require('../templates/project.handlebars');
@@ -48,13 +49,13 @@ ProjectPage.prototype.loadSection = function (sectionName) {
 
 ProjectPage.prototype.onLeaveProject = function () {
     connection.leaveProject(this.project.id);
-    this.project.people[this.user.id] = false;
+    this.project.people[session.user.id] = false;
     this.updateHeader();
 };
 
 ProjectPage.prototype.onJoinProject = function () {
     connection.joinProject(this.project.id);
-    this.project.people[this.user.id] = true;
+    this.project.people[session.user.id] = true;
     this.updateHeader();
 };
 
@@ -73,18 +74,13 @@ ProjectPage.prototype.onRoute = function (root, projectId, section) {
         }
     }
     else {
-        return Promise.all([
-            connection.getUser(connection.getAuth().uid),
-            connection.getProject(projectId)
-        ]).then(function (data) {
-            this.user = data[0];
-            this.project = data[1];
-
+        return connection.getProject(projectId).then(function (project) {
+            this.project = project;
             if (!this.project.created_by.image) {
                 this.project.created_by.image = defaultUserImage;
             }
 
-            var userProject = this.user.projects && this.user.projects[this.project.id];
+            var userProject = session.user.projects && session.user.projects[this.project.id];
             if (userProject) {
                 this.project.newActivity = isNew(this.project, userProject, 'activities');
                 this.project.newMeetups = isNew(this.project, userProject, 'meetups');
@@ -116,11 +112,11 @@ ProjectPage.prototype.updateHeader = function () {
         leftAction: 'back'
     };
 
-    if (this.project.created_by.id === this.user.id) {
+    if (this.project.created_by.id === session.user.id) {
         headerOptions.action = 'Edit Project';
         headerOptions.onAction = '#projects/' + this.project.id + '/edit';
     }
-    else if (this.project.people[this.user.id]) {
+    else if (this.project.people[session.user.id]) {
         headerOptions.action = 'Leave Project';
         headerOptions.onAction = this.onLeaveProject.bind(this);
     }

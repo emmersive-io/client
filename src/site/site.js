@@ -1,6 +1,6 @@
 'use strict';
 
-var connection = require('../firebase/connection');
+var session = require('../firebase/session');
 var animate = require('../core/animate');
 var Header = require('./header');
 var Router = require('../core/router');
@@ -10,9 +10,6 @@ var template = require('../templates/site.html');
 
 function Site(routeMap) {
     new Router(routeMap, this.onRouteChanged.bind(this));
-    connection.onLoggedOut(function () {
-        location.assign('#login');
-    });
 }
 
 Site.prototype.getDirection = function (path, oldPath) {
@@ -32,32 +29,31 @@ Site.prototype.getDirection = function (path, oldPath) {
 };
 
 Site.prototype.onRouteChanged = function (Page, path) {
-    var isLoggedIn = connection.isLoggedIn();
-    var isLoginScreen = location.hash.indexOf('#login') === 0;
-    if (isLoggedIn === isLoginScreen) {
-        location.assign(isLoggedIn ? '#' : '#login');
-        return;
-    }
-
-    if (!this.element) {
-        this.render();
-    }
-
-    var page = this.page;
-    if (!(page instanceof Page)) {
-        page = new Page(this.header);
-    }
-
-    var onRoute = page.onRoute && page.onRoute.apply(page, path);
-    if (page !== this.page) {
-        this.page = page;
-        if (onRoute && onRoute.then) {
-            onRoute.then(this.showPage.bind(this, path, page));
+    session.onUser(function (user) {
+        var isLoggedIn = (user != null);
+        var isLoginScreen = location.hash.indexOf('#login') === 0;
+        if (isLoggedIn === isLoginScreen) {
+            location.assign(isLoggedIn ? '#' : '#login');
+            return;
         }
-        else {
-            this.showPage(path, page);
+
+        if (!this.element) {
+            this.render();
         }
-    }
+
+        var page = this.page;
+        if (!(page instanceof Page)) {
+            page = new Page(this.header);
+        }
+
+        var onRoute = page.onRoute && page.onRoute.apply(page, path);
+        if (page !== this.page) {
+            this.page = page;
+            Promise.resolve(onRoute).then(function () {
+                this.showPage(path, page);
+            }.bind(this));
+        }
+    }.bind(this))
 };
 
 Site.prototype.render = function () {

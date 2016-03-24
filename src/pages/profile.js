@@ -1,7 +1,10 @@
 var connection = require('../firebase/connection');
+var session = require('../firebase/session');
+
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/profile.handlebars');
 var defaultUserImage = require('../images/profile.png');
+
 
 function ProfilePage(header) {
     this.header = header;
@@ -10,37 +13,44 @@ function ProfilePage(header) {
 ProfilePage.prototype.onClick = function (e) {
     var button = e.target.closest('button');
     if (button && button.classList.contains('button--log-out')) {
-        connection.logOut();
+        session.logOut();
     }
 };
 
 ProfilePage.prototype.onRoute = function (root, userId) {
-    return connection.getUser(userId).then(function (user) {
-        this.header.update({
-            title: 'Profile',
-            leftAction: 'back'
-        });
+    this.isCurrentUser = (session.user.id === userId);
+    if (this.isCurrentUser) {
+        this.render(session.user);
+    }
+    else {
+        return connection.getUser(userId).then(this.render.bind(this));
+    }
+};
 
-        if (!user.image) {
-            user.image = defaultUserImage;
-        }
+ProfilePage.prototype.render = function (user) {
+    this.header.update({
+        title: 'Profile',
+        leftAction: 'back'
+    });
 
-        var isCurrentUser = connection.getAuth().uid === userId;
-        this.element = renderTemplate(template({
-            isCurrentUser: isCurrentUser,
-            user: user
-        }));
+    if (!user.image) {
+        user.image = defaultUserImage;
+    }
 
-        if (isCurrentUser) {
-            this.element.addEventListener('click', this.onClick.bind(this), false);
+    this.element = renderTemplate(template({
+        isCurrentUser: this.isCurrentUser,
+        user: user
+    }));
+
+    if (this.isCurrentUser) {
+        this.element.addEventListener('click', this.onClick.bind(this), false);
+    }
+    else {
+        var inputs = this.element.getElementsByTagName('input');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].readOnly = true;
         }
-        else {
-            var inputs = this.element.getElementsByTagName('input');
-            for (var i = 0; i < inputs.length; i++) {
-                inputs[i].readOnly = true;
-            }
-        }
-    }.bind(this));
+    }
 };
 
 module.exports = ProfilePage;
