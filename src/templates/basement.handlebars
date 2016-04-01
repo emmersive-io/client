@@ -1,8 +1,8 @@
 <div class="page page--basement">
     <header class="header header--basement">
-        <img class="basement__header-logo"/>
-        <span class="basement__user-name text-truncate"></span>
-        <button class="basement__header-button transparent">
+        <img class="basement__header-logo" src="{{image}}"/>
+        <span class="basement__user-name text-truncate">{{user.name}}</span>
+        <button class="basement__header-button transparent" data-href="#profile/{{user.id}}">
             <span class="fa fa-gear" aria-hidden="true"></span>
         </button>
     </header>
@@ -14,6 +14,6 @@
             <span class="fa fa-search" aria-hidden="true"></span> Project Search
         </button>
         <h3 class="basement__section-header">My Projects</h3>
-        <div class="basement__project-list"></div>
+        <ul class="basement__project-list"></ul>
     </div>
 </div>

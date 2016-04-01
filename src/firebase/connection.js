@@ -94,15 +94,16 @@ module.exports = {
     createUser: function (name, email, password) {
         var credentials = {email: email, password: password};
         return connection.createUser(credentials).then(function (userData) {
-            connection.child('users/' + userData.uid).set({
+            // Create a user entry
+            return connection.child('users/' + userData.uid).set({
                 provider: 'password',
                 email: email,
                 name: name
             });
-
+        }).then(function () {
             // Automatically log the user in
             return session.login(email, password);
-        }.bind(this));
+        });
     },
 
     getAllProjects: function () {

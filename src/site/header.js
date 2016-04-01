@@ -1,4 +1,3 @@
-var Basement = require('./basement');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/header.html');
 
@@ -6,11 +5,8 @@ var template = require('../templates/header.html');
 function Header() {
     this.element = renderTemplate(template);
     this.element.addEventListener('click', this.onClick.bind(this), false);
-
-    this.basement = new Basement();
     this.headerTitle = this.element.querySelector('.header__title');
     this.rightButton = this.element.querySelector('.header__button--action');
-    document.body.appendChild(this.basement.element);
 }
 
 Header.prototype.onClick = function (e) {
@@ -26,9 +22,6 @@ Header.prototype.onClick = function (e) {
         }
         else if (button.classList.contains('header__button--basement')) {
             document.body.classList.toggle('show-basement');
-            if (document.body.classList.contains('show-basement')) {
-                this.basement.render();
-            }
         }
         else {
             history.back();

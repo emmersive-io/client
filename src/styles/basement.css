@@ -47,8 +47,17 @@
 }
 
 .basement__project {
-    display: block;
-    padding: 20px;
-    color: var(--text-inverted);
+    padding: 10px 0;
     border-bottom: 1px solid var(--basement-item-border);
+}
+
+.basement__project a {
+    display: inline-block;
+    color: var(--text-inverted);
+    border-left: 4px solid transparent;
+    padding: 5px 0 5px 16px;
+}
+
+.basement__project.has-update a {
+    border-color: var(--brand);
 }
