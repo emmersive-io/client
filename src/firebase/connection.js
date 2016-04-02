@@ -184,11 +184,11 @@ module.exports = {
     updateTask: function (projectId, taskId, taskData) {
         return Promise.all([
             connection.child('tasks/' + projectId + '/' + taskId).update(Object.assign(taskData, {
-                'updated_at': serverTime
+                updated_at: serverTime
             })),
             connection.child('projects/' + projectId).update({
-                'updated_at': serverTime,
-                'updated_tasks': serverTime
+                updated_at: serverTime,
+                updated_tasks: serverTime
             })
         ]);
     },

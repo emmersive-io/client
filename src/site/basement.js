@@ -1,14 +1,14 @@
 var firebase = require('../firebase/firebase').get();
 var transform = require('../firebase/transform');
-var renderTemplate = require('../core/renderTemplate');
+var session = require('../firebase/session');
 
+var renderTemplate = require('../core/renderTemplate');
 var itemTemplate = require('../templates/basementItem.handlebars');
 var template = require('../templates/basement.handlebars');
 var defaultUserImage = require('../images/profile-inverted.png');
 
 
 function Basement(user) {
-    this.user = user;
     this.element = renderTemplate(template({
         image: user.image || defaultUserImage,
         user: user
@@ -16,37 +16,53 @@ function Basement(user) {
 
     this.projects = {};
     this.projectList = this.element.querySelector('.basement__project-list');
-
-    this.userRef = firebase.child('users/' + user.id + '/projects');
-    this.userRef.on('child_added', this.onProjectJoin, this);
-    this.userRef.on('child_removed', this.onProjectLeave, this);
-
     this.element.addEventListener('click', function (e) {
         if (e.target.closest('[data-href]')) {
             document.body.classList.remove('show-basement');
         }
     }, false);
+
+    // Listen to changes to the user
+    this.userRef = firebase.child('users/' + user.id + '/projects');
+    this.userRef.on('child_added', this.onProjectJoin, this);
+    this.userRef.on('child_changed', this.onUserProjectDataChanged, this);
+    this.userRef.on('child_removed', this.onProjectLeave, this);
 }
 
 Basement.prototype.hasUpdate = function (project) {
-    var userProject = this.user.projects[project.id];
+    var userProject = session.user.projects[project.id];
     return this.isNew(project, userProject, 'activities') ||
         this.isNew(project, userProject, 'meetups') ||
         this.isNew(project, userProject, 'people') ||
-        this.isNew(project, userProject, 'tasks');
+        this.isNew(project, userProject, 'tasks') || false;
 };
 
 Basement.prototype.isNew = function (project, userProject, type) {
-    var lastView = userProject[type];
-    var lastContent = project['updated_' + type];
-    return lastContent && (!lastView || lastView < lastContent);
+    if (userProject) {
+        var lastView = userProject[type];
+        var lastChange = project['updated_' + type];
+        return lastChange && (!lastView || lastView < lastChange);
+    }
 };
 
-Basement.prototype.onProjectChanged = function (snapshot) {
+Basement.prototype.onUserProjectDataChanged = function (snapshot) {
+    var projectId = snapshot.key();
+    var project = this.projects[projectId];
+
+    // Delay so the remaining updates can roll in and update session.user
+    setTimeout(function () {
+        project.element.classList.toggle('has-update', this.hasUpdate(project.data));
+    }.bind(this), 0);
+};
+
+Basement.prototype.onProjectDataChanged = function (snapshot) {
     var projectData = transform.toObj(snapshot);
     var project = this.projects[projectData.id];
-    var hasNewName = (!project.data || project.data.name !== projectData.name);
+    if (!project) {
+        return;
+    }
 
+    var hasNewName = (!project.data || project.data.name !== projectData.name);
     if (!project.element) {
         project.element = renderTemplate(itemTemplate({
             name: projectData.name,
@@ -77,7 +93,7 @@ Basement.prototype.onProjectChanged = function (snapshot) {
 Basement.prototype.onProjectJoin = function (snapshot) {
     var projectId = snapshot.key();
     var project = {ref: firebase.child('projects/' + projectId)};
-    project.ref.on('value', this.onProjectChanged, this);
+    project.ref.on('value', this.onProjectDataChanged, this);
     this.projects[projectId] = project;
 };
 
@@ -86,7 +102,7 @@ Basement.prototype.onProjectLeave = function (snapshot) {
     var project = this.projects[projectId];
     if (project) {
         project.element.remove();
-        project.ref.off('value', this.onProjectChanged, this);
+        project.ref.off('value', this.onUserProjectDataChanged, this);
         delete this.projects[projectId];
     }
 };
@@ -94,10 +110,11 @@ Basement.prototype.onProjectLeave = function (snapshot) {
 Basement.prototype.remove = function () {
     this.element.remove();
     this.userRef.off('child_added', this.onProjectJoin, this);
+    this.userRef.off('child_changed', this.onUserProjectDataChanged, this);
     this.userRef.off('child_removed', this.onProjectLeave, this);
 
     for (var key in this.projects) {
-        this.projects[key].ref.off('value', this.onProjectChanged, this);
+        this.projects[key].ref.off('value', this.onUserProjectDataChanged, this);
     }
 };
 
