@@ -1,10 +1,10 @@
-<li class="checkbox-card" data-id="{{id}}">
+<li class="checkbox-card" data-id="{{task.id}}">
     <div class="task__header">
-        <a class="user-name" href="#profile/{{created_by.id}}">{{created_by.name}}</a>
+        <a class="user-name" href="#profile/{{user.id}}">{{user.name}}</a>
         <span class="item__date">{{dateDescription}}</span>
     </div>
     <div class="task__content">
-        <input type="checkbox" class="task__checkbox" {{#if isComplete}}checked{{/if}} />
-        <textarea class="task__description" rows="1">{{description}}</textarea>
+        <input type="checkbox" class="task__checkbox" {{#if task.isComplete}}checked{{/if}} />
+        <textarea class="task__description" rows="1">{{task.description}}</textarea>
     </div>
 </li>

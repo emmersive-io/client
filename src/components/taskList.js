@@ -27,9 +27,18 @@ function TaskList(projectId) {
 }
 
 TaskList.prototype.getTaskHTML = function (task) {
-    task.dateDescription = 'created ' + moment(task.created_at).fromNow();
+    if (task.updated_at) {
+        task.dateDescription = 'updated ' + moment(task.updated_at).fromNow();
+    }
+    else {
+        task.dateDescription = 'created ' + moment(task.created_at).fromNow();
+    }
+
     task.isComplete = (task.status !== 'open');
-    return itemTemplate(task);
+    return itemTemplate({
+        user: task.updated_by || task.created_by,
+        task: task
+    });
 };
 
 TaskList.prototype.onStatusChanged = function (e) {
