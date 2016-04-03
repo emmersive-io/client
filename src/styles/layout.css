@@ -80,27 +80,13 @@
 .profile__image {
     display: block;
     height: 150px;
-    margin: 0 auto;
+    margin: 0 auto 20px auto;
 }
 
-.profile__image + input {
-    margin-top: 20px;
-}
-
-.profile__sub-text {
-    font-size: 12px;
-    color: var(--medium-text);
-    text-align: center;
-}
-
-.home, .projects, .project--edit {
+.projects, .project--edit {
     padding: 10px 20px
 }
 
-.profile:not(.profile--current) {
-
-.user-actions, .profile__sub-text {
-    display: none;
-}
-
+.home .profile__image {
+    margin-bottom: 60px;
 }
