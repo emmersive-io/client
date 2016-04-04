@@ -27,16 +27,18 @@ function TaskList(projectId) {
 }
 
 TaskList.prototype.getTaskHTML = function (task) {
+    var dateDescription;
     if (task.updated_at) {
-        task.dateDescription = 'updated ' + moment(task.updated_at).fromNow();
+        dateDescription = 'updated ' + moment(task.updated_at).fromNow();
     }
     else {
-        task.dateDescription = 'created ' + moment(task.created_at).fromNow();
+        dateDescription = 'created ' + moment(task.created_at).fromNow();
     }
 
     task.isComplete = (task.status !== 'open');
     return itemTemplate({
         user: task.updated_by || task.created_by,
+        dateDescription: dateDescription,
         task: task
     });
 };

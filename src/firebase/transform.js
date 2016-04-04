@@ -1,26 +1,32 @@
 module.exports = {
-    fillUserData: function (ref, source, prop) {
+    fillUserData: function (ref, source, props) {
         var userHash = {};
         var objects = Array.isArray(source) ? source : [source];
+        props = Array.isArray(props) ? props : [props];
 
         for (var i = 0; i < objects.length; i++) {
             var obj = objects[i];
-            var userId = obj[prop];
+            for (var j = 0; j < props.length; j++) {
+                var prop = props[j];
+                var userId = obj[prop];
+                if (userId) {
+                    if (!userHash[userId]) {
+                        userHash[userId] = [];
+                    }
 
-            if (!userHash[userId]) {
-                userHash[userId] = [];
+                    userHash[userId].push({prop: prop, obj: obj});
+                }
             }
-
-            userHash[userId].push(obj);
         }
 
         return this.requestArrayFromHash(ref, userHash).then(function (array) {
             for (var i = 0; i < array.length; i++) {
                 var user = array[i];
-                var sources = userHash[user.id];
+                var matches = userHash[user.id];
 
-                for (var j = 0; j < sources.length; j++) {
-                    sources[j][prop] = user;
+                for (var j = 0; j < matches.length; j++) {
+                    var match = matches[j];
+                    match.obj[match.prop] = user;
                 }
             }
 
