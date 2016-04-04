@@ -3,6 +3,7 @@
 var session = require('../firebase/session');
 var animate = require('../core/animate');
 var Header = require('./header');
+var Basement = require('./basement');
 var Router = require('../core/router');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/site.html');
@@ -32,6 +33,7 @@ Site.prototype.onRouteChanged = function (Page, path) {
     session.onUser(function (user) {
         var isLoggedIn = (user != null);
         var isLoginScreen = location.hash.indexOf('#login') === 0;
+
         if (isLoggedIn === isLoginScreen) {
             location.assign(isLoggedIn ? '#' : '#login');
             return;
@@ -40,6 +42,8 @@ Site.prototype.onRouteChanged = function (Page, path) {
         if (!this.element) {
             this.render();
         }
+
+        this.updateBasement(user);
 
         var page = this.page;
         if (!(page instanceof Page)) {
@@ -59,8 +63,9 @@ Site.prototype.onRouteChanged = function (Page, path) {
 Site.prototype.render = function () {
     this.header = new Header();
     this.element = renderTemplate(template);
-    this.element.insertBefore(this.header.element, this.element.firstElementChild);
     this.container = this.element.querySelector('.content');
+
+    this.element.insertBefore(this.header.element, this.element.firstElementChild);
     document.body.appendChild(this.element);
 };
 
@@ -88,5 +93,19 @@ Site.prototype.showPage = function (path, page) {
     this.lastPage = this.page;
     this.path = path;
 };
+
+Site.prototype.updateBasement = function (user) {
+    if (this.basement) {
+        if (!user) {
+            this.basement.remove();
+            this.basement = null;
+        }
+    }
+    else if (user) {
+        this.basement = new Basement(user);
+        document.body.appendChild(this.basement.element);
+    }
+};
+
 
 module.exports = Site;

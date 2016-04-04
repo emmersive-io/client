@@ -1,19 +1,19 @@
 <div class="page page--basement">
     <header class="header header--basement">
-        <img class="basement__header-logo"/>
-        <span class="basement__user-name text-truncate"></span>
-        <button class="basement__header-button transparent">
+        <img class="basement__header-logo" src="{{image}}"/>
+        <span class="basement__user-name text-truncate">{{user.name}}</span>
+        <button class="basement__header-button transparent" data-href="#profile/{{user.id}}">
             <span class="fa fa-gear" aria-hidden="true"></span>
         </button>
     </header>
     <div class="content content--basement">
         <button class="button--full" data-href="#projects/new">
-            <span class="fa fa-plus" aria-hidden="true"></span> Create Project
+            <span class="fa fa-plus" aria-hidden="true"></span> Create a project
         </button>
         <button class="button--full" data-href="#projects">
-            <span class="fa fa-search" aria-hidden="true"></span> Project Search
+            <span class="fa fa-search" aria-hidden="true"></span> Find a project
         </button>
         <h3 class="basement__section-header">My Projects</h3>
-        <div class="basement__project-list"></div>
+        <ul class="basement__project-list"></ul>
     </div>
 </div>

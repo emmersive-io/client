@@ -41,6 +41,10 @@ button.button--full {
     margin: 10px 0;
 }
 
+.button--full .fa {
+    margin-right: 5px;
+}
+
 button:focus {
     outline: 0;
 }

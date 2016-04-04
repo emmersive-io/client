@@ -110,7 +110,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 30%, transparent 70%, rgba(0, 0, 0, 0.5) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 30%, transparent 60%, rgba(0, 0, 0, 0.3) 100%);
 }
 
 .section__nav-arrow {
@@ -173,6 +173,11 @@
 
 .project__name {
     font-weight: normal;
+}
+
+.project__name, .project__owner{
+    position: relative;
+    z-index: 1;
 }
 
 .project .profile-image--small {
