@@ -40,6 +40,7 @@ function updateProjectParticipation(projectId, value) {
 
 
 module.exports = {
+    firebase: connection,
     changeEmail: function (oldEmail, newEmail, password) {
         return connection.changeEmail({
             oldEmail: oldEmail,

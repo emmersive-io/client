@@ -175,7 +175,7 @@
     font-weight: normal;
 }
 
-.project__name, .project__owner{
+.project__name, .project__owner {
     position: relative;
     z-index: 1;
 }
@@ -206,7 +206,8 @@
     width: 50%;
 }
 
-.indicator--new {
+.project__section.has-update .project__section-title:before {
+    content: '';
     display: inline-block;
     background: var(--brand);
     border-radius: 50%;
