@@ -1,6 +1,7 @@
 var Firebase = require('./firebase');
 var session = require('./session');
 var transform = require('./transform');
+var userCache = require('./userCache');
 
 var serverTime = Firebase.ref.ServerValue.TIMESTAMP;
 var connection = Firebase.get();
@@ -22,8 +23,7 @@ function createProjectItem(projectId, type, data) {
         connection.child('projects/' + projectId).update(data);
 
         return typeListRef.child(snapshot.key()).once('value').then(function (snapshot) {
-            var obj = transform.toObj(snapshot);
-            return transform.fillUserData(connection.child('users'), obj, ['created_by', 'updated_by']);
+            return transform.fillUserData(transform.toObj(snapshot), ['created_by', 'updated_by']);
         });
     });
 }
@@ -116,31 +116,19 @@ module.exports = {
         return connection.child('projects/' + projectId).once('value').then(function (snapshot) {
             var project = transform.toObj(snapshot);
             if (project) {
-                return transform.fillUserData(connection.child('users'), project, 'created_by');
+                return transform.fillUserData(project, 'created_by');
             }
-        });
-    },
-
-    getProjectActivity: function (projectId) {
-        return connection.child('activities/' + projectId).once('value').then(function (snapshot) {
-            return transform.fillUserData(connection.child('users'), transform.toArray(snapshot), 'created_by');
-        });
-    },
-
-    getProjectPeople: function (projectId) {
-        return connection.child('projects/' + projectId + '/people').once('value').then(function (snapshot) {
-            return transform.requestAsArray(connection.child('users'), snapshot);
         });
     },
 
     getProjectTasks: function (projectId) {
         return connection.child('tasks/' + projectId).once('value').then(function (snapshot) {
-            return transform.fillUserData(connection.child('users'), transform.toArray(snapshot), ['created_by', 'updated_by']);
+            return transform.fillUserData(transform.toArray(snapshot), ['created_by', 'updated_by']);
         });
     },
 
     getUser: function (userId) {
-        return connection.child('users/' + userId).once('value').then(transform.toObj);
+        return userCache.get(userId);
     },
 
     joinProject: function (projectId) {

@@ -1,5 +1,3 @@
-'use strict';
-
 if (!Element.prototype.closest) { // Needed for IE/Edge/Safari < 9
     Element.prototype.closest = function (selector) {
         var element = this;

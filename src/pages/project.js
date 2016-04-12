@@ -103,6 +103,10 @@ ProjectPage.prototype.onRemove = function () {
     if (this.overlay) {
         this.overlay.remove();
         this.overlay = null;
+        
+        if (this.section.remove) {
+            this.section.remove();
+        }
     }
 };
 
