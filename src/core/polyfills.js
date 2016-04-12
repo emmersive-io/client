@@ -41,6 +41,32 @@ if (!Object.assign) { // Needed for IE/Safari < 9
     };
 }
 
+if (!Array.prototype.find) { // Needed for IE
+    Array.prototype.find = function (predicate) {
+        var thisArg = arguments[1];
+        for (var i = 0; i < this.length; i++) {
+            var value = this[i];
+            if (predicate.call(thisArg, value, i, this)) {
+                return value;
+            }
+        }
+    };
+}
+
+if (!Array.prototype.findIndex) { // Needed for IE
+    Array.prototype.findIndex = function (predicate) {
+        var thisArg = arguments[1];
+        for (var i = 0; i < this.length; i++) {
+            var value = this[i];
+            if (predicate.call(thisArg, value, i, this)) {
+                return i;
+            }
+        }
+
+        return -1;
+    };
+}
+
 // IE 10/11 don't support classlist.toggle's second param
 var test = document.createElement('div');
 test.classList.toggle('test', false);

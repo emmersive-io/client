@@ -7,7 +7,7 @@ module.exports = {
         var promise = this.cache[userId];
         if (!promise) {
             promise = userRef.child(userId).once('value').then(function (snapshot) {
-                user = snapshot.val();
+                var user = snapshot.val();
                 if (user) {
                     user.id = snapshot.key();
                     this.cache[user.id] = Promise.resolve(user);
@@ -15,7 +15,7 @@ module.exports = {
                 }
             }.bind(this));
 
-            this.cache[user.id] = promise;
+            this.cache[userId] = promise;
         }
 
         return promise;
