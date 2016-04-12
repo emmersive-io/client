@@ -18,7 +18,7 @@ var sections = {
 function isNew(project, userProject, type) {
     var lastView = userProject[type];
     var lastContent = project['updated_' + type];
-    return lastContent && (!lastView || lastView < lastContent);
+    return (lastContent && (!lastView || lastView < lastContent)) || false;
 }
 
 
@@ -69,35 +69,21 @@ ProjectPage.prototype.onProjectChanged = function (snapshot) {
             this.element.querySelector('.project__details').style.backgroundImage = 'url(' + project.image + ')';
         }
 
-        var userProject = session.user.projects && session.user.projects[project.id];
-        if (userProject) {
-            var sections = ['activities', 'meetups', 'people', 'tasks'];
-            var sectionElements = this.sectionContainer.children;
-            for (var i = 0; i < sectionElements.length; i++) {
-                sectionElements[i].classList.toggle('has-update', isNew(project, userProject, sections[i]));
-            }
-        }
-
-        if (!this.projectOwner) {
-            userCache.get(project.created_by).then(function (user) {
-                this.projectOwner = user;
-                if (user) {
-                    var ownerElement = this.element.querySelector('.project__owner');
-                    ownerElement.href = '#profile/' + user.id;
-                    ownerElement.lastElementChild.textContent = user.name;
-                    ownerElement.firstElementChild.src = user.image || defaultUserImage;
-                }
-            }.bind(this))
-        }
-
         this.project = project;
         this.updateHeader(project);
+        this.updateViewed(session.user.projects && session.user.projects[project.id]);
+        if (!this.projectOwner) {
+            userCache.get(project.created_by).then(this.setOwner.bind(this));
+        }
+
         this.loadSection(this.sectionName);
     }
 };
 
 ProjectPage.prototype.onRemove = function () {
+    this.userProjectRef.off('value', this.updateViewed, this);
     connection.firebase.child('projects/' + this.projectId).off('value', this.onProjectChanged, this);
+
     if (this.overlay) {
         this.overlay.remove();
         this.overlay = null;
@@ -115,12 +101,29 @@ ProjectPage.prototype.onRoute = function (root, projectId, section) {
     if (!this.element) {
         this.element = renderTemplate(template({id: projectId}));
         this.sectionContainer = this.element.querySelector('.project__sections');
+
         connection.firebase.child('projects/' + projectId).on('value', this.onProjectChanged.bind(this));
+        this.userProjectRef = connection.firebase.child('users/' + session.user.id + '/projects/' + projectId);
+        this.userProjectRef.on('value', this.onUserProjectUpdated, this);
     }
 
     this.onRemove();
     if (this.project && section) {
         return this.loadSection(section);
+    }
+};
+
+ProjectPage.prototype.onUserProjectUpdated = function (snapshot) {
+    this.updateViewed(snapshot.val());
+};
+
+ProjectPage.prototype.setOwner = function (user) {
+    this.projectOwner = user;
+    if (user) {
+        var ownerElement = this.element.querySelector('.project__owner');
+        ownerElement.href = '#profile/' + user.id;
+        ownerElement.lastElementChild.textContent = user.name;
+        ownerElement.firstElementChild.src = user.image || defaultUserImage;
     }
 };
 
@@ -147,6 +150,16 @@ ProjectPage.prototype.updateHeader = function (project) {
             style: 'transparent',
             leftAction: 'back'
         });
+    }
+};
+
+ProjectPage.prototype.updateViewed = function (userViewData) {
+    if (userViewData && this.project) {
+        var sections = ['activities', 'people', 'tasks', 'meetups'];
+        var sectionElements = this.sectionContainer.children;
+        for (var i = 0; i < sectionElements.length; i++) {
+            sectionElements[i].classList.toggle('has-update', isNew(this.project, userViewData, sections[i]));
+        }
     }
 };
 
