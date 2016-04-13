@@ -1,5 +1,3 @@
-'use strict';
-
 var onReady = require('./onReady');
 
 function getObject(obj, property) {
