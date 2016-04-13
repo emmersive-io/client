@@ -29,7 +29,7 @@ function ProjectPage(header) {
 
 ProjectPage.prototype.loadSection = function (sectionName) {
     var SectionType = sections[sectionName];
-    if (SectionType) {
+    if (SectionType && !(this.section instanceof SectionType)) {
         this.overlay = renderTemplate(overlayTemplate);
         this.section = new SectionType(this.project.id);
 
@@ -72,6 +72,7 @@ ProjectPage.prototype.onProjectChanged = function (snapshot) {
         this.project = project;
         this.updateHeader(project);
         this.updateViewed(session.user.projects && session.user.projects[project.id]);
+
         if (!this.projectOwner) {
             userCache.get(project.created_by).then(this.setOwner.bind(this));
         }
@@ -90,11 +91,16 @@ ProjectPage.prototype.onRemove = function () {
 
         if (this.section.remove) {
             this.section.remove();
+            this.section = null;
         }
     }
 };
 
 ProjectPage.prototype.onRoute = function (root, projectId, section) {
+    if (this.sectionName) {
+        connection.viewProject(this.projectId, this.sectionName);
+    }
+
     this.projectId = projectId;
     this.sectionName = section;
 
@@ -155,7 +161,7 @@ ProjectPage.prototype.updateHeader = function (project) {
 
 ProjectPage.prototype.updateViewed = function (userViewData) {
     if (userViewData && this.project) {
-        var sections = ['activities', 'people', 'tasks', 'meetups'];
+        var sections = ['activities', 'tasks', 'people', 'meetups'];
         var sectionElements = this.sectionContainer.children;
         for (var i = 0; i < sectionElements.length; i++) {
             sectionElements[i].classList.toggle('has-update', isNew(this.project, userViewData, sections[i]));
