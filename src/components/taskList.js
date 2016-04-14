@@ -3,6 +3,7 @@ var session = require('../firebase/session');
 var transform = require('../firebase/transform');
 
 var moment = require('moment');
+var SwipeHandler = require('../core/swipeHandler');
 var renderTemplate = require('../core/renderTemplate');
 var template = require('../templates/taskList.html');
 var itemTemplate = require('../templates/taskItem.handlebars');
@@ -16,6 +17,8 @@ function TaskList(projectId) {
     this.element = renderTemplate(template);
     this.taskList = this.element.querySelector('ul');
     this.newTask = this.element.querySelector('.task--new');
+    this.swipeHandler = new SwipeHandler(this.element, '.task__foreground', this.onSwipe.bind(this));
+
     this.newTask.addEventListener('submit', this.onNewTask.bind(this), false);
     this.element.addEventListener('change', this.onStatusChanged.bind(this), true);
 
@@ -51,6 +54,13 @@ TaskList.prototype.onStatusChanged = function (e) {
         }
 
         connection.updateTask(this.projectId, taskElement.dataset.id, data);
+    }
+};
+
+TaskList.prototype.onSwipe = function (element) {
+    var taskElement = element.closest('.checkbox-card');
+    if (taskElement) {
+        connection.removeTask(this.projectId, taskElement.dataset.id);
     }
 };
 
