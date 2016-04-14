@@ -49,14 +49,20 @@ SwipeHandler.prototype = {
     onTouchMove: function (e) {
         var touch = this.getTouch(e);
         if (touch) {
-            var xDist = Math.min(0, touch.pageX - this.initialTouch.pageX);
-            this.initialTouch.element.style.left = xDist + 'px';
+            var lastTouch = this.movements[this.movements.length - 1] || this.initialTouch;
+            var xDelta = Math.abs(touch.pageX - lastTouch.pageX);
+            var yDelta = Math.abs(touch.pageY - lastTouch.pageY);
 
-            this.movements.push({
-                timeStamp: e.timeStamp,
-                pageX: touch.pageX,
-                pageY: touch.pageY
-            });
+            if (xDelta > yDelta * 2) {
+                var xDist = Math.min(0, touch.pageX - this.initialTouch.pageX);
+                this.initialTouch.element.style.left = xDist + 'px';
+
+                this.movements.push({
+                    timeStamp: e.timeStamp,
+                    pageX: touch.pageX,
+                    pageY: touch.pageY
+                });
+            }
         }
     },
 
