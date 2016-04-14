@@ -1,10 +1,18 @@
 <li class="checkbox-card" data-id="{{id}}">
-    <div class="task__header">
-        <a class="user-name"></a>
-        <span class="item__date"></span>
+    <div class="task__foreground">
+        <div class="task__header">
+            <a class="user-name"></a>
+            <span class="item__date"></span>
+        </div>
+        <div class="task__content">
+            <input type="checkbox" class="task__checkbox" {{#if isComplete}}checked{{/if}} />
+            <textarea class="task__description" rows="1">{{description}}</textarea>
+        </div>
     </div>
-    <div class="task__content">
-        <input type="checkbox" class="task__checkbox" {{#if isComplete}}checked{{/if}} />
-        <textarea class="task__description" rows="1">{{description}}</textarea>
+    <div class="task__background">
+        <button class="task__delete-button">
+            <span class="fa fa-trash" aria-hidden="true"></span>
+            <span>Delete</span>
+        </button>
     </div>
 </li>

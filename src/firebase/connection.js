@@ -140,18 +140,34 @@ module.exports = {
         return updateProjectParticipation(projectId, null);
     },
 
-    removeProject: function (projectId) {
-        return connection.child('projects/' + projectId).once('value').then(function (snapshot) {
-            var data = {};
-            var project = snapshot.val();
-            data['archive/projects/' + projectId] = project;
-            data['projects/' + projectId] = null;
-
-            for (var userId in project.people) {
-                data['users/' + userId + '/projects/' + projectId] = null;
+    removeTask: function (projectId, taskId) {
+        var path = 'tasks/' + projectId + '/' + taskId;
+        return connection.child(path).once('value').then(function (snapshot) {
+            var task = snapshot.val();
+            if (task) {
+                var data = {};
+                data[path] = null;
+                data['archive/' + path] = task;
+                return connection.update(data);
             }
+        });
+    },
 
-            return connection.update(data);
+    removeProject: function (projectId) {
+        var path = 'projects/' + projectId;
+        return connection.child(path).once('value').then(function (snapshot) {
+            var project = snapshot.val();
+            if (project) {
+                var data = {};
+                data[path] = null;
+                data['archive/' + path] = project;
+
+                for (var userId in project.people) {
+                    data['users/' + userId + '/projects/' + projectId] = null;
+                }
+
+                return connection.update(data);
+            }
         });
     },
 
