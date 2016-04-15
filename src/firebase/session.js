@@ -14,7 +14,10 @@ function Session() {
 }
 
 Session.prototype = {
+    isAuthenticating: true,
+
     login: function (email, password) {
+        this.isAuthenticating = true;
         return connection.authWithPassword({
             email: email,
             password: password
@@ -22,10 +25,12 @@ Session.prototype = {
     },
 
     logOut: function () {
+        this.isAuthenticating = true;
         connection.unauth();
     },
 
     onUserChanged: function (snapshot) {
+        this.isAuthenticating = false;
         this.user = transform.toObj(snapshot);
         this.resolveCallback();
     },
@@ -37,12 +42,13 @@ Session.prototype = {
         }
 
         this.user = null;
+        this.isAuthenticating = false;
         location.assign('#login');
         this.resolveCallback();
     },
 
     onUser: function (callback) {
-        if (this.user === undefined) {
+        if (this.isAuthenticating) {
             this.callback = callback;
         }
         else {

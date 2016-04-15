@@ -1,6 +1,7 @@
 var Firebase = require('./firebase');
 var session = require('./session');
 var transform = require('./transform');
+var userCache = require('./userCache');
 
 var serverTime = Firebase.ref.ServerValue.TIMESTAMP;
 var connection = Firebase.get();
@@ -22,8 +23,7 @@ function createProjectItem(projectId, type, data) {
         connection.child('projects/' + projectId).update(data);
 
         return typeListRef.child(snapshot.key()).once('value').then(function (snapshot) {
-            var obj = transform.toObj(snapshot);
-            return transform.fillUserData(connection.child('users'), obj, 'created_by');
+            return transform.fillUserData(connection.child('users'), transform.toObj(snapshot), ['created_by', 'updated_by']);
         });
     });
 }
@@ -40,6 +40,7 @@ function updateProjectParticipation(projectId, value) {
 
 
 module.exports = {
+    firebase: connection,
     changeEmail: function (oldEmail, newEmail, password) {
         return connection.changeEmail({
             oldEmail: oldEmail,
@@ -86,6 +87,8 @@ module.exports = {
 
     createTask: function (projectId, content) {
         return createProjectItem(projectId, 'tasks', {
+            updated_at: serverTime,
+            updated_by: session.user.id,
             description: content,
             status: 'open'
         });
@@ -94,15 +97,16 @@ module.exports = {
     createUser: function (name, email, password) {
         var credentials = {email: email, password: password};
         return connection.createUser(credentials).then(function (userData) {
-            connection.child('users/' + userData.uid).set({
+            // Create a user entry
+            return connection.child('users/' + userData.uid).set({
                 provider: 'password',
                 email: email,
                 name: name
             });
-
+        }).then(function () {
             // Automatically log the user in
             return session.login(email, password);
-        }.bind(this));
+        });
     },
 
     getAllProjects: function () {
@@ -118,33 +122,14 @@ module.exports = {
         });
     },
 
-    getProjectActivity: function (projectId) {
-        return connection.child('activities/' + projectId).once('value').then(function (snapshot) {
-            return transform.fillUserData(connection.child('users'), transform.toArray(snapshot), 'created_by');
-        });
-    },
-
-    getProjectPeople: function (projectId) {
-        return connection.child('projects/' + projectId + '/people').once('value').then(function (snapshot) {
-            return transform.requestAsArray(connection.child('users'), snapshot);
-        });
-    },
-
     getProjectTasks: function (projectId) {
         return connection.child('tasks/' + projectId).once('value').then(function (snapshot) {
-            return transform.fillUserData(connection.child('users'), transform.toArray(snapshot), 'created_by');
-        });
-    },
-
-    getProjectsForUser: function () {
-        var userId = session.user.id;
-        return connection.child('users/' + userId + '/projects').once('value').then(function (snapshot) {
-            return transform.requestAsArray(connection.child('projects'), snapshot);
+            return transform.fillUserData(connection.child('users'), transform.toArray(snapshot), ['created_by', 'updated_by']);
         });
     },
 
     getUser: function (userId) {
-        return connection.child('users/' + userId).once('value').then(transform.toObj);
+        return userCache.get(userId);
     },
 
     joinProject: function (projectId) {
@@ -155,18 +140,34 @@ module.exports = {
         return updateProjectParticipation(projectId, null);
     },
 
-    removeProject: function (projectId) {
-        return connection.child('projects/' + projectId).once('value').then(function (snapshot) {
-            var data = {};
-            var project = snapshot.val();
-            data['archive/projects/' + projectId] = project;
-            data['projects/' + projectId] = null;
-
-            for (var userId in project.people) {
-                data['users/' + userId + '/projects/' + projectId] = null;
+    removeTask: function (projectId, taskId) {
+        var path = 'tasks/' + projectId + '/' + taskId;
+        return connection.child(path).once('value').then(function (snapshot) {
+            var task = snapshot.val();
+            if (task) {
+                var data = {};
+                data[path] = null;
+                data['archive/' + path] = task;
+                return connection.update(data);
             }
+        });
+    },
 
-            return connection.update(data);
+    removeProject: function (projectId) {
+        var path = 'projects/' + projectId;
+        return connection.child(path).once('value').then(function (snapshot) {
+            var project = snapshot.val();
+            if (project) {
+                var data = {};
+                data[path] = null;
+                data['archive/' + path] = project;
+
+                for (var userId in project.people) {
+                    data['users/' + userId + '/projects/' + projectId] = null;
+                }
+
+                return connection.update(data);
+            }
         });
     },
 
@@ -183,11 +184,12 @@ module.exports = {
     updateTask: function (projectId, taskId, taskData) {
         return Promise.all([
             connection.child('tasks/' + projectId + '/' + taskId).update(Object.assign(taskData, {
-                'updated_at': serverTime
+                updated_at: serverTime,
+                updated_by: session.user.id
             })),
             connection.child('projects/' + projectId).update({
-                'updated_at': serverTime,
-                'updated_tasks': serverTime
+                updated_at: serverTime,
+                updated_tasks: serverTime
             })
         ]);
     },

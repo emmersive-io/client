@@ -1,9 +1,6 @@
 <div class="profile form-page scrollable">
     <div class="form-page__form">
         <img class="profile__image" src="{{user.image}}"/>
-        {{#if isCurrentUser}}
-            <p class="profile__sub-text">Change a photo</p>
-        {{/if}}
         <input type="text" name="name" placeholder="Name" aria-label="name" autocomplete="name" value="{{user.name}}"/>
         <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" value="{{user.email}}"/>
         {{#if isCurrentUser}}

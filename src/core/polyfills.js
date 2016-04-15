@@ -1,5 +1,3 @@
-'use strict';
-
 if (!Element.prototype.closest) { // Needed for IE/Edge/Safari < 9
     Element.prototype.closest = function (selector) {
         var element = this;
@@ -40,6 +38,32 @@ if (!Object.assign) { // Needed for IE/Safari < 9
         }
 
         return output;
+    };
+}
+
+if (!Array.prototype.find) { // Needed for IE
+    Array.prototype.find = function (predicate) {
+        var thisArg = arguments[1];
+        for (var i = 0; i < this.length; i++) {
+            var value = this[i];
+            if (predicate.call(thisArg, value, i, this)) {
+                return value;
+            }
+        }
+    };
+}
+
+if (!Array.prototype.findIndex) { // Needed for IE
+    Array.prototype.findIndex = function (predicate) {
+        var thisArg = arguments[1];
+        for (var i = 0; i < this.length; i++) {
+            var value = this[i];
+            if (predicate.call(thisArg, value, i, this)) {
+                return i;
+            }
+        }
+
+        return -1;
     };
 }
 
