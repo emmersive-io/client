@@ -48,7 +48,7 @@
 }
 
 .basement__project a {
-    display: inline-block;
+    display: block;
     color: var(--text-inverted);
     border-left: 4px solid transparent;
     padding: 5px 0 5px 16px;
