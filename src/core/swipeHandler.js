@@ -1,16 +1,23 @@
-function SwipeHandler(element, selector, callback) {
+function SwipeHandler(element, selector) {
     this.element = element;
     this.selector = selector;
-    this.callback = callback;
     this.movements = [];
 
     this.element.addEventListener('touchstart', this.onTouchStart.bind(this), false);
     this.element.addEventListener('touchmove', this.onTouchMove.bind(this), false);
     this.element.addEventListener('touchend', this.onTouchEnd.bind(this), false);
-    this.element.addEventListener('touchcancel', this.onTouchCancel.bind(this), false);
 }
 
 SwipeHandler.prototype = {
+    closeItem: function () {
+        if (this.initialTouch) {
+            this.initialTouch.element.classList.remove('open');
+            this.initialTouch.element.style.left = '0px';
+            this.initialTouch = null;
+            this.movements.length = 0;
+        }
+    },
+
     getTouch: function (e) {
         if (this.initialTouch) {
             var touches = e.changedTouches;
@@ -23,17 +30,13 @@ SwipeHandler.prototype = {
         }
     },
 
-    onSwipeEnd: function () {
-        this.initialTouch = null;
-        this.movements.length = 0;
-    },
-
     onTouchStart: function (e) {
         var touches = e.touches;
         if (touches && touches.length === 1) {
             var touch = touches[0];
             var element = touch.target.closest(this.selector);
             if (element) {
+                this.closeItem();
                 element.classList.add('swiping');
                 this.initialTouch = {
                     identifier: touch.identifier,
@@ -78,27 +81,11 @@ SwipeHandler.prototype = {
 
             var movement = this.movements.shift();
             if (movement && movement.pageX - touch.pageX > 100) {
-                // Webkit prefix necessary for iOS 8 and non-Chromium Native Android browser (4.x)
-                var eventName = (element.style.transition === undefined) ? 'webkitTransitionEnd' : 'transitionend';
-                element.addEventListener(eventName, function onTransitionEnd(e) {
-                    element.removeEventListener(eventName, onTransitionEnd, false);
-                    this.callback(element);
-                }.bind(this), false);
-
-                element.style.left = '-100%';
+                element.classList.add('open');
             }
             else {
-                element.style.left = '0px';
+                this.closeItem();
             }
-
-
-            this.onSwipeEnd();
-        }
-    },
-
-    onTouchCancel: function (e) {
-        if (this.getTouch(e)) {
-            this.onSwipeEnd();
         }
     }
 };

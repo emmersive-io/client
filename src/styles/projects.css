@@ -81,7 +81,11 @@
     padding: 10px 20px 10px 50px;
 }
 
-.task__foreground:not(.swiping){
+.task__foreground.open {
+    left: -90px !important;
+}
+
+.task__foreground:not(.swiping) {
     transition: left .2s ease-out;
 }
 
@@ -123,6 +127,11 @@
     left: -30px;
     width: 16px;
     height: 16px;
+}
+
+.task__checkbox:checked + textarea {
+    color: var(--medium-text);
+    text-decoration: line-through;
 }
 
 .task__description {
