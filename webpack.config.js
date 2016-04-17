@@ -14,9 +14,9 @@ module.exports = {
     },
     module: {
         loaders: [
+            {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
             {test: /\.html$/, loader: 'html-loader?minimize=false'},
             {test: /\.(gif|jpg|png|svg|woff|woff2)$/, loader: 'file-loader'},
-            {test: /\.handlebars$/, loader: 'handlebars-loader'},
             {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader')

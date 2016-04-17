@@ -1,32 +1,33 @@
-var animate = require('../core/animate');
-var connection = require('../firebase/connection');
-var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/projectEdit.handlebars');
+import animate from '../core/animate';
+import connection from '../firebase/connection';
 
+export default class ProjectCreatePage {
+    constructor(header) {
+        this.header = header;
+        header.update({title: 'Create Project', leftAction: 'back'});
 
-function ProjectCreatePage(header) {
-    this.header = header;
-    this.header.update({
-        title: 'Create Project',
-        leftAction: 'back'
-    });
+        this.element = document.createElement('div');
+        this.element.className = 'project-edit';
+        this.element.innerHTML = `
+            <input class="project__name" type="text" placeholder="Untitled Project" aria-label="project name" />
+            <textarea class="project__description" placeholder="Add a short description"></textarea>
+            <button class="button--full">Create Project</button>`;
 
-    this.element = renderTemplate(template({action: 'Create Project'}));
-    this.element.addEventListener('click', function (e) {
-        var button = e.target.closest('button');
-        if (button) {
-            var project = {
-                name: this.element.querySelector('.project__name').value.trim(),
-                description: this.element.querySelector('.project__description').value.trim()
-            };
+        this.nameInput = this.element.firstElementChild;
+        this.descriptionInput = this.nameInput.nextElementSibling;
+        this.element.lastElementChild.addEventListener('click', this.onButtonClick);
+    }
 
-            connection.createProject(project).then(function (projectId) {
-                location.assign('#projects/' + projectId);
-            }).catch(function () {
-                animate(button, 'anim--shake');
-            });
-        }
-    }.bind(this), false);
+    onButtonClick() {
+        var project = {
+            name: this.nameInput.value.trim(),
+            description: this.descriptionInput.value.trim()
+        };
+
+        connection.createProject(project).then(function (projectId) {
+            location.assign('#projects/' + projectId);
+        }).catch(function () {
+            animate(button, 'anim--shake');
+        });
+    }
 }
-
-module.exports = ProjectCreatePage;

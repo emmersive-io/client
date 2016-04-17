@@ -1,64 +1,59 @@
-var firebase = require('../firebase/firebase').get();
-var connection = require('../firebase/connection');
-var transform = require('../firebase/transform');
-var session = require('../firebase/session');
-
-var moment = require('moment');
-var insertSorted = require('../core/insertSorted');
-var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/userList.html');
-var itemTemplate = require('../templates/userItem.handlebars');
-var defaultUserImage = require('../images/profile-red.png');
+import connection from '../firebase/connection';
+import insertSorted from '../core/insertSorted';
+import defaultUserImage from '../images/profile-red.png';
 
 
-function UserList(projectId) {
-    this.projectId = projectId;
-    this.element = renderTemplate(template);
-    this.userList = this.element.querySelector('ul');
-    this.users = [];
+export default class UserList {
+    constructor(projectId) {
+        this.users = [];
+        this.projectId = projectId;
 
-    this.userRef = firebase.child('projects/' + projectId + '/people');
-    this.userRef.on('child_added', this.onProjectAdded, this);
-    this.userRef.on('child_removed', this.onProjectRemoved, this);
-}
+        this.element = document.createElement('div');
+        this.element.className = 'scrollable';
+        this.element.innerHTML = '<ul class="user-list"></ul>';
+        this.userList = this.element.firstElementChild;
 
-UserList.prototype.onProjectAdded = function (snapshot) {
-    var userId = snapshot.key();
-    connection.getUser(userId).then(function (user) {
-        if (!user.image) {
-            user.image = defaultUserImage;
-        }
-
-        var index = insertSorted(this.users, user, function (user1, user2) {
-            return user1.name.localeCompare(user2.name) > 0;
-        });
-
-        var sibling = this.users[index - 1];
-        if (sibling) {
-            sibling.element.insertAdjacentHTML('afterend', itemTemplate(user));
-            user.element = sibling.element.nextElementSibling;
-        }
-        else {
-            this.userList.insertAdjacentHTML('afterbegin', itemTemplate(user));
-            user.element = this.userList.firstElementChild;
-        }
-    }.bind(this));
-};
-
-UserList.prototype.onProjectRemoved = function (snapshot) {
-    var userId = snapshot.key();
-    var index = this.users.findIndex(function (user) {
-        return user.id === userId;
-    });
-
-    if (index >= 0) {
-        this.users.splice(index, 1)[0].element.remove();
+        this.userRef = connection.firebase.child('projects/' + projectId + '/people');
+        this.userRef.on('child_added', this.onProjectAdded, this);
+        this.userRef.on('child_removed', this.onProjectRemoved, this);
     }
-};
 
-UserList.prototype.remove = function () {
-    this.userRef.off('child_added', this.onProjectAdded, this);
-    this.userRef.off('child_removed', this.onProjectRemoved, this);
-};
+    onProjectAdded(snapshot) {
+        var userId = snapshot.key();
+        connection.getUser(userId).then(function (user) {
+            var content = `
+                <li class="list-item--image">
+                    <a class="user" href="#profile/${user.id}">
+                        <img class="profile-image" src="${user.image || defaultUserImage}"/>
+                        <h2 class="user__name">${user.name}</h2>
+                        <span class="user__email">${user.email}</span>
+                    </a>
+                </li>`;
 
-module.exports = UserList;
+            var index = insertSorted(this.users, user, (u1, u2) => u1.name.localeCompare(u2.name) > 0);
+            var sibling = this.users[index - 1];
+            if (sibling) {
+                sibling.element.insertAdjacentHTML('afterend', content);
+                user.element = sibling.element.nextElementSibling;
+            }
+            else {
+                this.userList.insertAdjacentHTML('afterbegin', content);
+                user.element = this.userList.firstElementChild;
+            }
+        }.bind(this));
+    }
+
+    onProjectRemoved(snapshot) {
+        var userId = snapshot.key();
+        var index = this.users.findIndex(user => user.id === userId);
+
+        if (index >= 0) {
+            this.users.splice(index, 1)[0].element.remove();
+        }
+    }
+
+    remove() {
+        this.userRef.off('child_added', this.onProjectAdded, this);
+        this.userRef.off('child_removed', this.onProjectRemoved, this);
+    }
+}

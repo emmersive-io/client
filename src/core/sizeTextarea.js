@@ -8,20 +8,17 @@ function sizeToContent(element) {
     }
 }
 
+function sizeAllToContent(element) {
+    var textareas = element.getElementsByTagName('textarea');
+    for (var i = 0; i < textareas.length; i++) {
+        sizeToContent(textareas[i]);
+    }
+}
+
 document.addEventListener('input', function (e) {
     if (e.target.tagName === 'TEXTAREA') {
         sizeToContent(e.target);
     }
 }, false);
 
-module.exports = function (element) {
-    if (element.tagName === 'TEXTAREA') {
-        sizeToContent(element);
-    }
-    else {
-        var textareas = element.getElementsByTagName('textarea');
-        for (var i = 0; i < textareas.length; i++) {
-            sizeToContent(textareas[i]);
-        }
-    }
-};
+export {sizeToContent, sizeAllToContent};

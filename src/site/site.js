@@ -1,111 +1,108 @@
-'use strict';
-
-var session = require('../firebase/session');
-var animate = require('../core/animate');
-var Header = require('./header');
-var Basement = require('./basement');
-var Router = require('../core/router');
-var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/site.html');
+import animate from '../core/animate';
+import Basement from './basement';
+import Header from './header';
+import Router from '../core/router';
+import session from '../firebase/session';
 
 
-function Site(routeMap) {
-    new Router(routeMap, this.onRouteChanged.bind(this));
-}
-
-Site.prototype.getDirection = function (path, oldPath) {
-    if (oldPath) {
-        var length = path.length;
-        var oldLength = oldPath.length;
-        var minLength = Math.min(length, oldLength);
-
-        for (var i = 0; i < minLength; i++) {
-            if (path[i] !== oldPath[i]) {
-                return true;
-            }
-        }
-
-        return length > oldLength;
+export default class Site {
+    constructor(routeMap) {
+        new Router(routeMap, this.onRouteChanged.bind(this));
     }
-};
 
-Site.prototype.onRouteChanged = function (Page, path) {
-    session.onUser(function (user) {
-        var isLoggedIn = (user != null);
-        var isLoginScreen = location.hash.indexOf('#login') === 0;
+    getDirection(path, oldPath) {
+        if (oldPath) {
+            var length = path.length;
+            var oldLength = oldPath.length;
+            var minLength = Math.min(length, oldLength);
 
-        if (isLoggedIn === isLoginScreen) {
-            location.assign(isLoggedIn ? '#' : '#login');
+            for (var i = 0; i < minLength; i++) {
+                if (path[i] !== oldPath[i]) {
+                    return true;
+                }
+            }
+
+            return length > oldLength;
+        }
+    }
+
+    onRouteChanged(Page, path) {
+        session.onUser(function (user) {
+            var isLoggedIn = (user != null);
+            var isLoginScreen = location.hash.indexOf('#login') === 0;
+
+            if (isLoggedIn === isLoginScreen) {
+                location.assign(isLoggedIn ? '#' : '#login');
+                return;
+            }
+
+            if (!this.element) {
+                this.render();
+            }
+
+            this.updateBasement(user);
+
+            var page = this.page;
+            if (!page || !(page instanceof Page)) {
+                page = new Page(this.header);
+            }
+
+            var onRoute = page.onRoute && page.onRoute.apply(page, path);
+            if (page !== this.page) {
+                this.page = page;
+                Promise.resolve(onRoute).then(function () {
+                    this.showPage(path, page);
+                }.bind(this));
+            }
+        }.bind(this))
+    }
+
+    render() {
+        this.element = document.createElement('div');
+        this.element.className = 'page page--main';
+        this.element.innerHTML = '<div class="content content--main"></div>';
+        this.container = this.element.firstElementChild;
+
+        this.header = new Header();
+        this.element.insertBefore(this.header.element, this.element.firstElementChild);
+        document.body.appendChild(this.element);
+    }
+
+    showPage(path, page) {
+        if (page !== this.page) {
             return;
         }
 
-        if (!this.element) {
-            this.render();
+        this.container.appendChild(page.element);
+        if (this.lastPage) {
+            var animateForward = this.getDirection(path, this.path);
+            var pageAnim = animateForward ? 'anim--in-left' : 'anim--in-right';
+            var lastPageAnim = animateForward ? 'anim--out-left' : 'anim--out-right';
+
+            var lastPage = this.lastPage;
+            animate(this.page.element, pageAnim);
+            animate(this.lastPage.element, lastPageAnim, function (element) {
+                element.remove();
+                if (lastPage.onRemove) {
+                    lastPage.onRemove();
+                }
+            });
         }
 
-        this.updateBasement(user);
-
-        var page = this.page;
-        if (!(page instanceof Page)) {
-            page = new Page(this.header);
-        }
-
-        var onRoute = page.onRoute && page.onRoute.apply(page, path);
-        if (page !== this.page) {
-            this.page = page;
-            Promise.resolve(onRoute).then(function () {
-                this.showPage(path, page);
-            }.bind(this));
-        }
-    }.bind(this))
-};
-
-Site.prototype.render = function () {
-    this.header = new Header();
-    this.element = renderTemplate(template);
-    this.container = this.element.querySelector('.content');
-
-    this.element.insertBefore(this.header.element, this.element.firstElementChild);
-    document.body.appendChild(this.element);
-};
-
-Site.prototype.showPage = function (path, page) {
-    if (page !== this.page) {
-        return;
+        this.lastPage = this.page;
+        this.path = path;
     }
 
-    this.container.appendChild(page.element);
-    if (this.lastPage) {
-        var animateForward = this.getDirection(path, this.path);
-        var pageAnim = animateForward ? 'anim--in-left' : 'anim--in-right';
-        var lastPageAnim = animateForward ? 'anim--out-left' : 'anim--out-right';
-
-        var lastPage = this.lastPage;
-        animate(this.page.element, pageAnim);
-        animate(this.lastPage.element, lastPageAnim, function (element) {
-            element.remove();
-            if (lastPage.onRemove) {
-                lastPage.onRemove();
+    updateBasement(user) {
+        if (this.basement) {
+            if (!user) {
+                this.basement.remove();
+                this.basement = null;
             }
-        });
-    }
-
-    this.lastPage = this.page;
-    this.path = path;
-};
-
-Site.prototype.updateBasement = function (user) {
-    if (this.basement) {
-        if (!user) {
-            this.basement.remove();
-            this.basement = null;
+        }
+        else if (user) {
+            this.basement = new Basement(user);
+            document.body.appendChild(this.basement.element);
         }
     }
-    else if (user) {
-        this.basement = new Basement(user);
-        document.body.appendChild(this.basement.element);
-    }
-};
-
-
-module.exports = Site;
+}

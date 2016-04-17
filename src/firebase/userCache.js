@@ -1,12 +1,13 @@
-var connection = require('./firebase').get();
-var userRef = connection.child('users');
+import Firebase from './firebase';
 
-module.exports = {
+var userRef = Firebase.get().child('users');
+
+export default  {
     cache: {},
     get: function (userId) {
         var promise = this.cache[userId];
         if (!promise) {
-            promise = userRef.child(userId).once('value').then(function (snapshot) {
+            promise = userRef.child('users').child(userId).once('value').then(function (snapshot) {
                 var user = snapshot.val();
                 if (user) {
                     user.id = snapshot.key();

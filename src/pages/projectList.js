@@ -1,41 +1,43 @@
-var connection = require('../firebase/connection');
-var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/allProjects.html');
-var ProjectListItem = require('../components/projectListItem');
+import connection from '../firebase/connection';
+import ProjectListItem from '../components/projectListItem';
 
-
-function ProjectsPage(header) {
-    this.header = header;
-}
-
-ProjectsPage.prototype.onRoute = function () {
-    return connection.getAllProjects().then(function (projects) {
-        this.header.update({title: 'Find a project'});
-        this.element = renderTemplate(template);
-        this.element.addEventListener('input', this.onSearchChanged.bind(this), false);
-
-        this.listItems = [];
-        var fragment = document.createDocumentFragment();
-        for (var i = 0; i < projects.length; i++) {
-            var project = projects[i];
-            if (project) {
-                var listItem = new ProjectListItem(projects[i]);
-                fragment.insertBefore(listItem.element, fragment.firstElementChild);
-                this.listItems.push(listItem);
-            }
-        }
-
-        this.element.querySelector('.project-list').appendChild(fragment);
-    }.bind(this));
-};
-
-ProjectsPage.prototype.onSearchChanged = function (e) {
-    var filterText = e.target.value;
-    for (var i = 0; i < this.listItems.length; i++) {
-        var listItem = this.listItems[i];
-        var name = listItem.project.name || '';
-        listItem.element.hidden = (filterText && name.indexOf(filterText) < 0);
+export default class ProjectsPage {
+    constructor(header) {
+        this.header = header;
     }
-};
 
-module.exports = ProjectsPage;
+    onRoute() {
+        return connection.getAllProjects().then(function (projects) {
+            this.header.update({title: 'Find a project'});
+
+            this.element = document.createElement('div');
+            this.element.className = 'projects';
+            this.element.innerHTML = `
+                <input type="search" placeholder="Search" aria-label="search" />
+                <ul class="project-list"></ul>`;
+
+            this.listItems = [];
+            var fragment = document.createDocumentFragment();
+            for (var i = 0; i < projects.length; i++) {
+                var project = projects[i];
+                if (project) {
+                    var listItem = new ProjectListItem(projects[i]);
+                    fragment.insertBefore(listItem.element, fragment.firstElementChild);
+                    this.listItems.push(listItem);
+                }
+            }
+
+            this.element.lastElementChild.appendChild(fragment);
+            this.element.firstElementChild.addEventListener('input', this.onSearchChanged.bind(this), false);
+        }.bind(this));
+    }
+
+    onSearchChanged(e) {
+        var filterText = e.target.value;
+        for (var i = 0; i < this.listItems.length; i++) {
+            var listItem = this.listItems[i];
+            var name = listItem.project.name || '';
+            listItem.element.hidden = (filterText && name.indexOf(filterText) < 0);
+        }
+    }
+}

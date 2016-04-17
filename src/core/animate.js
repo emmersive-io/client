@@ -1,4 +1,4 @@
-module.exports = function (element, className, callback) {
+export default function (element, className, callback) {
     if (element.classList.contains(className)) {
         return;
     }
