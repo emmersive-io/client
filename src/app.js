@@ -21,6 +21,7 @@ new Site({
     'login/register': RegisterPage,
     'login/forgot-password': ResetPasswordPage,
     'profile/:userId': ProfilePage,
+    'profile/forgot-password': ResetPasswordPage,
     'projects': ProjectList,
     'projects/new': NewProjectPage,
     'projects/:projectId': ProjectPage,

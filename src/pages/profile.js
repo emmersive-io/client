@@ -7,13 +7,6 @@ export default class ProfilePage {
         this.header = header;
     }
 
-    onClick(e) {
-        var button = e.target.closest('button');
-        if (button && button.classList.contains('button--log-out')) {
-            session.logOut();
-        }
-    }
-
     onRoute(root, userId) {
         this.isCurrentUser = (session.user.id === userId);
         if (this.isCurrentUser) {
@@ -25,12 +18,22 @@ export default class ProfilePage {
     }
 
     render(user) {
+        this.header.update({
+            title: 'Profile',
+            action: 'Log out',
+            leftAction: 'back',
+            onAction: function () {
+                session.logOut();
+            }
+        });
+
         var userActions = '';
         if (this.isCurrentUser) {
             userActions = `
-                <button class="button--full button--log-out">Log out</button>
+                <a class="form-link" href="https://docs.google.com/forms/d/1w6eUjTbOEvLoqF0lToI9z0ajsKqVJu1L7DrUKM1AgVQ/viewform?c=0&w=1" target="_blank">Send Feedback</a>
+                <div class="section-header"><span>Manage Account</span></div>
                 <button class="button--full button--change-email">Change Email</button>
-                <button class="button--full button--reset" data-href="#login/forgot-password">Reset Password</button>`;
+                <button class="button--full button--reset" data-href="#profile/forgot-password">Reset Password</button>`;
         }
 
         var content = `
@@ -41,15 +44,12 @@ export default class ProfilePage {
                 ${userActions}
             </div>`;
 
-        this.header.update({title: 'Profile', leftAction: 'back'});
+
         this.element = document.createElement('div');
         this.element.className = 'profile form-page scrollable';
         this.element.innerHTML = content;
 
-        if (this.isCurrentUser) {
-            this.element.addEventListener('click', this.onClick.bind(this), false);
-        }
-        else {
+        if (!this.isCurrentUser) {
             var inputs = this.element.getElementsByTagName('input');
             for (var i = 0; i < inputs.length; i++) {
                 inputs[i].readOnly = true;

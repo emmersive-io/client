@@ -33,8 +33,7 @@ export default class TaskListItem {
     set date(value) {
         if (this.actionDate !== value) {
             this.actionDate = value;
-            var eventString = (this.task.created_at === value) ? 'created ' : 'updated ';
-            this.header.lastElementChild.textContent = eventString + humanizeDate(value);
+            this.header.lastElementChild.textContent = humanizeDate(value);
         }
     }
 

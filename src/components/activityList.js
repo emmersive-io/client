@@ -7,9 +7,9 @@ export default class ActivityList {
     constructor(projectId) {
         this.projectId = projectId;
         this.element = document.createElement('div');
-        this.element.className = 'scrollable';
+        this.element.className = 'project-activity';
         this.element.innerHTML = `
-            <ul class="activity-list"></ul>
+            <ul class="activity-list scrollable"></ul>
             <form class="activity--new">
                 <textarea class="activity--entry" placeholder="Message" aria-label="Message" rows="1"></textarea>
                 <button><span class="fa fa-plus" aria-hidden="true"></span></button>
@@ -24,12 +24,9 @@ export default class ActivityList {
     }
 
     isAtBottom() {
-        if (!this.scrollable) {
-            this.scrollable = this.element.closest('.scrollable');
-        }
-
-        var scrollBottom = this.scrollable.clientHeight + this.scrollable.scrollTop;
-        return (this.scrollable.scrollHeight - scrollBottom) <= 0;
+        var element = this.list.element;
+        var scrollBottom = element.clientHeight + element.scrollTop;
+        return (element.scrollHeight - scrollBottom) <= 0;
     }
 
     onActivityAdded(snapshot) {
@@ -41,7 +38,7 @@ export default class ActivityList {
             this.list.add(new ListItem(activity));
 
             if (wasAtBottom && !this.isAtBottom()) {
-                this.scrollable.scrollTop = this.scrollable.scrollHeight;
+                this.list.element.scrollTop = this.list.element.scrollHeight;
             }
         }.bind(this));
     }
