@@ -1,24 +1,24 @@
-function SwipeHandler(element, selector) {
-    this.element = element;
-    this.selector = selector;
-    this.movements = [];
+export default class SwipeHandler {
+    constructor(element, selector) {
+        this.element = element;
+        this.selector = selector;
+        this.movements = [];
 
-    this.element.addEventListener('touchstart', this.onTouchStart.bind(this), false);
-    this.element.addEventListener('touchmove', this.onTouchMove.bind(this), false);
-    this.element.addEventListener('touchend', this.onTouchEnd.bind(this), false);
-}
+        this.element.addEventListener('touchstart', this.onTouchStart.bind(this), false);
+        this.element.addEventListener('touchmove', this.onTouchMove.bind(this), false);
+        this.element.addEventListener('touchend', this.onTouchEnd.bind(this), false);
+    }
 
-SwipeHandler.prototype = {
-    closeItem: function () {
+    closeItem() {
         if (this.initialTouch) {
             this.initialTouch.element.classList.remove('open');
             this.initialTouch.element.style.left = '0px';
             this.initialTouch = null;
             this.movements.length = 0;
         }
-    },
+    }
 
-    getTouch: function (e) {
+    getTouch(e) {
         if (this.initialTouch) {
             var touches = e.changedTouches;
             for (var i = 0; i < touches.length; i++) {
@@ -28,9 +28,9 @@ SwipeHandler.prototype = {
                 }
             }
         }
-    },
+    }
 
-    onTouchStart: function (e) {
+    onTouchStart(e) {
         var touches = e.touches;
         if (touches && touches.length === 1) {
             var touch = touches[0];
@@ -47,9 +47,9 @@ SwipeHandler.prototype = {
                 };
             }
         }
-    },
+    }
 
-    onTouchMove: function (e) {
+    onTouchMove(e) {
         var touch = this.getTouch(e);
         if (touch) {
             var lastTouch = this.movements[this.movements.length - 1] || this.initialTouch;
@@ -67,9 +67,9 @@ SwipeHandler.prototype = {
                 });
             }
         }
-    },
+    }
 
-    onTouchEnd: function (e) {
+    onTouchEnd(e) {
         var touch = this.getTouch(e);
         if (touch) {
             var element = this.initialTouch.element;
@@ -88,6 +88,4 @@ SwipeHandler.prototype = {
             }
         }
     }
-};
-
-module.exports = SwipeHandler;
+}

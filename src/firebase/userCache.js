@@ -1,7 +1,8 @@
-var connection = require('./firebase').get();
-var userRef = connection.child('users');
+import Firebase from './firebase';
 
-module.exports = {
+var userRef = Firebase.get().child('users');
+
+export default  {
     cache: {},
     get: function (userId) {
         var promise = this.cache[userId];

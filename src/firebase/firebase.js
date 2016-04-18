@@ -1,6 +1,6 @@
-var Firebase = require('firebase');
+import Firebase from 'firebase';
 
-module.exports = {
+export default {
     ref: Firebase,
 
     get: function () {

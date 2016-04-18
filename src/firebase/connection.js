@@ -1,31 +1,23 @@
-var Firebase = require('./firebase');
-var session = require('./session');
-var transform = require('./transform');
-var userCache = require('./userCache');
+import Firebase from './firebase';
+import session from './session';
+import transform from './transform';
+import userCache from './userCache';
 
 var serverTime = Firebase.ref.ServerValue.TIMESTAMP;
 var connection = Firebase.get();
 
 
 function createProjectItem(projectId, type, data) {
-    var userId = session.user.id;
-    var typeListRef = connection.child(type).child(projectId);
-
-    data = Object.assign({
+    var itemData = Object.assign({
         created_at: serverTime,
-        created_by: userId
+        created_by: session.user.id
     }, data);
 
-    return typeListRef.push(data).then(function (snapshot) {
-        var data = {};
-        data.updated_at = serverTime;
-        data['updated_' + type] = serverTime;
-        connection.child('projects/' + projectId).update(data);
-
-        return typeListRef.child(snapshot.key()).once('value').then(function (snapshot) {
-            return transform.fillUserData(connection.child('users'), transform.toObj(snapshot), ['created_by', 'updated_by']);
-        });
-    });
+    var projectData = {};
+    projectData.updated_at = serverTime;
+    projectData['updated_' + type] = serverTime;
+    connection.child('projects/' + projectId).update(projectData);
+    return connection.child(type).child(projectId).push(itemData);
 }
 
 function updateProjectParticipation(projectId, value) {
@@ -39,7 +31,7 @@ function updateProjectParticipation(projectId, value) {
 }
 
 
-module.exports = {
+export default {
     firebase: connection,
     changeEmail: function (oldEmail, newEmail, password) {
         return connection.changeEmail({
@@ -68,21 +60,17 @@ module.exports = {
         var userId = session.user.id;
         var projectId = connection.child('projects').push().key();
 
-        var people = {};
-        people[userId] = true;
-
-        var data = {};
-        data['users/' + userId + '/projects/' + projectId] = {joined: true};
-        data['projects/' + projectId] = Object.assign({
+        projectData = Object.assign({
             created_at: serverTime,
             updated_at: serverTime,
             created_by: userId,
-            people: people
+            people: {[userId]: true}
         }, projectData);
 
-        return connection.update(data).then(function () {
-            return projectId;
-        });
+        return connection.update({
+            ['projects/' + projectId]: projectData,
+            ['users/' + userId + '/projects/' + projectId]: {joined: true}
+        }).then(function () { return projectId; });
     },
 
     createTask: function (projectId, content) {
@@ -117,14 +105,11 @@ module.exports = {
         return connection.child('projects/' + projectId).once('value').then(function (snapshot) {
             var project = transform.toObj(snapshot);
             if (project) {
-                return transform.fillUserData(connection.child('users'), project, 'created_by');
+                return userCache.get(project.created_by).then(function (user) {
+                    project.created_by = user;
+                    return project;
+                });
             }
-        });
-    },
-
-    getProjectTasks: function (projectId) {
-        return connection.child('tasks/' + projectId).once('value').then(function (snapshot) {
-            return transform.fillUserData(connection.child('users'), transform.toArray(snapshot), ['created_by', 'updated_by']);
         });
     },
 
@@ -145,10 +130,10 @@ module.exports = {
         return connection.child(path).once('value').then(function (snapshot) {
             var task = snapshot.val();
             if (task) {
-                var data = {};
-                data[path] = null;
-                data['archive/' + path] = task;
-                return connection.update(data);
+                return connection.update({
+                    ['archive/' + path]: task,
+                    [path]: null
+                });
             }
         });
     },
@@ -158,9 +143,10 @@ module.exports = {
         return connection.child(path).once('value').then(function (snapshot) {
             var project = snapshot.val();
             if (project) {
-                var data = {};
-                data[path] = null;
-                data['archive/' + path] = project;
+                var data = {
+                    ['archive/' + path]: project,
+                    [path]: null
+                };
 
                 for (var userId in project.people) {
                     data['users/' + userId + '/projects/' + projectId] = null;
@@ -195,9 +181,9 @@ module.exports = {
     },
 
     viewProject: function (projectId, type) {
-        var data = {};
         var userId = session.user.id;
-        data[type] = serverTime;
-        return connection.child('users/' + userId + '/projects/' + projectId).update(data);
+        return connection.child('users/' + userId + '/projects/' + projectId).update({
+            [type]: serverTime
+        });
     }
 };

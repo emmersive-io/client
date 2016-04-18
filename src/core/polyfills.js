@@ -72,7 +72,7 @@ var test = document.createElement('div');
 test.classList.toggle('test', false);
 
 if (test.classList.contains('test')) {
-    Element.prototype.classList.toggle = function (name, isTrue) {
+    DOMTokenList.prototype.classList.toggle = function (name, isTrue) {
         if (isTrue === undefined) {
             this.classList.toggle(name);
         }
