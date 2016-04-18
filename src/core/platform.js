@@ -1,6 +1,8 @@
-require('./onReady')(function () {
-    var userAgent = navigator.userAgent;
-    var platformTraits = {
+import onReady from './onReady';
+
+onReady(function () {
+    const userAgent = navigator.userAgent;
+    const platformTraits = {
         chrome: /webkit\W.*(chrome|chromium)\W/i.test(userAgent),
         firefox: /mozilla.*\Wfirefox\W/i.test(userAgent),
         ie: (navigator.appName === 'Microsoft Internet Explorer' || /\bTrident\b/.test(userAgent)),
@@ -12,7 +14,6 @@ require('./onReady')(function () {
         tablet: /(ipad|android(?!.*mobile)|tablet)/i.test(userAgent)
     };
 
-    document.body.className = Object.keys(platformTraits).filter(function (trait) {
-        return platformTraits[trait];
-    }).join(' ');
+    const classNames = Object.keys(platformTraits).filter(trait => platformTraits[trait]);
+    document.body.className = classNames.join(' ');
 });

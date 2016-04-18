@@ -27,14 +27,14 @@
     display: block;
     position: relative;
     min-height: 50px;
-    padding: 7px 0 0 60px;
+    padding-left: 45px;
     margin: 20px;
 }
 
 .profile-image {
     position: absolute;
-    height: 50px;
-    width: 50px;
+    height: 32px;
+    width: 32px;
     left: 0;
     top: 0;
 }
@@ -50,12 +50,18 @@
     color: #787878;
 }
 
-.item__date:after {
-    content: '...';
+.activity-list .item__date {
+    position: absolute;
+    top: 3px;
+    right: 0;
+}
+
+.task-list .item__date {
+    float: right;
 }
 
 .item__description {
-    margin: 5px 0;
+    margin: 10px 0;
 }
 
 .user__name {
@@ -69,7 +75,47 @@
 }
 
 .checkbox-card {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.task__foreground {
+    position: relative;
+    background: #fff;
+    z-index: 1;
     padding: 10px 20px 10px 50px;
+}
+
+.task__foreground.open {
+    left: -90px !important;
+}
+
+.task__foreground:not(.swiping) {
+    transition: left .2s ease-out;
+}
+
+.task__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    background-color: var(--brand);
+}
+
+.task__delete-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+}
+
+.task__delete-button .fa {
+    font-size: 24px;
+    display: block;
 }
 
 .task__header {
@@ -79,7 +125,6 @@
 .task__content {
     position: relative;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--input-border);
 }
 
 .task__checkbox {
@@ -88,6 +133,11 @@
     left: -30px;
     width: 16px;
     height: 16px;
+}
+
+.task__checkbox:checked + textarea {
+    color: var(--medium-text);
+    text-decoration: line-through;
 }
 
 .task__description {
@@ -110,7 +160,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, transparent 30%, transparent 70%, rgba(0, 0, 0, 0.5) 100%);
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0%, transparent 30%, transparent 60%, rgba(0, 0, 0, 0.3) 100%);
 }
 
 .section__nav-arrow {
@@ -134,23 +184,7 @@
 }
 
 .task--new {
-    padding: 0 20px 0 50px;
-}
-
-.activity--new {
-    display: flex;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-top: 1px solid var(--input-border);
-    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
-}
-
-.activity--new input {
-    padding-left: 20px;
-    border: none;
-    margin: 0;
+    padding: 12px 20px;
 }
 
 .project {
@@ -173,6 +207,11 @@
 
 .project__name {
     font-weight: normal;
+}
+
+.project__name, .project__owner {
+    position: relative;
+    z-index: 1;
 }
 
 .project .profile-image--small {
@@ -201,7 +240,8 @@
     width: 50%;
 }
 
-.indicator--new {
+.project__section.has-update .project__section-title:before {
+    content: '';
     display: inline-block;
     background: var(--brand);
     border-radius: 50%;
@@ -243,19 +283,25 @@
 
 .overlay__close {
     position: fixed;
-    right: 5px;
-    top: 5px;
     background: none;
     color: var(--text);
-    z-index: 1;
+    z-index: 5;
+    right: 0;
+    top: 0;
 }
 
 .project-tasks {
-    padding: 20px 0;
+    padding: 10px 0;
+}
+
+.project-activity {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .activity-list {
-    margin-bottom: 64px;
+    flex-grow: 1;
 }
 
 .activity--entry {
@@ -264,9 +310,32 @@
     max-height: 80px;
 }
 
+.activity--new {
+    display: flex;
+    flex-shrink: 0;
+    border-top: 1px solid var(--input-border);
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
+}
+
+.activity--new input {
+    padding-left: 20px;
+    border: none;
+    margin: 0;
+}
+
 @media (orientation: landscape) {
     .project__section {
         height: 50vw;
         max-height: 25vh;
     }
+}
+
+.project-edit {
+    padding: 20px;
+}
+
+.form-link {
+    display: block;
+    text-align: center;
+    line-height: 44px;
 }

@@ -1,22 +1,37 @@
-var connection = require('../firebase/connection');
-var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/userList.handlebars');
-var defaultUserImage = require('../images/profile-red.png');
+import connection from '../firebase/connection';
+import List from '../core/sortedElementList';
+import ListItem from '../elements/userListItem';
 
 
-function UserList() {}
+export default class UserList {
+    constructor(projectId) {
+        this.users = [];
+        this.projectId = projectId;
 
-UserList.prototype.render = function (projectId) {
-    return connection.getProjectPeople(projectId).then(function (users) {
-        for (var i = 0; i < users.length; i++) {
-            var user = users[i];
-            if (!user.image) {
-                user.image = defaultUserImage;
-            }
-        }
+        this.element = document.createElement('div');
+        this.element.className = 'scrollable';
+        this.element.innerHTML = '<ul class="user-list"></ul>';
+        this.list = new List(this.element.firstElementChild, (u1, u2) => u1.name.localeCompare(u2.name) >= 0);
 
-        this.element = renderTemplate(template(users));
-    }.bind(this));
-};
+        this.userRef = connection.firebase.child('projects/' + projectId + '/people');
+        this.userRef.on('child_added', this.onUserAdded, this);
+        this.userRef.on('child_removed', this.onUserRemoved, this);
+    }
 
-module.exports = UserList;
+    onUserAdded(snapshot) {
+        var userId = snapshot.key();
+        connection.getUser(userId).then(function (user) {
+            this.list.add(new ListItem(user));
+        }.bind(this));
+    }
+
+    onUserRemoved(snapshot) {
+        var userId = snapshot.key();
+        this.list.removeBy(user => user.id === userId);
+    }
+
+    remove() {
+        this.userRef.off('child_added', this.onUserAdded, this);
+        this.userRef.off('child_removed', this.onUserRemoved, this);
+    }
+}

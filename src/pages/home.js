@@ -1,32 +1,20 @@
-var connection = require('../firebase/connection');
-var ProjectListItem = require('../components/projectListItem');
-var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/home.html');
+import imagePath from '../images/no_projects.png';
 
-function HomePage(header) {
-    this.header = header;
+export default class HomePage {
+    constructor(header) {
+        header.update();
+
+        this.element = document.createElement('div');
+        this.element.className = 'home form-page scrollable';
+        this.element.innerHTML = `
+        <div class="form-page__form">
+            <img class="profile__image" src="${imagePath}"/>
+            <button class="button--full" data-href="#projects">
+                <span class="fa fa-search" aria-hidden="true"></span> Find a project
+            </button>
+            <button class="button--full" data-href="#projects/new">
+                <span class="fa fa-plus" aria-hidden="true"></span> Create a project
+            </button>
+        </div>`;
+    }
 }
-
-HomePage.prototype.onRoute = function () {
-    return connection.getProjectsForUser().then(function (projects) {
-        this.header.update({title: 'My Projects'});
-        this.element = renderTemplate(template);
-
-        if (projects && projects.length) {
-            var fragment = document.createDocumentFragment();
-            for (var i = 0; i < projects.length; i++) {
-                var project = projects[i];
-                if (project) {
-                    fragment.appendChild(new ProjectListItem(project).element);
-                }
-            }
-
-            this.element.querySelector('.project-list').appendChild(fragment);
-        }
-        else {
-            this.element.querySelector('.button--create-project').hidden = false;
-        }
-    }.bind(this));
-};
-
-module.exports = HomePage;
