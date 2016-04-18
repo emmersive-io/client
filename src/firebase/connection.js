@@ -60,21 +60,17 @@ export default {
         var userId = session.user.id;
         var projectId = connection.child('projects').push().key();
 
-        var people = {};
-        people[userId] = true;
-
-        var data = {};
-        data['users/' + userId + '/projects/' + projectId] = {joined: true};
-        data['projects/' + projectId] = Object.assign({
+        projectData = Object.assign({
             created_at: serverTime,
             updated_at: serverTime,
             created_by: userId,
-            people: people
+            people: {[userId]: true}
         }, projectData);
 
-        return connection.update(data).then(function () {
-            return projectId;
-        });
+        return connection.update({
+            ['projects/' + projectId]: projectData,
+            ['users/' + userId + '/projects/' + projectId]: {joined: true}
+        }).then(function () { return projectId; });
     },
 
     createTask: function (projectId, content) {
@@ -134,10 +130,10 @@ export default {
         return connection.child(path).once('value').then(function (snapshot) {
             var task = snapshot.val();
             if (task) {
-                var data = {};
-                data[path] = null;
-                data['archive/' + path] = task;
-                return connection.update(data);
+                return connection.update({
+                    ['archive/' + path]: task,
+                    [path]: null
+                });
             }
         });
     },
@@ -147,9 +143,10 @@ export default {
         return connection.child(path).once('value').then(function (snapshot) {
             var project = snapshot.val();
             if (project) {
-                var data = {};
-                data[path] = null;
-                data['archive/' + path] = project;
+                var data = {
+                    ['archive/' + path]: project,
+                    [path]: null
+                };
 
                 for (var userId in project.people) {
                     data['users/' + userId + '/projects/' + projectId] = null;
@@ -184,9 +181,9 @@ export default {
     },
 
     viewProject: function (projectId, type) {
-        var data = {};
         var userId = session.user.id;
-        data[type] = serverTime;
-        return connection.child('users/' + userId + '/projects/' + projectId).update(data);
+        return connection.child('users/' + userId + '/projects/' + projectId).update({
+            [type]: serverTime
+        });
     }
 };

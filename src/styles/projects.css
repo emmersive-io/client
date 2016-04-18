@@ -27,7 +27,7 @@
     display: block;
     position: relative;
     min-height: 50px;
-    padding: 7px 0 0 60px;
+    padding-left: 60px;
     margin: 20px;
 }
 
@@ -50,8 +50,8 @@
     color: #787878;
 }
 
-.item__date:after {
-    content: '...';
+.activity-list .item__date {
+    float: right;
 }
 
 .item__description {
@@ -183,10 +183,10 @@
 
 .activity--new {
     display: flex;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
     border-top: 1px solid var(--input-border);
     box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
 }
@@ -319,4 +319,8 @@
         height: 50vw;
         max-height: 25vh;
     }
+}
+
+.project-edit {
+    padding: 20px;
 }

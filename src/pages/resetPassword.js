@@ -5,7 +5,7 @@ export default class ResetPasswordPage {
     constructor(header) {
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
-        this.element = `
+        this.element.innerHTML = `
             <form class="form-page__form">
                 <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required/>
                 <button class="button--full">Reset Password</button>

@@ -7,7 +7,7 @@ export default  {
     get: function (userId) {
         var promise = this.cache[userId];
         if (!promise) {
-            promise = userRef.child('users').child(userId).once('value').then(function (snapshot) {
+            promise = userRef.child(userId).once('value').then(function (snapshot) {
                 var user = snapshot.val();
                 if (user) {
                     user.id = snapshot.key();

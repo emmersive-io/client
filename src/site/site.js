@@ -7,7 +7,7 @@ import session from '../firebase/session';
 
 export default class Site {
     constructor(routeMap) {
-        new Router(routeMap, this.onRouteChanged.bind(this));
+        this.router = new Router(routeMap, this.onRouteChanged.bind(this));
     }
 
     getDirection(path, oldPath) {

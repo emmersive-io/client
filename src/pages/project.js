@@ -4,11 +4,16 @@ import transform from '../firebase/transform';
 import userCache from '../firebase/userCache';
 import defaultUserImage from '../images/profile-inverted.png';
 
+import ActivityList from  '../components/activityList';
+import MeetupList from '../components/meetupList';
+import TaskList from '../components/taskList';
+import UserList from '../components/userList';
+
 var sections = {
-    activities: require('../components/activityList'),
-    meetups: require('../components/meetupList'),
-    people: require('../components/userList'),
-    tasks: require('../components/taskList')
+    activities: ActivityList,
+    meetups: MeetupList,
+    people: UserList,
+    tasks: TaskList
 };
 
 function isNew(project, userProject, type) {

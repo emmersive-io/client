@@ -15,7 +15,7 @@ export default class ProjectCreatePage {
 
         this.nameInput = this.element.firstElementChild;
         this.descriptionInput = this.nameInput.nextElementSibling;
-        this.element.lastElementChild.addEventListener('click', this.onButtonClick);
+        this.element.lastElementChild.addEventListener('click', this.onButtonClick.bind(this));
     }
 
     onButtonClick() {

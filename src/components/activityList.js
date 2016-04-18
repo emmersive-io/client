@@ -1,16 +1,11 @@
 import connection from '../firebase/connection';
 import transform from '../firebase/transform';
-
-import moment from 'moment';
-import insertSorted from '../core/insertSorted';
-import defaultUserImage from '../images/profile-red.png';
-
+import List from '../core/sortedElementList';
+import ListItem from '../elements/activityListItem';
 
 export default class ActivityList {
     constructor(projectId) {
-        this.items = [];
         this.projectId = projectId;
-
         this.element = document.createElement('div');
         this.element.className = 'scrollable';
         this.element.innerHTML = `
@@ -21,7 +16,7 @@ export default class ActivityList {
             </form>`;
 
         this.newActivity = this.element.lastElementChild;
-        this.activityList = this.element.firstElementChild;
+        this.list = new List(this.element.firstElementChild, (a1, a2) => a1.created_at > a2.created_at);
         this.newActivity.addEventListener('submit', this.onNewActivity.bind(this), false);
 
         this.activityRef = connection.firebase.child('activities/' + projectId);
@@ -39,30 +34,11 @@ export default class ActivityList {
 
     onActivityAdded(snapshot) {
         var activity = transform.toObj(snapshot);
-        activity.date = moment(activity.created_at).fromNow();
-
         connection.getUser(activity.created_by).then(function (user) {
             var wasAtBottom = this.isAtBottom();
-            var index = insertSorted(this.items, activity, (a1, a2) => a1.created_at > a2.created_at);
 
-            var content = `
-                <li class="list-item--image">
-                    <img class="profile-image" src="${user.image || defaultUserImage}"/>
-                    <a class="user-name" href="#profile/${user.id}">${user.name}</a>
-                    <span class="item__date">${activity.date}</span>
-                    <p class="item__description">${activity.description}</p>
-                </li>`;
-
-
-            var sibling = this.items[index - 1];
-            if (sibling) {
-                sibling.element.insertAdjacentHTML('afterend', content);
-                activity.element = sibling.element.nextElementSibling;
-            }
-            else {
-                this.activityList.insertAdjacentHTML('afterbegin', content);
-                activity.element = this.activityList.firstElementChild;
-            }
+            activity.created_by = user;
+            this.list.add(new ListItem(activity));
 
             if (wasAtBottom && !this.isAtBottom()) {
                 this.scrollable.scrollTop = this.scrollable.scrollHeight;
@@ -73,7 +49,7 @@ export default class ActivityList {
     onNewActivity(e) {
         e.preventDefault();
 
-        var content = this.newActivity.elements[0].value.trim();
+        var content = this.newActivity.firstElementChild.value.trim();
         if (content) {
             connection.createActivity(this.projectId, content);
             this.newActivity.reset();

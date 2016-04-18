@@ -1,5 +1,6 @@
 import animate from '../core/animate';
 import connection from '../firebase/connection';
+import profileImage from '../images/profile.png';
 
 export default class RegisterPage {
     constructor(header) {
@@ -9,7 +10,7 @@ export default class RegisterPage {
         this.element.className = 'form-page scrollable';
         this.element.innerHTML = `    
             <form class="form-page__form">
-                <img class="profile__image" src="../images/profile.png"/>
+                <img class="profile__image" src="${profileImage}"/>
                 <input type="text" name="name" placeholder="Name" aria-label="name" autocomplete="name" required/>
                 <div class="section-header"><span>Login</span></div>
                 <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required/>

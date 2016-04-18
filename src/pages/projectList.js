@@ -1,5 +1,5 @@
 import connection from '../firebase/connection';
-import ProjectListItem from '../components/projectListItem';
+import Project from '../elements/projectListItem';
 
 export default class ProjectsPage {
     constructor(header) {
@@ -16,14 +16,14 @@ export default class ProjectsPage {
                 <input type="search" placeholder="Search" aria-label="search" />
                 <ul class="project-list"></ul>`;
 
-            this.listItems = [];
+            this.projects = [];
             var fragment = document.createDocumentFragment();
             for (var i = 0; i < projects.length; i++) {
-                var project = projects[i];
-                if (project) {
-                    var listItem = new ProjectListItem(projects[i]);
-                    fragment.insertBefore(listItem.element, fragment.firstElementChild);
-                    this.listItems.push(listItem);
+                var projectData = projects[i];
+                if (projectData) {
+                    var project = new Project(projects[i]);
+                    fragment.insertBefore(project.element, fragment.firstElementChild);
+                    this.projects.push(project);
                 }
             }
 
@@ -33,11 +33,11 @@ export default class ProjectsPage {
     }
 
     onSearchChanged(e) {
-        var filterText = e.target.value;
-        for (var i = 0; i < this.listItems.length; i++) {
-            var listItem = this.listItems[i];
-            var name = listItem.project.name || '';
-            listItem.element.hidden = (filterText && name.indexOf(filterText) < 0);
+        var filterText = e.target.value.toLocaleLowerCase();
+        for (var i = 0; i < this.projects.length; i++) {
+            var project = this.projects[i];
+            var name = (project.name || '').toLocaleLowerCase();
+            project.element.hidden = filterText ? name.indexOf(filterText) < 0 : false;
         }
     }
 }
