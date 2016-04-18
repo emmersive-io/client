@@ -4,18 +4,18 @@ var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 
 
 function getDate(date) {
     var today = new Date();
+    if (isSameDay(date, today)) {
+        return 'today';
+    }
+
     var yesterday = new Date(today.getTime());
     yesterday.setDate(yesterday.getDate() - 1);
-
-    var year = date.getFullYear();
-    var month = date.getMonth();
-    var day = date.getDate();
-
-    if (day === yesterday.getDate() && month === yesterday.getMonth() && year === yesterday.getFullYear()) {
+    if (isSameDay(date, yesterday)) {
         return 'yesterday';
     }
 
-    var dateString = months[month] + ' ' + day;
+    var year = date.getFullYear();
+    var dateString = months[date.getMonth()] + ' ' + date.getDate();
     if (year !== today.getFullYear()) {
         return dateString + ', ' + year;
     }
@@ -30,11 +30,11 @@ function getTime(date) {
 
     if (hours > 11) {
         hours -= 12;
-        period = 'PM';
+        period = 'pm';
     }
     else {
         hours = hours || 12;
-        period = 'AM';
+        period = 'am';
     }
 
     if (minutes < 10) {
@@ -42,6 +42,12 @@ function getTime(date) {
     }
 
     return hours + ':' + minutes + period;
+}
+
+function isSameDay(date1, date2) {
+    return date1.getDate() === date2.getDate() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getFullYear() === date2.getFullYear();
 }
 
 function humanizeDate(dateTime) {
