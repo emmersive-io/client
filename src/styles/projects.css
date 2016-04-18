@@ -27,14 +27,14 @@
     display: block;
     position: relative;
     min-height: 50px;
-    padding: 7px 0 0 60px;
+    padding-left: 45px;
     margin: 20px;
 }
 
 .profile-image {
     position: absolute;
-    height: 50px;
-    width: 50px;
+    height: 32px;
+    width: 32px;
     left: 0;
     top: 0;
 }
@@ -50,12 +50,18 @@
     color: #787878;
 }
 
-.item__date:after {
-    content: '...';
+.activity-list .item__date {
+    position: absolute;
+    top: 3px;
+    right: 0;
+}
+
+.task-list .item__date {
+    float: right;
 }
 
 .item__description {
-    margin: 5px 0;
+    margin: 10px 0;
 }
 
 .user__name {
@@ -178,23 +184,7 @@
 }
 
 .task--new {
-    padding: 0 20px 0 50px;
-}
-
-.activity--new {
-    display: flex;
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-top: 1px solid var(--input-border);
-    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
-}
-
-.activity--new input {
-    padding-left: 20px;
-    border: none;
-    margin: 0;
+    padding: 12px 20px;
 }
 
 .project {
@@ -293,19 +283,25 @@
 
 .overlay__close {
     position: fixed;
-    right: 5px;
-    top: 5px;
     background: none;
     color: var(--text);
     z-index: 5;
+    right: 0;
+    top: 0;
 }
 
 .project-tasks {
-    padding: 40px 0 20px 0;
+    padding: 10px 0;
+}
+
+.project-activity {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .activity-list {
-    margin-bottom: 64px;
+    flex-grow: 1;
 }
 
 .activity--entry {
@@ -314,9 +310,32 @@
     max-height: 80px;
 }
 
+.activity--new {
+    display: flex;
+    flex-shrink: 0;
+    border-top: 1px solid var(--input-border);
+    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
+}
+
+.activity--new input {
+    padding-left: 20px;
+    border: none;
+    margin: 0;
+}
+
 @media (orientation: landscape) {
     .project__section {
         height: 50vw;
         max-height: 25vh;
     }
+}
+
+.project-edit {
+    padding: 20px;
+}
+
+.form-link {
+    display: block;
+    text-align: center;
+    line-height: 44px;
 }

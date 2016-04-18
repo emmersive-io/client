@@ -1,41 +1,42 @@
-var connection = require('./firebase').get();
-var transform = require('./transform');
+import Firebase from './firebase';
+import transform from './transform';
 
-function Session() {
-    connection.onAuth(function (authData) {
-        if (authData) {
-            connection.child('users/' + authData.uid)
-                .on('value', this.onUserChanged, this)
-        }
-        else {
-            this.onLoggedOut();
-        }
-    }, this);
-}
+var connection = Firebase.get();
 
-Session.prototype = {
-    isAuthenticating: true,
+class Session {
+    constructor() {
+        this.isAuthenticating = true;
+        connection.onAuth(function (authData) {
+            if (authData) {
+                connection.child('users/' + authData.uid)
+                    .on('value', this.onUserChanged, this)
+            }
+            else {
+                this.onLoggedOut();
+            }
+        }, this);
+    }
 
-    login: function (email, password) {
+    login(email, password) {
         this.isAuthenticating = true;
         return connection.authWithPassword({
             email: email,
             password: password
         });
-    },
+    }
 
-    logOut: function () {
+    logOut() {
         this.isAuthenticating = true;
         connection.unauth();
-    },
+    }
 
-    onUserChanged: function (snapshot) {
+    onUserChanged(snapshot) {
         this.isAuthenticating = false;
         this.user = transform.toObj(snapshot);
         this.resolveCallback();
-    },
+    }
 
-    onLoggedOut: function () {
+    onLoggedOut() {
         if (this.user) {
             connection.child('users/' + this.user.id)
                 .off('value', this.onUserChanged, this);
@@ -45,23 +46,23 @@ Session.prototype = {
         this.isAuthenticating = false;
         location.assign('#login');
         this.resolveCallback();
-    },
+    }
 
-    onUser: function (callback) {
+    onUser(callback) {
         if (this.isAuthenticating) {
             this.callback = callback;
         }
         else {
             callback(this.user);
         }
-    },
+    }
 
-    resolveCallback: function () {
+    resolveCallback() {
         if (this.callback) {
             this.callback(this.user);
             this.callback = null;
         }
     }
-};
+}
 
-module.exports = new Session();
+export default new Session();

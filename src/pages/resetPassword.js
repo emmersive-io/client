@@ -1,27 +1,30 @@
-var connection = require('../firebase/connection');
-var animate = require('../core/animate');
-var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/resetPassword.html');
-var passwordResetTemplate = require('../templates/passwordResetMessage.html');
+import animate from '../core/animate';
+import connection from '../firebase/connection';
 
+export default class ResetPasswordPage {
+    constructor(header) {
+        this.element = document.createElement('div');
+        this.element.className = 'form-page scrollable';
+        this.element.innerHTML = `
+            <form class="form-page__form">
+                <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required/>
+                <button class="button--full">Reset Password</button>
+            </form>`;
 
-function ResetPasswordPage(header) {
-    header.update({leftAction: 'back', style: 'transparent-dark'});
-    this.element = renderTemplate(template);
-    this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
+        header.update({leftAction: 'back', style: 'transparent-dark'});
+        this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
+    }
+
+    onFormSubmit(e) {
+        e.preventDefault();
+
+        var email = e.target.elements.email.value.trim();
+        if (email) {
+            connection.resetPassword(email);
+            e.target.innerHTML = `<p class="zero-state-message">We've sent you an email. Please follow the instructions to reset your password.</p>`;
+        }
+        else {
+            animate(e.target, 'anim--shake');
+        }
+    }
 }
-
-ResetPasswordPage.prototype.onFormSubmit = function (e) {
-    e.preventDefault();
-
-    var email = e.target.elements.email.value.trim();
-    if (email) {
-        connection.resetPassword(email);
-        e.target.innerHTML = passwordResetTemplate;
-    }
-    else {
-        animate(e.target, 'anim--shake');
-    }
-};
-
-module.exports = ResetPasswordPage;

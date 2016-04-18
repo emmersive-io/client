@@ -1,9 +1,7 @@
-var renderTemplate = require('../core/renderTemplate');
-var template = require('../templates/meetupList.html');
-
-
-function MeetupList() {
-    this.element = renderTemplate(template);
+export default class MeetupList {
+    constructor() {
+        this.element = document.createElement('div');
+        this.element.className = 'zero-state--center';
+        this.element.textContent = 'Coming soon';
+    }
 }
-
-module.exports = MeetupList;
