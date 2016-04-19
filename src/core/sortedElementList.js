@@ -30,6 +30,13 @@ export default class SortedElementList {
         return 0;
     }
 
+    remove(item) {
+        var index = this.items.indexOf(item);
+        if (index >= 0) {
+            this.items.splice(index, 1)[0].element.remove();
+        }
+    }
+
     removeBy(compareFunction) {
         var index = this.items.findIndex(compareFunction);
         if (index >= 0) {

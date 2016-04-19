@@ -1,7 +1,8 @@
 import Firebase from '../firebase/firebase';
 import transform from '../firebase/transform';
 import session from '../firebase/session';
-import BasementListItem from '../elements/basementListItem';
+import List from '../core/sortedElementList';
+import ListItem from '../elements/basementListItem';
 import {projectHasUpdate} from '../firebase/utility';
 import defaultUserImage from '../images/profile-inverted.png';
 
@@ -31,7 +32,8 @@ export default class Basement {
             </div>`;
 
         this.projects = {};
-        this.projectList = this.element.querySelector('.basement__project-list');
+        var listElement = this.element.querySelector('.basement__project-list');
+        this.list = new List(listElement, (p1, p2) => p1.name.localeCompare(p2.name) >= 0);
         this.element.addEventListener('click', this.onItemClicked.bind(this), false);
 
         // Listen to changes to the user
@@ -51,7 +53,9 @@ export default class Basement {
         // Delay so the remaining updates can roll in and update session.user
         setTimeout(function () {
             var project = this.projects[snapshot.key()];
-            project.item.element.classList.toggle('has-update', projectHasUpdate(project.data, session.user));
+            if (project && project.item) {
+                project.item.element.classList.toggle('has-update', projectHasUpdate(project.item.data, session.user));
+            }
         }.bind(this), 0);
     }
 
@@ -63,41 +67,27 @@ export default class Basement {
         }
 
         if (project.item) {
+            var name = project.item.name;
             project.item.name = projectData.name;
+
+            if (name !== project.item.name) {
+                this.list.remove(project.item);
+                this.list.add(project.item);
+            }
         }
         else {
-            project.item = new BasementListItem(projectData);
+            project.item = new ListItem(projectData);
+            this.list.add(project.item);
         }
 
-        if (!project.data || project.data.name !== projectData.name) {
-            var projectArray = Object.keys(this.projects)
-                .map(function (key) { return this.projects[key]; }, this)
-                .filter(function (project) { return project.data; })
-                .sort(function (project1, project2) {
-                    return project1.data.name.localeCompare(project2.data.name);
-                });
-
-
-            var index = Math.max(0, projectArray.indexOf(project));
-            var nextProject = projectArray[index + 1];
-
-            if (nextProject && nextProject.item) {
-                this.projectList.insertBefore(project.item.element, nextProject.item.element);
-            }
-            else {
-                this.projectList.appendChild(project.item.element);
-            }
-        }
-
-        project.data = projectData;
         project.item.element.classList.toggle('has-update', projectHasUpdate(projectData, session.user));
     }
 
     onProjectJoin(snapshot) {
         var projectId = snapshot.key();
-        var project = {ref: firebaseRoot.child('projects/' + projectId)};
-        this.projects[projectId] = project;
-        project.ref.on('value', this.onProjectDataChanged, this);
+        var ref = firebaseRoot.child('projects/' + projectId);
+        this.projects[projectId] = {ref: ref};
+        ref.on('value', this.onProjectDataChanged, this);
     }
 
     onProjectLeave(snapshot) {
@@ -105,8 +95,8 @@ export default class Basement {
         var project = this.projects[projectId];
         if (project) {
             project.item.element.remove();
-            project.ref.off('value', this.onUserProjectDataChanged, this);
             delete this.projects[projectId];
+            project.ref.off('value', this.onUserProjectDataChanged, this);
         }
     }
 

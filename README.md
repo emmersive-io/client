@@ -55,7 +55,7 @@ Upload to firebase
 
 Upload to different environment in firebase  
 `firebase deploy -f emmersive-stage` (staging)  
-`firebase deploy -f flickering-infero-1351` (production)
+`firebase deploy -f flickering-inferno-1351` (production)
 
 #### Other Dependencies
 * Node.js 4.x

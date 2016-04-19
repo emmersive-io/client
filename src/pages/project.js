@@ -2,6 +2,7 @@ import connection from '../firebase/connection';
 import session from '../firebase/session';
 import transform from '../firebase/transform';
 import userCache from '../firebase/userCache';
+import {projectTypeHasUpdate} from '../firebase/utility';
 import defaultUserImage from '../images/profile-inverted.png';
 
 import ActivityList from  '../components/activityList';
@@ -15,12 +16,6 @@ var sections = {
     people: UserList,
     tasks: TaskList
 };
-
-function isNew(project, userProject, type) {
-    var lastView = userProject[type];
-    var lastContent = project['updated_' + type];
-    return (lastContent && (!lastView || lastView < lastContent)) || false;
-}
 
 
 export default class ProjectPage {
@@ -194,12 +189,12 @@ export default class ProjectPage {
         }
     }
 
-    updateViewed(userViewData) {
-        if (userViewData && this.project) {
+    updateViewed(userProjects) {
+        if (userProjects && this.project) {
             var sections = ['activities', 'tasks', 'people', 'meetups'];
             var sectionElements = this.sectionContainer.children;
             for (var i = 0; i < sectionElements.length; i++) {
-                sectionElements[i].classList.toggle('has-update', isNew(this.project, userViewData, sections[i]));
+                sectionElements[i].classList.toggle('has-update', projectTypeHasUpdate(this.project, userProjects, sections[i]));
             }
         }
     }
