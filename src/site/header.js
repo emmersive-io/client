@@ -33,6 +33,7 @@ export default class Header {
             }
             else if (button.classList.contains('header__button--basement')) {
                 document.body.classList.toggle('show-basement');
+                e.stopPropagation();
             }
             else {
                 history.back();

@@ -26,6 +26,12 @@ export default class Site {
         }
     }
 
+    onClick(e) {
+        if (!e.target.closest('.page--basement')) {
+            document.body.classList.remove('show-basement');
+        }
+    }
+
     onRouteChanged(Page, path) {
         session.onUser(function (user) {
             var isLoggedIn = (user != null);
@@ -66,6 +72,7 @@ export default class Site {
         this.header = new Header();
         this.element.insertBefore(this.header.element, this.element.firstElementChild);
         document.body.appendChild(this.element);
+        document.body.addEventListener('click', this.onClick.bind(this), false);
     }
 
     showPage(path, page) {
