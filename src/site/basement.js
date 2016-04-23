@@ -15,7 +15,7 @@ export default class Basement {
         this.element.innerHTML = `
             <header class="header header--basement">
                 <img class="basement__header-logo" src="${user.image || defaultUserImage}"/>
-                <span class="basement__user-name text-truncate">${user.name}</span>
+                <span class="basement__user-name text-truncate"></span>
                 <button class="basement__header-button transparent" data-href="#profile/${user.id}">
                     <span class="fa fa-gear" aria-hidden="true"></span>
                 </button>
@@ -32,15 +32,20 @@ export default class Basement {
             </div>`;
 
         this.projects = {};
+        this.nameElement = this.element.querySelector('.basement__user-name');
+
         var listElement = this.element.querySelector('.basement__project-list');
         this.list = new List(listElement, (p1, p2) => p1.name.localeCompare(p2.name) >= 0);
         this.element.addEventListener('click', this.onItemClicked.bind(this), false);
 
         // Listen to changes to the user
-        this.userRef = firebaseRoot.child('users/' + user.id + '/projects');
-        this.userRef.on('child_added', this.onProjectJoin, this);
-        this.userRef.on('child_changed', this.onUserProjectDataChanged, this);
-        this.userRef.on('child_removed', this.onProjectLeave, this);
+        this.userRef = firebaseRoot.child('users/' + user.id);
+        this.userRef.child('name').on('value', this.onUserNameChanged, this);
+
+        var projectsRef = this.userRef.child('projects');
+        projectsRef.on('child_added', this.onProjectJoin, this);
+        projectsRef.on('child_changed', this.onUserProjectDataChanged, this);
+        projectsRef.on('child_removed', this.onProjectLeave, this);
     }
 
     onItemClicked(e) {
@@ -100,11 +105,18 @@ export default class Basement {
         }
     }
 
+    onUserNameChanged(snapshot) {
+        this.nameElement.textContent = snapshot.val();
+    }
+
     remove() {
         this.element.remove();
-        this.userRef.off('child_added', this.onProjectJoin, this);
-        this.userRef.off('child_changed', this.onUserProjectDataChanged, this);
-        this.userRef.off('child_removed', this.onProjectLeave, this);
+        this.userRef.child('name').off('value', this.onUserNameChanged, this);
+
+        var projectsRef = this.userRef.child('projects');
+        projectsRef.off('child_added', this.onProjectJoin, this);
+        projectsRef.off('child_changed', this.onUserProjectDataChanged, this);
+        projectsRef.off('child_removed', this.onProjectLeave, this);
 
         for (var key in this.projects) {
             this.projects[key].ref.off('value', this.onUserProjectDataChanged, this);
