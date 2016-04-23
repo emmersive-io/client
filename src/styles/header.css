@@ -65,11 +65,9 @@
 }
 
 .header__title {
-    margin: 0;
     font-size: 18px;
     line-height: 44px;
     text-align: center;
-    font-weight: normal;
 }
 
 .header:not([data-left-action="back"]) .header__button--back {
