@@ -4,11 +4,13 @@ import './core/platform';
 import './core/elementHrefs';
 import './core/sizeTextarea';
 
+import ChangeEmailPage from './pages/changeEmail';
+import ChangePasswordPage from './pages/changePassword';
+import EditProjectPage from './pages/projectEdit';
 import HomePage from './pages/home';
 import LoginPage from './pages/login';
 import NewProjectPage from './pages/projectCreate';
 import ProfilePage from './pages/profile';
-import EditProjectPage from './pages/projectEdit';
 import ProjectList from './pages/projectList';
 import ProjectPage from './pages/project';
 import RegisterPage from './pages/register';
@@ -21,6 +23,8 @@ new Site({
     'login/register': RegisterPage,
     'login/forgot-password': ResetPasswordPage,
     'profile/:userId': ProfilePage,
+    'profile/change-email': ChangeEmailPage,
+    'profile/change-password': ChangePasswordPage,
     'profile/forgot-password': ResetPasswordPage,
     'projects': ProjectList,
     'projects/new': NewProjectPage,

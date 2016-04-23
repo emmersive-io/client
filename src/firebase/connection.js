@@ -33,21 +33,6 @@ function updateProjectParticipation(projectId, value) {
 
 export default {
     firebase: connection,
-    changeEmail: function (oldEmail, newEmail, password) {
-        return connection.changeEmail({
-            oldEmail: oldEmail,
-            newEmail: newEmail,
-            password: password
-        });
-    },
-
-    changePassword: function (email, oldPassword, newPassword) {
-        return connection.changePassword({
-            email: email,
-            oldPassword: oldPassword,
-            newPassword: newPassword
-        });
-    },
 
     createActivity: function (projectId, content) {
         return createProjectItem(projectId, 'activities', {
@@ -178,6 +163,10 @@ export default {
                 updated_tasks: serverTime
             })
         ]);
+    },
+
+    updateUser: function (data) {
+        connection.child('users/' + session.user.id).update(data);
     },
 
     viewProject: function (projectId, type) {
