@@ -1,4 +1,4 @@
-import "./styles.css";
+import './styles.css';
 import './core/polyfills';
 import './core/platform';
 import './core/elementHrefs';
@@ -25,7 +25,6 @@ new Site({
     'profile/:userId': ProfilePage,
     'profile/change-email': ChangeEmailPage,
     'profile/change-password': ChangePasswordPage,
-    'profile/forgot-password': ResetPasswordPage,
     'projects': ProjectList,
     'projects/new': NewProjectPage,
     'projects/:projectId': ProjectPage,

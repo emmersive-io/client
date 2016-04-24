@@ -12,11 +12,11 @@ export default class RegisterPage {
             <form class="form-page__form">
                 <img class="profile__image" src="${profileImage}"/>
                 <input type="text" name="name" placeholder="Name" aria-label="name" autocomplete="name" required/>
-                <div class="section-header"><span>Login</span></div>
                 <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required/>
                 <input type="password" name="password" placeholder="Password" aria-label="password" autocomplete="new-password" required/>
                 <input type="password" name="password2" placeholder="Confirm Password" aria-label="confirm password" autocomplete="new-password" required/>
                 <button class="button--full">Register</button>
+                <a class="form-link" href="#login">Log into an existing account</a>
             </form>`;
 
         this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);

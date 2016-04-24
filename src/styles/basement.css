@@ -7,8 +7,8 @@
 .header--basement {
     display: flex;
     align-items: center;
-    padding: 0 20px;
-    background: #202020;
+    padding: 0 20px 0 10px;
+    background: var(--basement);
     color: var(--text-inverted);
 }
 
@@ -39,7 +39,7 @@
 
 .basement__project-list {
     margin-right: -20px;
-    color: #fff;
+    color: var(--text-inverted);
 }
 
 .basement__project {
@@ -56,4 +56,14 @@
 
 .basement__project.has-update a {
     border-color: var(--brand);
+}
+
+@media (min-width: 470px) {
+    .page--basement {
+        width: 400px;
+    }
+
+    .show-basement .page--main {
+        left: 400px;
+    }
 }
