@@ -25,7 +25,7 @@ export default class ProjectCreatePage {
         };
 
         connection.createProject(project).then(function (projectId) {
-            location.assign('#projects/' + projectId);
+            location.replace('#projects/' + projectId);
         }).catch(function () {
             animate(button, 'anim--shake');
         });

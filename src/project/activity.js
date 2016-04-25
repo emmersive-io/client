@@ -3,9 +3,9 @@ import transform from '../firebase/transform';
 import List from '../core/sortedElementList';
 import ListItem from '../elements/activityListItem';
 
-export default class ActivityList {
-    constructor(projectId) {
-        this.projectId = projectId;
+export default class ProjectActivity {
+    constructor(project) {
+        this.project = project;
         this.element = document.createElement('div');
         this.element.className = 'project-activity';
         this.element.innerHTML = `
@@ -19,7 +19,7 @@ export default class ActivityList {
         this.list = new List(this.element.firstElementChild, (a1, a2) => a1.created_at > a2.created_at);
         this.newActivity.addEventListener('submit', this.onNewActivity.bind(this), false);
 
-        this.activityRef = connection.firebase.child('activities/' + projectId);
+        this.activityRef = connection.firebase.child('activities/' + project.id);
         this.activityRef.on('child_added', this.onActivityAdded, this);
     }
 

@@ -1,0 +1,32 @@
+.footer {
+    display: flex;
+    flex-shrink: 0;
+    border-top: 1px solid var(--input-border);
+}
+
+.footer button {
+    background: #fff;
+    color: var(--medium-text);
+    flex-grow: 1;
+    font-size: 12px;
+}
+
+.footer button.selected {
+    color: var(--selected-color);
+}
+
+.footer button.has-update .button__title:before {
+    content: '';
+    display: inline-block;
+    background: var(--brand);
+    border-radius: 50%;
+    height: 6px;
+    width: 6px;
+    margin: 0 4px 0 -10px;
+}
+
+.footer .fa {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 2px;
+}
