@@ -4,4 +4,6 @@ export default class ProjectMeetups {
         this.element.className = 'project__meetups scrollable';
         this.element.innerHTML = `<div class="zero-state--center">Coming soon</div>`;
     }
+
+    remove() { }
 }

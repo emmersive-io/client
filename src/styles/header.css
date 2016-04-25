@@ -43,7 +43,7 @@
     left: -14px;
 }
 
-.header__button--basement .fa{
+.header__button--basement .fa {
     line-height: 32px;
     vertical-align: middle;
 }
@@ -68,6 +68,7 @@
     font-size: 18px;
     line-height: 44px;
     text-align: center;
+    padding: 0px 100px;
 }
 
 .header:not([data-left-action="back"]) .header__button--back {

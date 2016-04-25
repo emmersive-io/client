@@ -12,7 +12,7 @@ export default class Header {
                 <span class="fa fa-bars" aria-hidden="true"></span>
                 <img class="header__logo" src="${headerLogo}"/>
             </button>
-            <h1 class="header__title"></h1>
+            <h1 class="header__title text-truncate"></h1>
             <button class="header__button--action"></button>`;
 
         this.headerTitle = this.element.children[2];

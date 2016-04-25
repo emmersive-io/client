@@ -5,25 +5,20 @@
 }
 
 .header--basement {
-    display: flex;
-    align-items: center;
-    padding: 0 20px 0 10px;
+    padding: 0 20px;
+    line-height: 64px;
     background: var(--basement);
     color: var(--text-inverted);
 }
 
 .basement__header-logo {
     width: 32px;
+    vertical-align: middle;
+    margin-right: 5px;
 }
 
 .basement__user-name {
-    flex-grow: 1;
-    padding: 0 10px;
-}
-
-.header--basement button {
-    background: none;
-    font-size: 24px;
+    color: var(--text-inverted);
 }
 
 .content--basement {

@@ -6,18 +6,11 @@ export default class ProjectEditPage {
     }
 
     onBlur(e) {
-        var field;
-        if (e.target.classList.contains('project__name')) {
-            field = 'name';
-        }
-        else if (e.target.classList.contains('project__description')) {
-            field = 'description';
-        }
-
+        var field = e.target.name;
         if (field) {
-            var projectData = {};
-            projectData[field] = e.target.value.trim();
-            connection.updateProject(this.project.id, projectData);
+            connection.updateProject(this.project.id, {
+                [field]: e.target.value.trim()
+            });
         }
     }
 
@@ -37,10 +30,12 @@ export default class ProjectEditPage {
             this.element = document.createElement('div');
             this.element.className = 'project-edit';
             this.element.innerHTML = `
-                <input class="project__name" type="text" placeholder="Untitled Project" aria-label="project name" value="${project.name}"/>
-                <textarea class="project__description" placeholder="Add a short description">${project.description}</textarea>
+                <input name="name" type="text" placeholder="Untitled Project" aria-label="project name" value="${project.name}"/>
+                <textarea name="description" placeholder="Add a short description">${project.description}</textarea>
                 <button class="button--full">Delete Project</button>`;
 
+            this.nameInput = this.element.firstElementChild;
+            this.descriptionInput = this.nameInput.nextElementSibling;
             this.element.addEventListener('blur', this.onBlur.bind(this), true);
             this.element.lastElementChild.addEventListener('click', this.onButtonClick.bind(this), false);
         }.bind(this));

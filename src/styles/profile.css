@@ -1,8 +1,8 @@
-.profile__name{
+.profile__name {
     font-size: 18px;
 }
 
-.profile__email{
+.profile__email {
     font-size: 14px;
     color: var(--medium-text);
 }

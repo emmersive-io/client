@@ -1,5 +1,5 @@
 .anim--in-left, .anim--in-right, .anim--out-left, .anim--out-right {
-    position: fixed;
+    position: absolute;
     width: 100vw;
     top: 0;
 }
@@ -13,7 +13,6 @@
 .anim--fade-out { animation: fade-out .2s ease-out; }
 
 .anim--shake {
-    outline-color: red;
     animation: shake .5s linear;
 }
 

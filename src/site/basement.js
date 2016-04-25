@@ -13,12 +13,11 @@ export default class Basement {
         this.element = document.createElement('div');
         this.element.className = 'page page--basement';
         this.element.innerHTML = `
-            <header class="header header--basement">
-                <img class="basement__header-logo" src="${user.image || defaultUserImage}"/>
-                <span class="basement__user-name text-truncate"></span>
-                <button class="basement__header-button transparent" data-href="#profile/${user.id}">
-                    <span class="fa fa-gear" aria-hidden="true"></span>
-                </button>
+            <header class="header header--basement text-truncate">
+                <a href="#profile/${user.id}">
+                    <img class="basement__header-logo" src="${user.image || defaultUserImage}"/>
+                    <span class="basement__user-name">${user.name}</span>            
+                </a>
             </header>
             <div class="content content--basement">
                 <button class="button--full" data-href="#projects/new">

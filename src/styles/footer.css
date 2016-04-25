@@ -11,6 +11,12 @@
     font-size: 12px;
 }
 
+.footer .fa {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 2px;
+}
+
 .footer button.selected {
     color: var(--selected-color);
 }
@@ -23,10 +29,4 @@
     height: 6px;
     width: 6px;
     margin: 0 4px 0 -10px;
-}
-
-.footer .fa {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 2px;
 }
