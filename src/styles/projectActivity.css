@@ -11,7 +11,7 @@
 
 .activity--entry {
     font-size: 12px;
-    max-height: 80px;
+    max-height: 120px;
     border: none;
     padding-left: 20px;
     margin: 0;
@@ -22,7 +22,6 @@
     display: flex;
     flex-shrink: 0;
     border-top: 1px solid var(--input-border);
-    box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.3);
 }
 
 .activity--new button {

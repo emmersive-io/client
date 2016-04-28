@@ -31,7 +31,7 @@ export default class ProjectPage {
                 </button>
                 <button data-href="#projects/${projectId}/activities">
                     <span class="fa fa-comment" aria-hidden="true"></span>
-                    <span class="button__title">Chat</span>
+                    <span class="button__title">Discuss</span>
                 </button>
                 <button data-href="#projects/${projectId}/tasks">
                     <span class="fa fa-tasks" aria-hidden="true"></span>
@@ -39,7 +39,7 @@ export default class ProjectPage {
                 </button>
                 <button data-href="#projects/${projectId}/meetups">
                     <span class="fa fa-calendar-check-o" aria-hidden="true"></span>
-                    <span class="button__title">Meetups</span>
+                    <span class="button__title">Meet up</span>
                 </button>
             </footer>`;
 
