@@ -9,7 +9,6 @@
 .footer button {
     background: #fff;
     color: var(--medium-text);
-    flex-grow: 1;
     font-size: 12px;
 }
 

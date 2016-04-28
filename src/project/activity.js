@@ -11,7 +11,7 @@ export default class ProjectActivity {
         this.element.innerHTML = `
             <ul class="activity-list scrollable"></ul>
             <form class="activity--new">
-                <textarea class="activity--entry" placeholder="Message" aria-label="Message" rows="1"></textarea>
+                <textarea class="activity--entry" placeholder="Send a message" aria-label="Message" rows="1"></textarea>
                 <button><span class="fa fa-plus" aria-hidden="true"></span></button>
             </form>`;
 
