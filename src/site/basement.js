@@ -48,7 +48,7 @@ export default class Basement {
     }
 
     onItemClicked(e) {
-        if (e.tagName === 'A' || e.target.closest('[data-href]')) {
+        if (e.target.tagName === 'A' || e.target.closest('[data-href]')) {
             document.body.classList.remove('show-basement');
         }
     }
