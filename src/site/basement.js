@@ -13,10 +13,10 @@ export default class Basement {
         this.element = document.createElement('div');
         this.element.className = 'page page--basement';
         this.element.innerHTML = `
-            <header class="header header--basement text-truncate">
-                <a href="#profile/${user.id}">
+            <header class="header header--basement">
+                <a class="basement__header-link text-truncate" href="#profile/${user.id}">
                     <img class="basement__header-logo" src="${user.image || defaultUserImage}"/>
-                    <span class="basement__user-name">${user.name}</span>            
+                    <span class="basement__user-name">${user.name}</span>
                 </a>
             </header>
             <div class="content content--basement scrollable">
@@ -88,10 +88,13 @@ export default class Basement {
     }
 
     onProjectJoin(snapshot) {
-        var projectId = snapshot.key();
-        var ref = firebaseRoot.child('projects/' + projectId);
-        this.projects[projectId] = {ref: ref};
-        ref.on('value', this.onProjectDataChanged, this);
+        var value = snapshot.val();
+        if (value && value.joined){
+            var projectId = snapshot.key();
+            var ref = firebaseRoot.child('projects/' + projectId);
+            this.projects[projectId] = {ref: ref};
+            ref.on('value', this.onProjectDataChanged, this);
+        }
     }
 
     onProjectLeave(snapshot) {

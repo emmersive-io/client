@@ -11,6 +11,10 @@
     color: var(--text-inverted);
 }
 
+.basement__header-link {
+    display: block;
+}
+
 .basement__header-logo {
     width: 32px;
     vertical-align: middle;
