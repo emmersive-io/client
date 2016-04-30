@@ -19,7 +19,7 @@ export default class Basement {
                     <span class="basement__user-name">${user.name}</span>            
                 </a>
             </header>
-            <div class="content content--basement">
+            <div class="content content--basement scrollable">
                 <button class="button--full" data-href="#projects/new">
                     <span class="fa fa-plus" aria-hidden="true"></span> Create a project
                 </button>

@@ -42,6 +42,10 @@
     border-bottom: 1px solid var(--basement-item-border);
 }
 
+.basement__project:last-child {
+    border-bottom: none;
+}
+
 .basement__project a {
     display: block;
     color: var(--text-inverted);

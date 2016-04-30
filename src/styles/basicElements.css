@@ -71,6 +71,10 @@ textarea {
     resize: none;
 }
 
+input[type="checkbox"], input[type="radio"] {
+    margin: 0;
+}
+
 input.input--full {
     display: block;
     width: 100%;
@@ -90,6 +94,18 @@ ul {
 
 [data-href] {
     cursor: pointer;
+}
+
+.scrollable {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ios .scrollable {
+    -webkit-transform: translateZ(0px);
+    transform: translateZ(0px);
 }
 
 .section-header {
