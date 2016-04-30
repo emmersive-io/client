@@ -12,8 +12,4 @@ export default class UserListItem {
                 <span class="user__email">${user.email}</span>
             </a>`;
     }
-
-    get name() {
-        return this.user.name;
-    }
 }

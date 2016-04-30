@@ -16,18 +16,23 @@ export default class ProjectHome {
         this.element.innerHTML = `                
                 <h2 class="project__name">${project.name}</h2>
                 <p class="project__description">${project.description}</p>
-                <a class="project__owner">
-                    <img class="profile-image--small"/>
-                    <span class="project__user-name"></span>
-                </a>                
                 <h3 class="project__header">Members</h3>
                 <ul class="user-list"></ul>`;
 
         this.nameElement = this.element.children[0];
         this.descriptionElement = this.element.children[1];
-        this.list = new List(this.element.lastElementChild, (u1, u2) => u1.name.localeCompare(u2.name) >= 0);
 
-        userCache.get(project.created_by).then(this.setOwner.bind(this));
+        userCache.get(project.created_by).then(function (user) {
+            if (user) {
+                this.descriptionElement.insertAdjacentHTML('afterend', `
+                    <a class="project__owner" href="#profile/${user.id}">
+                        <img class="profile-image--small" src="${user.image || defaultUserImage}"/>
+                        <span class="project__user-name">${user.name}</span>
+                    </a>`);
+            }
+        }.bind(this));
+
+        this.list = new List(this.element.lastElementChild, (u1, u2) => u1.user.name.localeCompare(u2.user.name) >= 0);
         this.userRef = connection.firebase.child('projects/' + this.project.id + '/people');
         this.userRef.on('child_added', this.onUserAdded, this);
         this.userRef.on('child_removed', this.onUserRemoved, this);
@@ -75,20 +80,11 @@ export default class ProjectHome {
 
     onUserRemoved(snapshot) {
         var userId = snapshot.key();
-        this.list.removeBy(user => user.id === userId);
+        this.list.removeBy(item => item.user.id === userId);
     }
 
     remove() {
         this.userRef.off('child_added', this.onUserAdded, this);
         this.userRef.off('child_removed', this.onUserRemoved, this);
-    }
-
-    setOwner(user) {
-        if (user) {
-            var ownerElement = this.element.querySelector('.project__owner');
-            ownerElement.href = '#profile/' + user.id;
-            ownerElement.lastElementChild.textContent = user.name;
-            ownerElement.firstElementChild.src = user.image || defaultUserImage;
-        }
     }
 }

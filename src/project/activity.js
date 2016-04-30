@@ -48,7 +48,7 @@ export default class ProjectActivity {
 
         var content = this.newActivity.firstElementChild.value.trim();
         if (content) {
-            connection.createActivity(this.projectId, content);
+            connection.createActivity(this.project.id, content);
             this.newActivity.reset();
         }
     }
