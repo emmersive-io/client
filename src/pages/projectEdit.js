@@ -1,8 +1,9 @@
 import connection from '../firebase/connection';
 
 export default class ProjectEditPage {
-    constructor(header) {
-        this.header = header;
+    constructor(options) {
+        this.header = options.header;
+        this.router = options.router;
     }
 
     onBlur(e) {
@@ -17,12 +18,12 @@ export default class ProjectEditPage {
     onButtonClick() {
         if (confirm('Are you sure you want to delete the project?')) {
             connection.removeProject(this.project.id).then(function () {
-                location.assign('#projects')
+                this.router.navigateTo('#projects')
             });
         }
     }
 
-    onRoute(root, projectId) {
+    onRoute(projectId) {
         return connection.getProject(projectId).then(function (project) {
             this.project = project;
             this.header.update({title: 'Edit Project', leftAction: 'back'});

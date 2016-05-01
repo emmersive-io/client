@@ -2,7 +2,7 @@ import animate from '../core/animate';
 import connection from '../firebase/connection';
 
 export default class ResetPasswordPage {
-    constructor(header) {
+    constructor(options) {
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
         this.element.innerHTML = `
@@ -11,7 +11,7 @@ export default class ResetPasswordPage {
                 <button class="button--full">Reset Password</button>
             </form>`;
 
-        header.update({leftAction: 'back', style: 'transparent-dark'});
+        options.header.update({leftAction: 'back', style: 'transparent-dark'});
         this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
     }
 
@@ -22,6 +22,8 @@ export default class ResetPasswordPage {
         if (email) {
             connection.resetPassword(email);
             e.target.innerHTML = `<p class="zero-state-message">We've sent you an email. Please follow the instructions to reset your password.</p>`;
+
+            // TODO: Where does the user go now? Should there be a link back to the login screen?
         }
         else {
             animate(e.target, 'anim--shake');

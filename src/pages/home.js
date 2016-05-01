@@ -1,8 +1,8 @@
 import imagePath from '../images/no_projects.png';
 
 export default class HomePage {
-    constructor(header) {
-        header.update();
+    constructor(options) {
+        options.header.update();
 
         this.element = document.createElement('div');
         this.element.className = 'home form-page scrollable';

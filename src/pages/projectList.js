@@ -2,8 +2,8 @@ import connection from '../firebase/connection';
 import Project from '../elements/projectListItem';
 
 export default class ProjectsPage {
-    constructor(header) {
-        this.header = header;
+    constructor(options) {
+        this.header = options.header;
     }
 
     onRoute() {

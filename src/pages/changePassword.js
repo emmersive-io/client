@@ -4,7 +4,8 @@ import session from '../firebase/session';
 import validate from '../core/validate';
 
 export default class ChangePasswordPage {
-    constructor(header) {
+    constructor(options) {
+        this.router = options.router;
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
         this.element.innerHTML = `
@@ -15,7 +16,7 @@ export default class ChangePasswordPage {
                 <button class="button--full">Change Password</button>
             </form>`;
 
-        header.update({leftAction: 'back', style: 'transparent-dark'});
+        options.header.update({leftAction: 'back', style: 'transparent-dark'});
         this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
     }
 
@@ -26,7 +27,7 @@ export default class ChangePasswordPage {
         if (isValid) {
             connection.firebase.changePassword(data)
                 .then(function () {
-                    location.assign('#profile/' + session.user.id);
+                    this.router.navigateTo('#profile/' + session.user.id);
                 })
                 .catch(function (e) {
                     animate(e.target, 'anim--shake');

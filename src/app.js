@@ -1,7 +1,6 @@
 import './styles.css';
 import './core/polyfills';
 import './core/platform';
-import './core/elementHrefs';
 import './core/sizeTextarea';
 
 import ChangeEmailPage from './pages/changeEmail';
@@ -18,8 +17,7 @@ import RegisterPage from './pages/register';
 import ResetPasswordPage from './pages/resetPassword';
 
 import Site from './site/site';
-new Site({
-    '': HomePage,
+new Site(HomePage, {
     'login': LoginPage,
     'login/register': RegisterPage,
     'login/forgot-password': ResetPasswordPage,

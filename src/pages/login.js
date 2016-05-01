@@ -3,8 +3,9 @@ import animate from '../core/animate';
 import logoPath from '../images/logo.png';
 
 export default class LoginPage {
-    constructor(header) {
-        header.update({style: 'hidden'});
+    constructor(options) {
+        this.router = options.router;
+        options.header.update({style: 'hidden'});
 
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
@@ -33,7 +34,7 @@ export default class LoginPage {
 
         if (email && password) {
             session.login(email, password).then(function () {
-                location.assign('#');
+                this.router.navigateTo('#');
             }).catch(function () {
                 animate(e.target, 'anim--shake');
             });

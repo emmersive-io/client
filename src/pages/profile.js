@@ -3,8 +3,8 @@ import session from '../firebase/session';
 import defaultUserImage from '../images/profile.png';
 
 export default class ProfilePage {
-    constructor(header) {
-        this.header = header;
+    constructor(options) {
+        this.header = options.header;
     }
 
     onInputChanged(e) {
@@ -14,7 +14,7 @@ export default class ProfilePage {
         }
     }
 
-    onRoute(root, userId) {
+    onRoute(userId) {
         this.isCurrentUser = (session.user.id === userId);
         if (this.isCurrentUser) {
             this.render(session.user);

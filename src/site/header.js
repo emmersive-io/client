@@ -1,7 +1,8 @@
 import headerLogo from '../images/header-logo.png';
 
 export default class Header {
-    constructor() {
+    constructor(router) {
+        this.router = router;
         this.element = document.createElement('header');
         this.element.className = 'header header--main';
         this.element.innerHTML = `
@@ -28,7 +29,7 @@ export default class Header {
                     this.options.onAction();
                 }
                 else {
-                    location.assign(this.options.onAction);
+                    this.router.navigateTo(this.options.onAction);
                 }
             }
             else if (button.classList.contains('header__button--basement')) {
@@ -36,7 +37,7 @@ export default class Header {
                 e.stopPropagation();
             }
             else {
-                history.back();
+                this.router.navigateBack();
             }
         }
     }

@@ -3,8 +3,9 @@ import connection from '../firebase/connection';
 import profileImage from '../images/profile.png';
 
 export default class RegisterPage {
-    constructor(header) {
-        header.update({leftAction: 'back', style: 'transparent-dark'});
+    constructor(options) {
+        this.router = options.router;
+        options.header.update({leftAction: 'back', style: 'transparent-dark'});
 
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
@@ -33,7 +34,8 @@ export default class RegisterPage {
 
         if (name && email && password && password === password2) {
             connection.createUser(name, email, password).then(function () {
-                location.assign('#');
+                // TODO: Should this be a navigate to route or end auth loop to go back to where you were kind of thing?
+                this.router.navigateTo('#');
             }).catch(function () {
                 animate(e.target, 'anim--shake');
             });

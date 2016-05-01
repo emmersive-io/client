@@ -10,8 +10,8 @@ import TaskPage from '../project/tasks';
 
 
 export default class ProjectPage {
-    constructor(header) {
-        this.header = header;
+    constructor(options) {
+        this.header = options.header;
         this.sections = [
             {type: HomePage},
             {name: 'activities', type: ActivityPage},
@@ -72,7 +72,7 @@ export default class ProjectPage {
         }
     }
 
-    onRoute(root, projectId, section) {
+    onRoute(projectId, section) {
         if (!this.element) {
             this.initialize(projectId);
         }

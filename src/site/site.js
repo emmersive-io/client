@@ -6,24 +6,8 @@ import session from '../firebase/session';
 
 
 export default class Site {
-    constructor(routeMap) {
-        this.router = new Router(routeMap, this.onRouteChanged.bind(this));
-    }
-
-    getDirection(path, oldPath) {
-        if (oldPath) {
-            var length = path.length;
-            var oldLength = oldPath.length;
-            var minLength = Math.min(length, oldLength);
-
-            for (var i = 0; i < minLength; i++) {
-                if (path[i] !== oldPath[i]) {
-                    return true;
-                }
-            }
-
-            return length > oldLength;
-        }
+    constructor(HomePage, routes) {
+        this.router = new Router(HomePage, routes, this.onRouteChanged.bind(this));
     }
 
     onClick(e) {
@@ -32,13 +16,15 @@ export default class Site {
         }
     }
 
-    onRouteChanged(Page, path) {
+    onRouteChanged(Page, options) {
         session.onUser(function (user) {
             var isLoggedIn = (user != null);
             var isLoginScreen = location.hash.indexOf('#login') === 0;
 
+            // TODO: I think there's still a bug in here somehow when loading
+            // the page after the session has expired
             if (isLoggedIn === isLoginScreen) {
-                location.assign(isLoggedIn ? '#' : '#login');
+                this.router.navigateTo(isLoggedIn ? '#' : '#login');
                 return;
             }
 
@@ -49,15 +35,16 @@ export default class Site {
             this.updateBasement(user);
 
             var page = this.page;
-            if (!page || !(page instanceof Page) || (page.is && !page.is.apply(page, path))) {
-                page = new Page(this.header);
+            if (options.isNewPage) {
+                page = new Page({header: this.header, router: this.router});
             }
 
-            var onRoute = page.onRoute && page.onRoute.apply(page, path);
+            // TODO: Clean this up
+            var onRoute = page.onRoute && page.onRoute.apply(page, options.path);
             if (page !== this.page) {
                 this.page = page;
                 Promise.resolve(onRoute).then(function () {
-                    this.showPage(path, page);
+                    this.showPage(page, options);
                 }.bind(this));
             }
         }.bind(this))
@@ -69,24 +56,23 @@ export default class Site {
         this.element.innerHTML = '<div class="content content--main"></div>';
         this.container = this.element.firstElementChild;
 
-        this.header = new Header();
+        this.header = new Header(this.router);
         this.element.insertBefore(this.header.element, this.element.firstElementChild);
         document.body.appendChild(this.element);
         document.body.addEventListener('click', this.onClick.bind(this), false);
     }
 
-    showPage(path, page) {
+    showPage(page, options) {
         if (page !== this.page) {
             return;
         }
 
         this.container.appendChild(page.element);
         if (this.lastPage) {
-            var animateForward = this.getDirection(path, this.path);
-            var pageAnim = animateForward ? 'anim--in-left' : 'anim--in-right';
-            var lastPageAnim = animateForward ? 'anim--out-left' : 'anim--out-right';
-
             var lastPage = this.lastPage;
+            var pageAnim = options.isMovingForward ? 'anim--in-left' : 'anim--in-right';
+            var lastPageAnim = options.isMovingForward ? 'anim--out-left' : 'anim--out-right';
+
             animate(this.page.element, pageAnim);
             animate(this.lastPage.element, lastPageAnim, function (element) {
                 element.remove();
@@ -97,7 +83,6 @@ export default class Site {
         }
 
         this.lastPage = this.page;
-        this.path = path;
     }
 
     updateBasement(user) {

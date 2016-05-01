@@ -42,8 +42,7 @@ if (!Object.assign) { // Needed for IE/Safari < 9
 }
 
 if (!Array.prototype.find) { // Needed for IE
-    Array.prototype.find = function (predicate) {
-        var thisArg = arguments[1];
+    Array.prototype.find = function (predicate, thisArg) {
         for (var i = 0; i < this.length; i++) {
             var value = this[i];
             if (predicate.call(thisArg, value, i, this)) {
@@ -54,8 +53,7 @@ if (!Array.prototype.find) { // Needed for IE
 }
 
 if (!Array.prototype.findIndex) { // Needed for IE
-    Array.prototype.findIndex = function (predicate) {
-        var thisArg = arguments[1];
+    Array.prototype.findIndex = function (predicate, thisArg) {
         for (var i = 0; i < this.length; i++) {
             var value = this[i];
             if (predicate.call(thisArg, value, i, this)) {

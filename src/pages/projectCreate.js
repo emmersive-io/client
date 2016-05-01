@@ -2,9 +2,10 @@ import animate from '../core/animate';
 import connection from '../firebase/connection';
 
 export default class ProjectCreatePage {
-    constructor(header) {
-        this.header = header;
-        header.update({title: 'New Project', leftAction: 'back'});
+    constructor(options) {
+        this.router = options.router;
+        this.header = options.header;
+        this.header.update({title: 'New Project', leftAction: 'back'});
 
         this.element = document.createElement('div');
         this.element.className = 'project-edit';
@@ -25,7 +26,7 @@ export default class ProjectCreatePage {
         };
 
         connection.createProject(project).then(function (projectId) {
-            location.replace('#projects/' + projectId);
+            this.router.navigateTo('#projects/' + projectId);
         }).catch(function () {
             animate(button, 'anim--shake');
         });
