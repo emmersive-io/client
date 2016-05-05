@@ -140,7 +140,7 @@ export default class ProjectPage {
         if (this.project && userProjectData) {
             for (var i = 0; i < this.sections.length; i++) {
                 var section = this.sections[i];
-                var property = section.section || 'people'; // Home updates on user changes
+                var property = section.name || 'people'; // Home updates on user changes
                 section.button.classList.toggle('has-update', projectTypeHasUpdate(this.project, userProjectData, property));
             }
 
