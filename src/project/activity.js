@@ -11,8 +11,8 @@ export default class ProjectActivity {
         this.element.innerHTML = `
             <ul class="activity-list scrollable"></ul>
             <form class="activity--new">
-                <textarea class="activity--entry" placeholder="Send a message" aria-label="Message" rows="1"></textarea>
-                <button><span class="fa fa-plus" aria-hidden="true"></span></button>
+                <textarea class="activity--entry" placeholder="Enter your message..." aria-label="Message" rows="1"></textarea>
+                <button class="button--link" type="submit">Send</button>
             </form>`;
 
         this.newActivity = this.element.lastElementChild;

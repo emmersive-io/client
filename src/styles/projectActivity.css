@@ -10,23 +10,27 @@
 }
 
 .activity--entry {
-    font-size: 12px;
+    font-size: 14px;
     max-height: 120px;
-    border: none;
-    padding-left: 20px;
-    margin: 0;
-    outline: none;
+    border-radius: 6px;
+    margin-right: 10px;
+}
+
+.activity--entry:focus{
+    outline:none;
+    border-color: var(--selected-color);
 }
 
 .activity--new {
     display: flex;
     flex-shrink: 0;
+    padding: 0 10px 0 20px;
+    background-color: var(--background-light);
     border-top: 1px solid var(--input-border);
 }
 
-.activity--new button {
-    background: none;
-    color: var(--brand);
+.activity--new .button--link {
+    flex-shrink: 0;
 }
 
 .activity-list .item__date {
@@ -38,8 +42,4 @@
 .item__description {
     margin: 5px 0 20px 0;
     font-size: 14px;
-}
-
-.project-activity + .footer {
-    border-top: none;
 }

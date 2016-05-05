@@ -3,12 +3,14 @@
     --text-inverted: #fff;
     --medium-text: #a1a1a1;
     --light-text: #d6d6da;
+
+    --background-light: #f8f8f8;
     --input-border: #cacacd;
 
     --brand: #da392a;
     --button-color: #da392a;
     --link-color: #da392a;
-    --selected-color: #55acee;
+    --selected-color: #4d90fe;
 
     --basement: #202020;
     --basement-background: #2d2d2d;

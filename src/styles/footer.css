@@ -19,7 +19,7 @@
 }
 
 .footer button.selected {
-    color: var(--selected-color);
+    color: var(--brand);
 }
 
 .footer button.has-update .button__title:before {
