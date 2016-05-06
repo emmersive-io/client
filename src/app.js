@@ -12,6 +12,7 @@ import LoginPage from './pages/login';
 import NewProjectPage from './pages/projectCreate';
 import ProfilePage from './pages/profile';
 import ProjectList from './pages/projectList';
+import ProjectMembersPage from './pages/projectMembers';
 import ProjectPage from './pages/project';
 import RegisterPage from './pages/register';
 import ResetPasswordPage from './pages/resetPassword';
@@ -28,5 +29,6 @@ new Site({
     'projects': ProjectList,
     'projects/new': NewProjectPage,
     'projects/:projectId': ProjectPage,
-    'projects/:projectId/edit': EditProjectPage
+    'projects/:projectId/edit': EditProjectPage,
+    'projects/:projectId/members': ProjectMembersPage
 });

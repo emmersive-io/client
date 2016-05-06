@@ -1,10 +1,14 @@
 :root {
     --text: #000;
     --text-inverted: #fff;
-    --medium-text: #a1a1a1;
-    --light-text: #d6d6da;
+    --text-inverted-light: #a2a2a2;
+
+    --text-dark: #565656;
+    --text-medium: #a1a1a1;
+    --text-light: #d6d6da;
 
     --background-light: #f8f8f8;
+    --background-dark: #2d2d2d;
     --input-border: #cacacd;
 
     --brand: #da392a;

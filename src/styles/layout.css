@@ -80,6 +80,12 @@
     margin-right: 5px;
 }
 
+.profile-image--medium {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
 .home .profile__image {
     margin-bottom: 60px;
 }
@@ -95,6 +101,10 @@
     position: absolute;
     left: 0;
     top: 0;
+}
+
+.list-item--thumb {
+    display: inline-block;
 }
 
 .item__date {

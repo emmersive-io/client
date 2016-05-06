@@ -1,10 +1,19 @@
 .project__home {
     flex-grow: 1;
+}
+
+.project__info {
     padding: 20px;
+    background-color: var(--background-dark);
 }
 
 .project__name {
     font-size: 18px;
+    color: var(--text-inverted);
+}
+
+.project__description {
+    color: var(--text-inverted-light);
 }
 
 .user__name {
@@ -16,13 +25,35 @@
     color: var(--text);
 }
 
+.project__owner {
+    color: var(--text-inverted);
+}
+
 .project__owner .profile-image--small {
     vertical-align: middle;
 }
 
+.project__group {
+    position: relative;
+    border-bottom: 1px solid var(--input-border);
+    padding: 20px;
+}
+
 .project__header {
-     font-size: 16px;
-     border-bottom: 1px solid var(--input-border);
-     margin-bottom: 20px;
-     margin-top: 40px;
- }
+    font-size: 14px;
+    color: var(--text-dark);
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.project__member-list {
+    padding-right: 44px;
+}
+
+.project__nav-button {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    height: 100%;
+    color: var(--text-light);
+}

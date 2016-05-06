@@ -69,7 +69,7 @@
 }
 
 .task__checkbox:checked + textarea {
-    color: var(--medium-text);
+    color: var(--text-medium);
     text-decoration: line-through;
 }
 
