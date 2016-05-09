@@ -13,8 +13,8 @@ export default class ProjectHome {
         this.element.className = 'project__home scrollable';
         this.element.innerHTML = ` 
                 <div class="project__info">
-                    <h2 class="project__name">${project.name}</h2>
-                    <p class="project__description">${project.description}</p>
+                    <h2 class="project__name">${project.name || 'Untitled Project'}</h2>
+                    <p class="project__description">${project.description || ''}</p>
                 </div>
                 <div class="project__group">
                     <h3 class="project__header">Members</h3>

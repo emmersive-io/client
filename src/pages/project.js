@@ -48,11 +48,16 @@ export default class ProjectPage {
             this.sections[i].button = this.footer.children[i];
         }
 
+        this.projectId = projectId;
         this.projectRef = connection.firebase.child('projects/' + projectId);
         this.userProjectRef = connection.firebase.child('users/' + session.user.id + '/projects/' + projectId);
 
         this.projectRef.on('value', this.onProjectChanged, this);
         this.userProjectRef.on('value', this.onUserProjectUpdated, this);
+    }
+
+    is (root, projectId){
+        return projectId === this.projectId;
     }
 
     onRemove() {

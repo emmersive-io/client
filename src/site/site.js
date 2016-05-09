@@ -49,7 +49,7 @@ export default class Site {
             this.updateBasement(user);
 
             var page = this.page;
-            if (!page || !(page instanceof Page)) {
+            if (!page || !(page instanceof Page) || (page.is && !page.is.apply(page, path))) {
                 page = new Page(this.header);
             }
 
