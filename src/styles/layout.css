@@ -1,9 +1,10 @@
 .page {
     position: fixed;
     top: 0;
+    left: 0;
     bottom: 0;
     overflow: hidden;
-    transition: left .2s ease-out;
+    transition: transform .2s linear;
 }
 
 .page--main {
@@ -12,11 +13,11 @@
 }
 
 .show-basement .page--basement {
-    left: 0;
+    transform: translateX(0);
 }
 
 .show-basement .page--main {
-    left: 85%;
+    transform: translateX(84vw);
     box-shadow: -10px 0 10px 0 rgba(0, 0, 0, 0.5);
 }
 

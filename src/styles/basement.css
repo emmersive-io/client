@@ -1,5 +1,5 @@
 .page--basement {
-    left: -85%;
+    transform: translate(-85vw);
     width: 85%;
     background: var(--basement-background);
 }
@@ -67,6 +67,6 @@
     }
 
     .show-basement .page--main {
-        left: 400px;
+        transform: translateX(400px);
     }
 }
