@@ -18,8 +18,8 @@ export default class ProjectEditPage {
     onButtonClick() {
         if (confirm('Are you sure you want to delete the project?')) {
             connection.removeProject(this.project.id).then(function () {
-                this.router.navigateTo('#projects')
-            });
+                this.router.navigateTo('#projects', {replace: true})
+            }.bind(this));
         }
     }
 

@@ -22,8 +22,6 @@ export default class ResetPasswordPage {
         if (email) {
             connection.resetPassword(email);
             e.target.innerHTML = `<p class="zero-state-message">We've sent you an email. Please follow the instructions to reset your password.</p>`;
-
-            // TODO: Where does the user go now? Should there be a link back to the login screen?
         }
         else {
             animate(e.target, 'anim--shake');

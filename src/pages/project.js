@@ -56,10 +56,6 @@ export default class ProjectPage {
         this.userProjectRef.on('value', this.onUserProjectUpdated, this);
     }
 
-    is (root, projectId){
-        return projectId === this.projectId;
-    }
-
     onRemove() {
         this.projectRef.off('value', this.onProjectChanged, this);
         this.userProjectRef.off('value', this.onUserProjectUpdated, this);

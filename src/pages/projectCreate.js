@@ -25,10 +25,12 @@ export default class ProjectCreatePage {
             description: this.descriptionInput.value.trim()
         };
 
-        connection.createProject(project).then(function (projectId) {
-            this.router.navigateTo('#projects/' + projectId);
-        }).catch(function () {
-            animate(button, 'anim--shake');
-        });
+        connection.createProject(project)
+            .then(function (projectId) {
+                this.router.navigateTo('#projects/' + projectId, {replace: true});
+            }.bind(this))
+            .catch(function () {
+                animate(button, 'anim--shake');
+            });
     }
 }

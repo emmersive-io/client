@@ -27,8 +27,8 @@ export default class ChangePasswordPage {
         if (isValid) {
             connection.firebase.changeEmail(data)
                 .then(function () {
-                    this.router.navigateTo('#profile/' + session.user.id);
-                })
+                    this.router.navigateTo('#profile/' + session.user.id, {replace: true});
+                }.bind(this))
                 .catch(function (e) {
                     animate(e.target, 'anim--shake');
                 });

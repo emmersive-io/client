@@ -86,7 +86,7 @@ export default class Router {
         }
         else {
             var index;
-            if (history.length === this.historyLength) { // TODO: Does this hold up when moving forward from history[-1]?
+            if (history.length === this.historyLength) {
                 index = this.history.findIndex(entry => entry.hash === hash);
             }
 

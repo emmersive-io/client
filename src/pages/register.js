@@ -33,12 +33,13 @@ export default class RegisterPage {
         var password2 = elements.password2.value.trim();
 
         if (name && email && password && password === password2) {
-            connection.createUser(name, email, password).then(function () {
-                // TODO: Should this be a navigate to route or end auth loop to go back to where you were kind of thing?
-                this.router.navigateTo('#');
-            }).catch(function () {
-                animate(e.target, 'anim--shake');
-            });
+            connection.createUser(name, email, password)
+                .then(function () {
+                    this.router.navigateTo('#', {replace: true});
+                }.bind(this))
+                .catch(function () {
+                    animate(e.target, 'anim--shake');
+                });
         }
         else {
             animate(e.target, 'anim--shake');

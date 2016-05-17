@@ -33,11 +33,13 @@ export default class LoginPage {
         var password = elements.password.value.trim();
 
         if (email && password) {
-            session.login(email, password).then(function () {
-                this.router.navigateTo('#');
-            }).catch(function () {
-                animate(e.target, 'anim--shake');
-            });
+            session.login(email, password)
+                .then(function () {
+                    this.router.navigateTo('#', {replace: true});
+                }.bind(this))
+                .catch(function () {
+                    animate(e.target, 'anim--shake');
+                });
         }
     }
 }

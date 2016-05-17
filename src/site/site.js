@@ -21,10 +21,8 @@ export default class Site {
             var isLoggedIn = (user != null);
             var isLoginScreen = location.hash.indexOf('#login') === 0;
 
-            // TODO: I think there's still a bug in here somehow when loading
-            // the page after the session has expired
             if (isLoggedIn === isLoginScreen) {
-                this.router.navigateTo(isLoggedIn ? '#' : '#login');
+                this.router.navigateTo(isLoggedIn ? '#' : '#login', {replace: true});
                 return;
             }
 
@@ -39,7 +37,6 @@ export default class Site {
                 page = new Page({header: this.header, router: this.router});
             }
 
-            // TODO: Clean this up
             var onRoute = page.onRoute && page.onRoute.apply(page, options.path);
             if (page !== this.page) {
                 this.page = page;
