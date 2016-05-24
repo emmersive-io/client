@@ -157,8 +157,8 @@ export default class Router {
         }
         else {
             this.internalRoute.historyIndex++;
-            var state = this.history[this.historyIndex];
-            location.assign('#' + state.path.slice(0, -1));
+            var state = this.history[this.historyIndex].path.slice(0, -1);
+            location.assign('#' + state.join('/'));
         }
     }
 

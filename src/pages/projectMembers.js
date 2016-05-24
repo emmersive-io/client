@@ -3,14 +3,14 @@ import List from '../core/sortedElementList';
 import ListItem from '../elements/userListItem';
 
 export default class ProjectHome {
-    constructor(header) {
-        header.update({leftAction: 'back', title: 'Members'});
+    constructor(options) {
+        options.header.update({leftAction: 'back', title: 'Members'});
         this.element = document.createElement('div');
         this.element.className = 'project__members scrollable';
         this.list = new List(this.element, (u1, u2) => u1.user.name.localeCompare(u2.user.name) >= 0);
     }
 
-    onRoute(root, projectId) {
+    onRoute(projectId) {
         this.userRef = connection.firebase.child('projects/' + projectId + '/people');
         this.userRef.on('child_added', this.onUserAdded, this);
         this.userRef.on('child_removed', this.onUserRemoved, this);

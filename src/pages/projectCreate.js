@@ -4,8 +4,7 @@ import connection from '../firebase/connection';
 export default class ProjectCreatePage {
     constructor(options) {
         this.router = options.router;
-        this.header = options.header;
-        this.header.update({title: 'New Project', leftAction: 'back'});
+        options.header.update({title: 'New Project', leftAction: 'back'});
 
         this.element = document.createElement('div');
         this.element.className = 'project-edit';

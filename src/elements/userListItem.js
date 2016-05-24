@@ -8,7 +8,7 @@ export default class UserListItem {
         if (isPreview === true) {
             this.element.className = 'list-item--thumb';
             this.element.innerHTML = `
-                <a href="#profile/${user.id}">
+                <a href="#profile/${user.id}" title="${user.name}">
                     <img class="profile-image--medium" src="${user.image || defaultUserImage}"/>
                 </a>`;
         }
