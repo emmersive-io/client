@@ -1,9 +1,12 @@
 .footer {
+    position: relative;
     display: flex;
     flex-shrink: 0;
     justify-content: space-between;
+    background: #fff;
     border-top: 1px solid var(--input-border);
     padding: 5px 10px;
+    z-index: 1;
 }
 
 .footer button {

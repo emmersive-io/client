@@ -1,5 +1,5 @@
+import {animate} from '../core/animate';
 import session from '../firebase/session';
-import animate from '../core/animate';
 import logoPath from '../images/logo.png';
 
 export default class LoginPage {

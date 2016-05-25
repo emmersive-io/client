@@ -10,8 +10,9 @@
 @import "styles/footer.css";
 @import "styles/basement.css";
 @import "styles/profile.css";
-
 @import "styles/projects.css";
-@import "styles/projectHome.css";
+
 @import "styles/projectActivity.css";
+@import "styles/projectHome.css";
+@import "styles/projectMeetups.css";
 @import "styles/projectTasks.css";

@@ -1,4 +1,4 @@
-.anim--in-left, .anim--in-right, .anim--out-left, .anim--out-right {
+.anim--out-left, .anim--out-right {
     position: absolute;
     top: 0;
     left: 0;

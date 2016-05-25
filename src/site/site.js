@@ -1,4 +1,4 @@
-import animate from '../core/animate';
+import {slide} from '../core/animate';
 import Basement from './basement';
 import Header from './header';
 import Router from '../core/router';
@@ -60,26 +60,15 @@ export default class Site {
     }
 
     showPage(page, options) {
-        if (page !== this.page) {
-            return;
+        if (page === this.page) {
+            this.container.appendChild(page.element);
+            if (this.lastPage) {
+                var callback = this.lastPage.onRemove && this.lastPage.onRemove.bind(this.lastPage);
+                slide(this.page.element, this.lastPage.element, options.isMovingForward, callback);
+            }
+
+            this.lastPage = this.page;
         }
-
-        this.container.appendChild(page.element);
-        if (this.lastPage) {
-            var lastPage = this.lastPage;
-            var pageAnim = options.isMovingForward ? 'anim--in-left' : 'anim--in-right';
-            var lastPageAnim = options.isMovingForward ? 'anim--out-left' : 'anim--out-right';
-
-            animate(this.page.element, pageAnim);
-            animate(this.lastPage.element, lastPageAnim, function (element) {
-                element.remove();
-                if (lastPage.onRemove) {
-                    lastPage.onRemove();
-                }
-            });
-        }
-
-        this.lastPage = this.page;
     }
 
     updateBasement(user) {

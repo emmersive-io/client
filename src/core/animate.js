@@ -1,4 +1,4 @@
-export default function (element, className, callback) {
+function animate(element, className, callback) {
     if (element.classList.contains(className)) {
         return;
     }
@@ -15,4 +15,15 @@ export default function (element, className, callback) {
     }, false);
 
     element.classList.add(className);
-};
+}
+
+function slide(newElement, oldElement, isMovingForward, callback) {
+    var direction = isMovingForward ? 'left' : 'right';
+    animate(newElement, 'anim--in-' + direction);
+    animate(oldElement, 'anim--out-' + direction, function (element) {
+        element.remove();
+        callback && callback();
+    });
+}
+
+export {animate, slide};

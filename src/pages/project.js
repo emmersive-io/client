@@ -1,3 +1,4 @@
+import {slide} from '../core/animate';
 import connection from '../firebase/connection';
 import session from '../firebase/session';
 import transform from '../firebase/transform';
@@ -18,6 +19,8 @@ export default class ProjectPage {
             {name: 'tasks', type: TaskPage},
             {name: 'meetups', type: MeetupPage}
         ];
+
+        this.sections.forEach((x, i) => x.index = i);
     }
 
     initialize(projectId) {
@@ -48,7 +51,6 @@ export default class ProjectPage {
             this.sections[i].button = this.footer.children[i];
         }
 
-        this.projectId = projectId;
         this.projectRef = connection.firebase.child('projects/' + projectId);
         this.userProjectRef = connection.firebase.child('users/' + session.user.id + '/projects/' + projectId);
 
@@ -77,10 +79,10 @@ export default class ProjectPage {
     }
 
     setSelectedSection(sectionName) {
+        var oldSection = this.section;
         if (this.section) {
-            this.section.content.element.remove();
-            this.section.button.classList.remove('selected');
-            connection.viewProject(this.project.id, this.section.name || 'people');
+            oldSection.button.classList.remove('selected');
+            connection.viewProject(this.project.id, oldSection.name || 'people');
         }
 
         this.section = this.sections.find(section => section.name === sectionName)
@@ -88,6 +90,11 @@ export default class ProjectPage {
 
         this.section.button.classList.add('selected');
         this.setSectionElement();
+
+        if (oldSection && this.section.content) {
+            var isMovingForward = this.section.index >= oldSection.index;
+            slide(this.section.content.element, oldSection.content.element, isMovingForward);
+        }
     }
 
     setSectionElement() {

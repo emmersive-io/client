@@ -1,4 +1,4 @@
-import animate from '../core/animate';
+import {animate} from '../core/animate';
 import connection from '../firebase/connection';
 import profileImage from '../images/profile.png';
 
