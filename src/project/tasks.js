@@ -6,9 +6,9 @@ import ListItem from '../elements/taskListItem';
 import SwipeHandler from '../core/swipeHandler';
 
 
-export default class TaskList {
-    constructor(projectId) {
-        this.projectId = projectId;
+export default class ProjectTasks {
+    constructor(project) {
+        this.project = project;
         this.element = document.createElement('div');
         this.element.className = 'project-tasks scrollable';
         this.element.innerHTML = `
@@ -26,7 +26,7 @@ export default class TaskList {
         this.element.addEventListener('change', this.onStatusChanged.bind(this), true);
         this.element.addEventListener('click', this.onDeleteButtonClick.bind(this), this);
 
-        this.taskRef = connection.firebase.child('tasks/' + projectId);
+        this.taskRef = connection.firebase.child('tasks/' + project.id);
         this.taskRef.on('child_added', this.onTaskAdded, this);
         this.taskRef.on('child_changed', this.onTaskChanged, this);
         this.taskRef.on('child_removed', this.onTaskRemoved, this);
@@ -37,7 +37,7 @@ export default class TaskList {
         var taskElement = deleteButton && deleteButton.closest('.checkbox-card');
         if (taskElement) {
             var task = this.list.get(task => task.element === taskElement);
-            connection.removeTask(this.projectId, task.id);
+            connection.removeTask(this.project.id, task.id);
         }
     }
 
@@ -45,7 +45,7 @@ export default class TaskList {
         e.preventDefault();
         var content = this.newTask.elements[0].value.trim();
         if (content) {
-            connection.createTask(this.projectId, content);
+            connection.createTask(this.project.id, content);
             this.newTask.reset();
         }
     }
@@ -66,7 +66,7 @@ export default class TaskList {
             }
 
             var task = this.list.get(task => task.element === taskElement);
-            connection.updateTask(this.projectId, task.id, data);
+            connection.updateTask(this.project.id, task.id, data);
         }
     }
 

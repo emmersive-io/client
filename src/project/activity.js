@@ -3,23 +3,23 @@ import transform from '../firebase/transform';
 import List from '../core/sortedElementList';
 import ListItem from '../elements/activityListItem';
 
-export default class ActivityList {
-    constructor(projectId) {
-        this.projectId = projectId;
+export default class ProjectActivity {
+    constructor(project) {
+        this.project = project;
         this.element = document.createElement('div');
         this.element.className = 'project-activity';
         this.element.innerHTML = `
             <ul class="activity-list scrollable"></ul>
             <form class="activity--new">
-                <textarea class="activity--entry" placeholder="Message" aria-label="Message" rows="1"></textarea>
-                <button><span class="fa fa-plus" aria-hidden="true"></span></button>
+                <textarea class="activity--entry" placeholder="Enter your message..." aria-label="Message" rows="1"></textarea>
+                <button class="button--link" type="submit">Send</button>
             </form>`;
 
         this.newActivity = this.element.lastElementChild;
         this.list = new List(this.element.firstElementChild, (a1, a2) => a1.created_at > a2.created_at);
         this.newActivity.addEventListener('submit', this.onNewActivity.bind(this), false);
 
-        this.activityRef = connection.firebase.child('activities/' + projectId);
+        this.activityRef = connection.firebase.child('activities/' + project.id);
         this.activityRef.on('child_added', this.onActivityAdded, this);
     }
 
@@ -48,7 +48,7 @@ export default class ActivityList {
 
         var content = this.newActivity.firstElementChild.value.trim();
         if (content) {
-            connection.createActivity(this.projectId, content);
+            connection.createActivity(this.project.id, content);
             this.newActivity.reset();
         }
     }

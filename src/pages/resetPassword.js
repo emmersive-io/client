@@ -1,8 +1,8 @@
-import animate from '../core/animate';
+import {animate} from '../core/animate';
 import connection from '../firebase/connection';
 
 export default class ResetPasswordPage {
-    constructor(header) {
+    constructor(options) {
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
         this.element.innerHTML = `
@@ -11,7 +11,7 @@ export default class ResetPasswordPage {
                 <button class="button--full">Reset Password</button>
             </form>`;
 
-        header.update({leftAction: 'back', style: 'transparent-dark'});
+        options.header.update({leftAction: 'back', style: 'transparent-dark'});
         this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
     }
 

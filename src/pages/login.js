@@ -1,10 +1,11 @@
+import {animate} from '../core/animate';
 import session from '../firebase/session';
-import animate from '../core/animate';
 import logoPath from '../images/logo.png';
 
 export default class LoginPage {
-    constructor(header) {
-        header.update({style: 'hidden'});
+    constructor(options) {
+        this.router = options.router;
+        options.header.update({style: 'hidden'});
 
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
@@ -32,11 +33,13 @@ export default class LoginPage {
         var password = elements.password.value.trim();
 
         if (email && password) {
-            session.login(email, password).then(function () {
-                location.assign('#');
-            }).catch(function () {
-                animate(e.target, 'anim--shake');
-            });
+            session.login(email, password)
+                .then(function () {
+                    this.router.navigateTo('#', {replace: true});
+                }.bind(this))
+                .catch(function () {
+                    animate(e.target, 'anim--shake');
+                });
         }
     }
 }

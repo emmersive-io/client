@@ -1,0 +1,85 @@
+.project-tasks {
+    flex-grow: 1;
+    padding: 10px 0;
+}
+
+.task-list .item__date {
+    float: right;
+}
+
+.checkbox-card {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--input-border);
+}
+
+.task__foreground {
+    position: relative;
+    background: #fff;
+    z-index: 1;
+    padding: 10px 20px 10px 50px;
+}
+
+.task__foreground.open {
+    left: -90px !important;
+}
+
+.task__foreground:not(.swiping) {
+    transition: left .2s ease-out;
+}
+
+.task__background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    background-color: var(--brand);
+}
+
+.task__delete-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+}
+
+.task__delete-button .fa {
+    font-size: 24px;
+    display: block;
+}
+
+.task__header {
+    font-size: 12px;
+}
+
+.task__content {
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.task__checkbox {
+    position: absolute;
+    top: 5px;
+    left: -30px;
+    width: 16px;
+    height: 16px;
+}
+
+.task__checkbox:checked + textarea {
+    color: var(--text-medium);
+    text-decoration: line-through;
+}
+
+.task__description {
+    margin: 5px 0;
+    border: none;
+    padding: 0;
+    outline: none;
+}
+
+.task--new {
+    padding: 12px 20px;
+}

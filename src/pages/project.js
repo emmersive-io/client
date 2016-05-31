@@ -1,205 +1,159 @@
+import {slide} from '../core/animate';
 import connection from '../firebase/connection';
 import session from '../firebase/session';
 import transform from '../firebase/transform';
-import userCache from '../firebase/userCache';
-import defaultUserImage from '../images/profile-inverted.png';
+import {projectTypeHasUpdate} from '../firebase/utility';
 
-import ActivityList from  '../components/activityList';
-import MeetupList from '../components/meetupList';
-import TaskList from '../components/taskList';
-import UserList from '../components/userList';
-
-var sections = {
-    activities: ActivityList,
-    meetups: MeetupList,
-    people: UserList,
-    tasks: TaskList
-};
-
-function isNew(project, userProject, type) {
-    var lastView = userProject[type];
-    var lastContent = project['updated_' + type];
-    return (lastContent && (!lastView || lastView < lastContent)) || false;
-}
+import ActivityPage from  '../project/activity';
+import HomePage from '../project/home';
+import MeetupPage from '../project/meetups';
+import TaskPage from '../project/tasks';
 
 
 export default class ProjectPage {
-    constructor(header) {
-        this.header = header;
-        header.update({style: 'transparent', leftAction: 'back'});
+    constructor(options) {
+        this.header = options.header;
+        this.sections = [
+            {type: HomePage},
+            {name: 'activities', type: ActivityPage},
+            {name: 'tasks', type: TaskPage},
+            {name: 'meetups', type: MeetupPage}
+        ];
+
+        this.sections.forEach((x, i) => x.index = i);
     }
 
-    loadSection(sectionName) {
-        var SectionType = sections[sectionName];
-        if (SectionType && !(this.section instanceof SectionType)) {
-            this.overlay = document.createElement('div');
-            this.overlay.className = 'project__overlay';
-            this.overlay.innerHTML = `
-                <div class="overlay__content">
-                    <button class="overlay__close">
-                        <span class="fa fa-close" aria-hidden="true"></span>
-                    </button>
-                </div>`;
+    initialize(projectId) {
+        this.element = document.createElement('div');
+        this.element.className = 'project';
+        this.element.innerHTML = `
+            <footer class="footer">
+                <button data-href="#projects/${projectId}">
+                    <span class="fa fa-briefcase" aria-hidden="true"></span>
+                    <span class="button__title">Project</span>
+                </button>
+                <button data-href="#projects/${projectId}/activities">
+                    <span class="fa fa-comment" aria-hidden="true"></span>
+                    <span class="button__title">Discuss</span>
+                </button>
+                <button data-href="#projects/${projectId}/tasks">
+                    <span class="fa fa-tasks" aria-hidden="true"></span>
+                    <span class="button__title">Tasks</span>
+                </button>
+                <button data-href="#projects/${projectId}/meetups">
+                    <span class="fa fa-calendar-check-o" aria-hidden="true"></span>
+                    <span class="button__title">Meet up</span>
+                </button>
+            </footer>`;
 
-            this.section = new SectionType(this.project.id);
-            if (this.section.element) {
-                this.overlay.firstElementChild.appendChild(this.section.element);
-            }
-            else {
-                this.section.render(this.project.id).then(function () {
-                    this.overlay.firstElementChild.appendChild(this.section.element);
-                }.bind(this));
-            }
+        this.footer = this.element.lastElementChild;
+        for (var i = 0; i < this.sections.length; i++) {
+            this.sections[i].button = this.footer.children[i];
+        }
 
-            this.overlay.addEventListener('click', this.onOverlayCloseClick.bind(this), false);
-            document.body.appendChild(this.overlay);
-            connection.viewProject(this.project.id, sectionName);
+        this.projectRef = connection.firebase.child('projects/' + projectId);
+        this.userProjectRef = connection.firebase.child('users/' + session.user.id + '/projects/' + projectId);
+
+        this.projectRef.on('value', this.onProjectChanged, this);
+        this.userProjectRef.on('value', this.onUserProjectUpdated, this);
+    }
+
+    onRemove() {
+        this.projectRef.off('value', this.onProjectChanged, this);
+        this.userProjectRef.off('value', this.onUserProjectUpdated, this);
+
+        for (var i = 0; i < this.sections.length; i++) {
+            var section = this.sections[i];
+            if (section.content) {
+                section.content.remove();
+            }
         }
     }
 
-    onOverlayCloseClick(e) {
-        var button = e.target.closest('.overlay__close');
-        if (button) {
-            history.back();
+    onRoute(projectId, section) {
+        if (!this.element) {
+            this.initialize(projectId);
+        }
+
+        this.setSelectedSection(section);
+    }
+
+    setSelectedSection(sectionName) {
+        var oldSection = this.section;
+        if (this.section) {
+            oldSection.button.classList.remove('selected');
+            connection.viewProject(this.project.id, oldSection.name || 'people');
+        }
+
+        this.section = this.sections.find(section => section.name === sectionName)
+                       || this.sections[0];
+
+        this.section.button.classList.add('selected');
+        this.setSectionElement();
+
+        if (oldSection && this.section.content) {
+            var isMovingForward = this.section.index >= oldSection.index;
+            slide(this.section.content.element, oldSection.content.element, isMovingForward);
+        }
+    }
+
+    setSectionElement() {
+        if (this.project) {
+            if (!this.section.content) {
+                this.section.content = new this.section.type(this.project);
+            }
+
+            var element = this.section.content.element;
+            if (!element.parentNode) {
+                connection.viewProject(this.project.id, this.section.name || 'people');
+                this.element.insertBefore(element, this.footer);
+            }
+
+            this.updateHeader();
         }
     }
 
     onProjectChanged(snapshot) {
-        var project = transform.toObj(snapshot);
-        if (project) {
-            if (this.projectName !== project.name) {
-                this.projectName = project.name;
-                this.element.querySelector('.project__name').textContent = project.name;
+        this.project = transform.toObj(snapshot);
+        if (this.project) {
+            if (this.section) {
+                this.setSectionElement();
+                if (this.section.content.onProjectChanged) {
+                    this.section.content.onProjectChanged(this.project);
+                }
             }
 
-            if (this.projectImage !== project.image) {
-                this.projectImage = project.image;
-                this.element.querySelector('.project__details').style.backgroundImage = 'url(' + project.image + ')';
-            }
-
-            this.project = project;
-            this.updateHeader(project);
-            this.updateViewed(session.user.projects && session.user.projects[project.id]);
-
-            if (!this.projectOwner) {
-                userCache.get(project.created_by).then(this.setOwner.bind(this));
-            }
-
-            this.loadSection(this.sectionName);
-        }
-    }
-
-    onRemove() {
-        this.userProjectRef.off('value', this.updateViewed, this);
-        connection.firebase.child('projects/' + this.projectId).off('value', this.onProjectChanged, this);
-
-        if (this.overlay) {
-            this.overlay.remove();
-            this.overlay = null;
-
-            if (this.section.remove) {
-                this.section.remove();
-                this.section = null;
-            }
-        }
-    }
-
-    onRoute(root, projectId, section) {
-        if (this.sectionName) {
-            connection.viewProject(this.projectId, this.sectionName);
-        }
-
-        this.projectId = projectId;
-        this.sectionName = section;
-
-        if (!this.element) {
-            this.element = document.createElement('div');
-            this.element.className = 'project';
-            this.element.innerHTML = `
-                <div class="project__details">
-                    <h2 class="project__name"></h2>
-                    <a class="project__owner">
-                        <img class="profile-image--small"/>
-                        <span class="project__user-name"></span>
-                    </a>
-                </div>
-                <div class="project__sections">
-                    <a class="project__section" href="#projects/${projectId}/activities">
-                        <span class="fa fa-comment" aria-hidden="true"></span>
-                        <span class="project__section-title">Team Chat</span>
-                    </a>
-                    <a class="project__section" href="#projects/${projectId}/tasks">
-                        <span class="fa fa-tasks" aria-hidden="true"></span>
-                        <span class="project__section-title">Tasks</span>
-                    </a>
-                    <a class="project__section" href="#projects/${projectId}/people">
-                        <span class="fa fa-users" aria-hidden="true"></span>
-                        <span class="project__section-title">Team Members</span>
-                    </a>
-                    <a class="project__section" href="#projects/${projectId}/meetups">
-                        <span class="fa fa-calendar-check-o" aria-hidden="true"></span>
-                        <span class="project__section-title">Meet up</span>
-                    </a>
-                </div>`;
-
-            this.sectionContainer = this.element.lastElementChild;
-            connection.firebase.child('projects/' + projectId).on('value', this.onProjectChanged.bind(this));
-            this.userProjectRef = connection.firebase.child('users/' + session.user.id + '/projects/' + projectId);
-            this.userProjectRef.on('value', this.onUserProjectUpdated, this);
-        }
-
-        this.onRemove();
-        if (this.project && section) {
-            return this.loadSection(section);
+            this.updateHeader();
+            this.updateFooter(session.user.projects && session.user.projects[this.project.id]);
         }
     }
 
     onUserProjectUpdated(snapshot) {
-        this.updateViewed(snapshot.val());
+        this.updateFooter(snapshot.val());
     }
 
-    setOwner(user) {
-        this.projectOwner = user;
-        if (user) {
-            var ownerElement = this.element.querySelector('.project__owner');
-            ownerElement.href = '#profile/' + user.id;
-            ownerElement.lastElementChild.textContent = user.name;
-            ownerElement.firstElementChild.src = user.image || defaultUserImage;
+    updateHeader() {
+        var actions;
+        var content = this.section && this.section.content;
+        if (content && content.getHeaderAction) {
+            actions = content.getHeaderAction();
         }
+
+        var headerOptions = actions || {};
+        headerOptions.title = this.project.name;
+        this.header.update(headerOptions);
     }
 
-    updateHeader(project) {
-        var action, onAction;
-        if (project.created_by === session.user.id) {
-            action = 'Edit Project';
-            onAction = '#projects/' + project.id + '/edit';
-        }
-        else if (project.people[session.user.id]) {
-            action = 'Leave Project';
-            onAction = connection.leaveProject.bind(connection, this.project.id);
-        }
-        else {
-            action = 'Join Project';
-            onAction = connection.joinProject.bind(connection, this.project.id);
-        }
+    updateFooter(userProjectData) {
+        if (this.project && userProjectData) {
+            for (var i = 0; i < this.sections.length; i++) {
+                var section = this.sections[i];
+                var property = section.name || 'people'; // Home updates on user changes
+                section.button.classList.toggle('has-update', projectTypeHasUpdate(this.project, userProjectData, property));
+            }
 
-        if (this.headerAction !== action) {
-            this.headerAction = action;
-            this.header.update({
-                action: action,
-                onAction: onAction,
-                style: 'transparent',
-                leftAction: 'back'
-            });
-        }
-    }
-
-    updateViewed(userViewData) {
-        if (userViewData && this.project) {
-            var sections = ['activities', 'tasks', 'people', 'meetups'];
-            var sectionElements = this.sectionContainer.children;
-            for (var i = 0; i < sectionElements.length; i++) {
-                sectionElements[i].classList.toggle('has-update', isNew(this.project, userViewData, sections[i]));
+            if (this.section && this.section.onUserProjectUpdated) {
+                this.section.onUserProjectUpdated(userProjectData);
             }
         }
     }

@@ -1,29 +1,28 @@
 .page--basement {
-    left: -85%;
+    transform: translate(-85vw);
     width: 85%;
     background: var(--basement-background);
 }
 
 .header--basement {
-    display: flex;
-    align-items: center;
     padding: 0 20px;
-    background: #202020;
+    line-height: 64px;
+    background: var(--basement);
     color: var(--text-inverted);
+}
+
+.basement__header-link {
+    display: block;
 }
 
 .basement__header-logo {
     width: 32px;
+    vertical-align: middle;
+    margin-right: 5px;
 }
 
 .basement__user-name {
-    flex-grow: 1;
-    padding: 0 10px;
-}
-
-.header--basement button {
-    background: none;
-    font-size: 24px;
+    color: var(--text-inverted);
 }
 
 .content--basement {
@@ -34,17 +33,21 @@
     font-weight: bold;
     font-size: 16px;
     color: var(--basement-section-header);
-    margin: 20px 0 0 0;
+    margin-top: 20px;
 }
 
 .basement__project-list {
     margin-right: -20px;
-    color: #fff;
+    color: var(--text-inverted);
 }
 
 .basement__project {
     padding: 10px 0;
     border-bottom: 1px solid var(--basement-item-border);
+}
+
+.basement__project:last-child {
+    border-bottom: none;
 }
 
 .basement__project a {
@@ -56,4 +59,14 @@
 
 .basement__project.has-update a {
     border-color: var(--brand);
+}
+
+@media (min-width: 470px) {
+    .page--basement {
+        width: 400px;
+    }
+
+    .show-basement .page--main {
+        transform: translateX(400px);
+    }
 }

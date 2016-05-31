@@ -1,7 +1,8 @@
 import headerLogo from '../images/header-logo.png';
 
 export default class Header {
-    constructor() {
+    constructor(router) {
+        this.router = router;
         this.element = document.createElement('header');
         this.element.className = 'header header--main';
         this.element.innerHTML = `
@@ -12,7 +13,7 @@ export default class Header {
                 <span class="fa fa-bars" aria-hidden="true"></span>
                 <img class="header__logo" src="${headerLogo}"/>
             </button>
-            <h1 class="header__title"></h1>
+            <h1 class="header__title text-truncate"></h1>
             <button class="header__button--action"></button>`;
 
         this.headerTitle = this.element.children[2];
@@ -28,14 +29,15 @@ export default class Header {
                     this.options.onAction();
                 }
                 else {
-                    location.assign(this.options.onAction);
+                    this.router.navigateTo(this.options.onAction);
                 }
             }
             else if (button.classList.contains('header__button--basement')) {
                 document.body.classList.toggle('show-basement');
+                e.stopPropagation();
             }
             else {
-                history.back();
+                this.router.navigateBack();
             }
         }
     }

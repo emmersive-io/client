@@ -43,14 +43,14 @@
     left: -14px;
 }
 
-.header__button--basement .fa{
+.header__button--basement .fa {
     line-height: 32px;
     vertical-align: middle;
 }
 
 .header__logo {
     width: 32px;
-    margin-left: 10px;
+    margin-left: 5px;
     vertical-align: middle;
 }
 
@@ -65,11 +65,12 @@
 }
 
 .header__title {
-    margin: 0;
     font-size: 18px;
     line-height: 44px;
     text-align: center;
-    font-weight: normal;
+    margin: auto;
+    width: 50%;
+    max-width: 100vw;
 }
 
 .header:not([data-left-action="back"]) .header__button--back {

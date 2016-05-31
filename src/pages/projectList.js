@@ -2,8 +2,8 @@ import connection from '../firebase/connection';
 import Project from '../elements/projectListItem';
 
 export default class ProjectsPage {
-    constructor(header) {
-        this.header = header;
+    constructor(options) {
+        this.header = options.header;
     }
 
     onRoute() {
@@ -11,9 +11,9 @@ export default class ProjectsPage {
             this.header.update({title: 'Find a project'});
 
             this.element = document.createElement('div');
-            this.element.className = 'projects';
+            this.element.className = 'projects scrollable';
             this.element.innerHTML = `
-                <input type="search" placeholder="Search" aria-label="search" />
+                <input class="input--full" type="search" placeholder="Search" aria-label="search" />
                 <ul class="project-list"></ul>`;
 
             this.projects = [];

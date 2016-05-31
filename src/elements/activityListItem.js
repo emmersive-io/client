@@ -11,7 +11,7 @@ export default class ActivityListItem {
         var dateString = humanizeDate(activity.created_at);
 
         this.element.innerHTML = `
-            <img class="profile-image" src="${user.image || defaultUserImage}"/>
+            <img class="profile-image--small" src="${user.image || defaultUserImage}"/>
             <a class="user-name" href="#profile/${user.id}">${user.name}</a>
             <span class="item__date">${dateString}</span>
             <p class="item__description">${activity.description}</p>`;

@@ -1,40 +1,41 @@
-.anim--in-left, .anim--in-right, .anim--out-left, .anim--out-right {
-    position: fixed;
-    width: 100vw;
+.anim--out-left, .anim--out-right {
+    position: absolute;
     top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
-.anim--in-left { animation: slide-in-left .2s ease-out; }
-.anim--in-right { animation: slide-in-right .2s ease-out; }
-.anim--out-left { animation: slide-out-left .2s ease-out; }
-.anim--out-right { animation: slide-out-right .2s ease-out; }
+.anim--in-left { animation: slide-in-left .2s linear; }
+.anim--in-right { animation: slide-in-right .2s linear; }
+.anim--out-left { animation: slide-out-left .2s linear; }
+.anim--out-right { animation: slide-out-right .2s linear; }
 
 .anim--fade-in { animation: fade-in .2s ease-out; }
 .anim--fade-out { animation: fade-out .2s ease-out; }
 
 .anim--shake {
-    outline-color: red;
     animation: shake .5s linear;
 }
 
 @keyframes slide-in-left {
-    from { left: 100%; }
-    to { left: 0; }
+    from { transform: translateX(100vw); }
+    to { transform: translateX(0); }
 }
 
 @keyframes slide-in-right {
-    from { left: -100%; }
-    to { left: 0; }
+    from { transform: translateX(-100vw); }
+    to { transform: translateX(0); }
 }
 
 @keyframes slide-out-left {
-    from { left: 0; }
-    to { left: -100%; }
+    from { transform: translateX(0); }
+    to { transform: translateX(-100vw); }
 }
 
 @keyframes slide-out-right {
-    from { left: 0; }
-    to { left: 100%; }
+    from { transform: translateX(0); }
+    to { transform: translateX(100vw); }
 }
 
 @keyframes fade-in {

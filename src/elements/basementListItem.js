@@ -6,6 +6,10 @@ export default class BasementListItem {
         this.element.innerHTML = `<a href="#projects/${project.id}">${project.name}</a>`;
     }
 
+    get data() {
+        return this.project;
+    }
+
     get name() {
         return this.project.name;
     }
