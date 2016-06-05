@@ -15,12 +15,6 @@
     font-size: 12px;
 }
 
-.footer .fa {
-    display: block;
-    font-size: 16px;
-    margin-bottom: 2px;
-}
-
 .footer button.selected {
     color: var(--brand);
 }

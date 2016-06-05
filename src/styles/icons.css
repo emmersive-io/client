@@ -1,0 +1,19 @@
+.icon {
+    vertical-align: middle;
+    fill: currentColor;
+    width: 16px;
+    height: 16px;
+}
+
+.icon-medium {
+    width: 32px;
+    height: 32px;
+}
+
+button .icon {
+    vertical-align: top;
+}
+
+.icon.left {
+    transform: rotate(180deg);
+}

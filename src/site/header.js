@@ -1,3 +1,4 @@
+import getIcon from '../elements/icon';
 import headerLogo from '../images/header-logo.png';
 
 export default class Header {
@@ -6,11 +7,9 @@ export default class Header {
         this.element = document.createElement('header');
         this.element.className = 'header header--main';
         this.element.innerHTML = `
-            <button class="header__button--back">
-                <span class="fa fa-chevron-left" aria-hidden="true"></span>
-            </button>
+            <button class="header__button--back">${getIcon('chevron', 'left')}</button>
             <button class="header__button--basement">
-                <span class="fa fa-bars" aria-hidden="true"></span>
+                ${getIcon('hamburger')}
                 <img class="header__logo" src="${headerLogo}"/>
             </button>
             <h1 class="header__title text-truncate"></h1>

@@ -1,0 +1,29 @@
+input, textarea {
+    border: 1px solid var(--input-border);
+    margin: 8px 0;
+    width: 100%;
+}
+
+input {
+    height: 44px;
+    padding: 0 10px;
+}
+
+textarea {
+    padding: 10px;
+    resize: none;
+}
+
+input[type="checkbox"], input[type="radio"] {
+    margin: 0;
+}
+
+input.input--full {
+    display: block;
+    width: 100%;
+}
+
+:-ms-input-placeholder { font-style: italic; }
+::-moz-placeholder { font-style: italic; }
+::-webkit-input-placeholder { font-style: italic; }
+::placeholder { font-style: italic; }

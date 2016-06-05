@@ -3,6 +3,7 @@ import connection from '../firebase/connection';
 import session from '../firebase/session';
 import transform from '../firebase/transform';
 import {projectTypeHasUpdate} from '../firebase/utility';
+import getIcon from '../elements/icon';
 
 import ActivityPage from  '../project/activity';
 import HomePage from '../project/home';
@@ -28,20 +29,20 @@ export default class ProjectPage {
         this.element.className = 'project';
         this.element.innerHTML = `
             <footer class="footer">
-                <button data-href="#projects/${projectId}">
-                    <span class="fa fa-briefcase" aria-hidden="true"></span>
+                <button class="button--stacked" data-href="#projects/${projectId}">
+                    ${getIcon('project')}
                     <span class="button__title">Project</span>
                 </button>
-                <button data-href="#projects/${projectId}/activities">
-                    <span class="fa fa-comment" aria-hidden="true"></span>
+                <button class="button--stacked" data-href="#projects/${projectId}/activities">
+                    ${getIcon('chat')}
                     <span class="button__title">Discuss</span>
                 </button>
-                <button data-href="#projects/${projectId}/tasks">
-                    <span class="fa fa-tasks" aria-hidden="true"></span>
+                <button class="button--stacked" data-href="#projects/${projectId}/tasks">
+                    ${getIcon('tasks')}
                     <span class="button__title">Tasks</span>
                 </button>
-                <button data-href="#projects/${projectId}/meetups">
-                    <span class="fa fa-calendar-check-o" aria-hidden="true"></span>
+                <button class="button--stacked" data-href="#projects/${projectId}/meetups">
+                    ${getIcon('meetups')}
                     <span class="button__title">Meet up</span>
                 </button>
             </footer>`;

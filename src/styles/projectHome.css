@@ -53,7 +53,7 @@
 .project__nav-button {
     position: absolute;
     top: 0;
-    right: 20px;
+    right: 0;
     height: 100%;
     color: var(--text-light);
 }

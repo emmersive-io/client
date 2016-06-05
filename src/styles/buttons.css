@@ -1,0 +1,35 @@
+button {
+    background: var(--button-color);
+    color: var(--text-inverted);
+    border: none;
+    padding: 0 10px;
+    min-width: 44px;
+    min-height: 44px;
+}
+
+.button--full {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+}
+
+.button--full .icon {
+    margin-right: 5px;
+}
+
+.button--link {
+    background: none;
+    border: none;
+    color: var(--brand);
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.button--stacked .icon {
+    display: block;
+    margin: 0 auto 2px auto;
+}
+
+button:focus {
+    outline: 0;
+}

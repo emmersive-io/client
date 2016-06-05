@@ -1,10 +1,13 @@
 import Firebase from '../firebase/firebase';
 import transform from '../firebase/transform';
 import session from '../firebase/session';
+
 import List from '../core/sortedElementList';
 import ListItem from '../elements/basementListItem';
 import {projectHasUpdate} from '../firebase/utility';
+
 import defaultUserImage from '../images/profile-inverted.png';
+import getIcon from '../elements/icon';
 
 var firebaseRoot = Firebase.get();
 
@@ -21,10 +24,10 @@ export default class Basement {
             </header>
             <div class="content content--basement scrollable">
                 <button class="button--full" data-href="#projects/new">
-                    <span class="fa fa-plus" aria-hidden="true"></span> Create a project
+                    ${getIcon('plus')} Create a project
                 </button>
                 <button class="button--full" data-href="#projects">
-                    <span class="fa fa-search" aria-hidden="true"></span> Find a project
+                    ${getIcon('search')} Find a project
                 </button>
                 <h3 class="basement__section-header">My Projects</h3>
                 <ul class="basement__project-list"></ul>

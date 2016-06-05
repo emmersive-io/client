@@ -3,6 +3,7 @@ import session from '../firebase/session';
 import userCache from '../firebase/userCache';
 import defaultUserImage from '../images/profile-inverted.png';
 
+import getIcon from '../elements/icon';
 import List from '../core/sortedElementList';
 import ListItem from '../elements/userListItem';
 
@@ -20,7 +21,7 @@ export default class ProjectHome {
                     <h3 class="project__header">Members</h3>
                     <ul class="project__member-list"></ul>                    
                     <button class="button--link project__nav-button" data-href="#projects/${project.id}/members">
-                        <span class="fa fa-chevron-right"></span>
+                        ${getIcon('chevron')}
                     </button>
                 </div>`;
 

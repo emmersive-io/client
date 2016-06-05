@@ -1,9 +1,11 @@
 @import "styles/normalize.css";
-@import "styles/font-awesome.css";
-
 @import "styles/colors.css";
+@import "styles/base.css";
 @import "styles/animation.css";
-@import "styles/basicElements.css";
+@import "styles/icons.css";
+
+@import "styles/buttons.css";
+@import "styles/inputs.css";
 @import "styles/layout.css";
 
 @import "styles/header.css";
