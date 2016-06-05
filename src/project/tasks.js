@@ -77,7 +77,7 @@ export default class ProjectTasks {
     }
 
     onTaskChanged(snapshot) {
-        var taskId = snapshot.key();
+        var taskId = snapshot.key;
         var task = this.list.get(task => task.id === taskId);
         if (task) {
             task.update(snapshot.val());
@@ -85,7 +85,7 @@ export default class ProjectTasks {
     }
 
     onTaskRemoved(snapshot) {
-        var taskId = snapshot.key();
+        var taskId = snapshot.key;
         this.list.removeBy(task => task.id === taskId);
     }
 

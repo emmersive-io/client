@@ -1,14 +1,12 @@
-import Firebase from './firebase';
+import firebase from './ref';
 import transform from './transform';
-
-var connection = Firebase.get();
 
 class Session {
     constructor() {
         this.isAuthenticating = true;
-        connection.onAuth(function (authData) {
-            if (authData) {
-                connection.child('users/' + authData.uid)
+        firebase.auth.onAuthStateChanged(function (user) {
+            if (user) {
+                firebase.root.child('users/' + user.uid)
                     .on('value', this.onUserChanged, this)
             }
             else {
@@ -19,7 +17,7 @@ class Session {
 
     login(email, password) {
         this.isAuthenticating = true;
-        return connection.authWithPassword({
+        return firebase.auth.signInWithEmailAndPassword({
             email: email,
             password: password
         });
@@ -27,7 +25,7 @@ class Session {
 
     logOut() {
         this.isAuthenticating = true;
-        connection.unauth();
+        firebase.auth.signOut();
     }
 
     onUserChanged(snapshot) {
@@ -38,7 +36,7 @@ class Session {
 
     onLoggedOut() {
         if (this.user) {
-            connection.child('users/' + this.user.id)
+            firebase.root.child('users/' + this.user.id)
                 .off('value', this.onUserChanged, this);
         }
 

@@ -1,9 +1,9 @@
 // This upgrades user.projects from a value of `true` to a value of `{joined: true}`
 
-import Firebase from '../src/firebase/firebase';
+import Firebase from '../src/firebase/connection';
 
 export default function upgrade() {
-    var ref = Firebase.get().child('users');
+    var ref = Firebase.ref.child('users');
     ref.on('value', function (snapshot) {
         var users = snapshot.val();
 

@@ -17,14 +17,14 @@ export default class ProjectHome {
     }
 
     onUserAdded(snapshot) {
-        var userId = snapshot.key();
+        var userId = snapshot.key;
         connection.getUser(userId).then(function (user) {
             this.list.add(new ListItem(user));
         }.bind(this));
     }
 
     onUserRemoved(snapshot) {
-        var userId = snapshot.key();
+        var userId = snapshot.key;
         this.list.removeBy(item => item.user.id === userId);
     }
 

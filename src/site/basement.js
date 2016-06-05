@@ -1,4 +1,4 @@
-import Firebase from '../firebase/firebase';
+import Firebase from '../firebase/connection';
 import transform from '../firebase/transform';
 import session from '../firebase/session';
 
@@ -9,7 +9,7 @@ import {projectHasUpdate} from '../firebase/utility';
 import defaultUserImage from '../images/profile-inverted.png';
 import getIcon from '../elements/icon';
 
-var firebaseRoot = Firebase.get();
+var firebaseRoot = Firebase.ref;
 
 export default class Basement {
     constructor(user) {
@@ -59,7 +59,7 @@ export default class Basement {
     onUserProjectDataChanged(snapshot) {
         // Delay so the remaining updates can roll in and update session.user
         setTimeout(function () {
-            var project = this.projects[snapshot.key()];
+            var project = this.projects[snapshot.key];
             if (project && project.item) {
                 project.item.element.classList.toggle('has-update', projectHasUpdate(project.item.data, session.user));
             }
@@ -93,7 +93,7 @@ export default class Basement {
     onProjectJoin(snapshot) {
         var value = snapshot.val();
         if (value && value.joined){
-            var projectId = snapshot.key();
+            var projectId = snapshot.key;
             var ref = firebaseRoot.child('projects/' + projectId);
             this.projects[projectId] = {ref: ref};
             ref.on('value', this.onProjectDataChanged, this);
@@ -101,7 +101,7 @@ export default class Basement {
     }
 
     onProjectLeave(snapshot) {
-        var projectId = snapshot.key();
+        var projectId = snapshot.key;
         var project = this.projects[projectId];
         if (project) {
             project.item.element.remove();
