@@ -23,7 +23,22 @@ input.input--full {
     width: 100%;
 }
 
-:-ms-input-placeholder { font-style: italic; }
-::-moz-placeholder { font-style: italic; }
-::-webkit-input-placeholder { font-style: italic; }
-::placeholder { font-style: italic; }
+:-ms-input-placeholder {
+    font-style: italic;
+    font-size: 14px;
+}
+
+::-moz-placeholder {
+    font-style: italic;
+    font-size: 14px;
+}
+
+::-webkit-input-placeholder {
+    font-style: italic;
+    font-size: 14px;
+}
+
+::placeholder {
+    font-style: italic;
+    font-size: 14px;
+}

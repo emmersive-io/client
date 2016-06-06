@@ -1,0 +1,112 @@
+.form--infield {
+    margin: 0 auto;
+    max-width: 500px;
+    background-color: #fff;
+}
+
+.form--infield .form__field {
+    position: relative;
+    font-size: 16px;
+    border: 1px solid var(--input-border);
+}
+
+.form--infield label {
+    position: absolute;
+    top: 2em;
+    left: 0;
+    right: 0;
+    color: #545454;
+    background-color: #fff;
+    padding: 0 0 4px 10px;
+    pointer-events: none;
+    z-index: 2;
+    transition-property: top, font-size;
+    transition-duration: .2s;
+    transition-timing-function: ease-out;
+}
+
+.form--infield input,
+.form--infield select,
+.form--infield textarea {
+    position: relative;
+    height: auto;
+    width: 100%;
+    margin: 0;
+    padding: 2em 10px 10px 10px;
+    border: none;
+    font-size: inherit;
+}
+
+.form--infield input:focus,
+.form--infield select:focus,
+.form--infield textarea:focus {
+    outline: 1px solid #2c7dff;
+    outline-offset: 0;
+    z-index: 1;
+}
+
+.form--infield label.is-active {
+    top: 10px;
+    font-size: 14px;
+}
+
+.form__field--optional label:after {
+    content: 'optional';
+    float: right;
+    color: #a9a9a9;
+    font-size: 12px;
+    font-style: italic;
+    margin-right: 10px
+}
+
+.form--infield > .form__field:not(:last-child),
+.form__body > .form__field:not(:last-child) {
+    border-bottom-color: transparent;
+}
+
+input:-webkit-autofill,
+select:-webkit-autofill {
+    box-shadow: 0 0 0 50px #fff inset;
+}
+
+.form-page {
+    display: flex;
+}
+
+.form-page__form {
+    width: 320px;
+    max-width: 100%;
+    padding: 20px;
+    margin: auto;
+}
+
+.form-link {
+    display: block;
+    text-align: center;
+    line-height: 44px;
+}
+
+.form__error {
+    color: var(--brand);
+}
+
+.form__error:empty {
+    display: none;
+}
+
+.form__body {
+    margin: 10px 0;
+}
+
+.form__submit {
+    margin-top: 20px;
+}
+
+.form__error:not(:empty) + .form__submit {
+    margin-top: 0;
+}
+
+/* No idea why this is needed */
+.form--infield textarea {
+    margin-bottom: -4px;
+}

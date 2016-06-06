@@ -1,40 +1,26 @@
-import {animate} from '../core/animate';
-import connection from '../firebase/connection';
+import Form from '../forms/form';
+import {getFormField} from '../forms/formField';
 import session from '../firebase/session';
-import validate from '../core/validate';
 
 export default class ChangePasswordPage {
-    constructor(options) {
-        this.router = options.router;
+    constructor({header, router}) {
+        header.update({leftAction: 'back', style: 'transparent-dark'});
+
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
         this.element.innerHTML = `
-            <form class="form-page__form">
-                <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required/>
-                <input type="password" name="oldPassword" placeholder="Old Password" aria-label="old password" autocomplete="current-password" required/>
-                <input type="password" name="newPassword" placeholder="New Password" aria-label="new password" autocomplete="new-password" required/>
-                <button class="button--full">Change Password</button>
+            <form class="form-page__form form--infield">
+                <div class="form__body">
+                    ${getFormField({id: 'password', type: 'passwordNew'})}
+                </div>
+                <p class="form__error"></p>
+                <button class="button--full form__submit">Change Password</button>
             </form>`;
 
-        options.header.update({leftAction: 'back', style: 'transparent-dark'});
-        this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
-    }
-
-    onFormSubmit(e) {
-        e.preventDefault();
-
-        var {data, isValid} = validate(e.target);
-        if (isValid) {
-            connection.firebase.changePassword(data)
-                .then(function () {
-                    this.router.navigateTo('#profile/' + session.user.id, {replace: true});
-                }.bind(this))
-                .catch(function (e) {
-                    animate(e.target, 'anim--shake');
-                });
-        }
-        else {
-            animate(e.target, 'anim--shake');
-        }
+        var form = new Form(this.element.firstElementChild, function (data) {
+            session.changePassword(data.password)
+                .then(() => router.navigateTo('#profile/' + session.user.id, {replace: true}))
+                .catch((e) => form.setError(e.message));
+        });
     }
 }

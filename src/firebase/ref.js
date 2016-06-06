@@ -3,14 +3,24 @@ import firebase from 'firebase';
 export default {
     serverTime: firebase.database.ServerValue.TIMESTAMP,
 
-    get root() {
-        firebase.initializeApp(this.getConfig());
+    init: function (property) {
+        firebase.initializeApp({
+            apiKey: 'AIzaSyDEamVmF67BIhbKFL23O_jgxjTSl1mtDNc',
+            authDomain: 'project-1955571858363412928.firebaseapp.com',
+            databaseURL: 'https://project-1955571858363412928.firebaseio.com',
+            storageBucket: 'project-1955571858363412928.appspot.com'
+        });
+
+        delete this.auth;
         delete this.root;
-        
+
         this.auth = firebase.auth();
         this.root = firebase.database().ref();
-        return this.root;
+        return this[property];
     },
+
+    get auth() { return this.init('auth'); },
+    get root() { return this.init('root'); },
 
     getConfig(){
         var id;

@@ -11,6 +11,7 @@
 
 .footer button {
     background: #fff;
+    border-color: transparent;
     color: var(--text-dark);
     font-size: 12px;
 }

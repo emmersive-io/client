@@ -46,16 +46,6 @@
     height: 100%;
 }
 
-.form-page {
-    display: flex;
-}
-
-.form-page__form {
-    margin: auto;
-    width: 280px;
-    padding: 20px;
-}
-
 .login__logo {
     width: 100%;
     margin-bottom: 8px;

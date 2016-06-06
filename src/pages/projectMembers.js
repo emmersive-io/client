@@ -1,4 +1,5 @@
 import connection from '../firebase/connection';
+import firebase from '../firebase/ref';
 import List from '../core/sortedElementList';
 import ListItem from '../elements/userListItem';
 
@@ -11,7 +12,7 @@ export default class ProjectHome {
     }
 
     onRoute(projectId) {
-        this.userRef = connection.firebase.child('projects/' + projectId + '/people');
+        this.userRef = firebase.root.child('projects/' + projectId + '/people');
         this.userRef.on('child_added', this.onUserAdded, this);
         this.userRef.on('child_removed', this.onUserRemoved, this);
     }

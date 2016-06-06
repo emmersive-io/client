@@ -30,8 +30,8 @@
 
 .header--main button {
     position: absolute;
-    background: none;
     top: 10px;
+    color: #fff;
 }
 
 .header__button--back {

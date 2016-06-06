@@ -1,30 +1,25 @@
-import {animate} from '../core/animate';
+import Form from '../forms/form';
+import {getFormField} from '../forms/formField';
 import connection from '../firebase/connection';
 
 export default class ResetPasswordPage {
-    constructor(options) {
+    constructor({header}) {
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
         this.element.innerHTML = `
-            <form class="form-page__form">
-                <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required/>
-                <button class="button--full">Reset Password</button>
+            <form class="form-page__form form--infield">
+                <div class="form__body">
+                    ${getFormField('email')}
+                </div>
+                <p class="form__error"></p>
+                <button class="button--full form__submit">Reset Password</button>
             </form>`;
 
-        options.header.update({leftAction: 'back', style: 'transparent-dark'});
-        this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
-    }
+        header.update({leftAction: 'back', style: 'transparent-dark'});
 
-    onFormSubmit(e) {
-        e.preventDefault();
-
-        var email = e.target.elements.email.value.trim();
-        if (email) {
-            connection.resetPassword(email);
-            e.target.innerHTML = `<p class="zero-state-message">We've sent you an email. Please follow the instructions to reset your password.</p>`;
-        }
-        else {
-            animate(e.target, 'anim--shake');
-        }
+        var form = new Form(this.element.firstElementChild, function (data) {
+            form.element.innerHTML = `<p class="zero-state-message">We've sent you an email. Please follow the instructions to reset your password.</p>`;
+            connection.resetPassword(data.email);
+        });
     }
 }

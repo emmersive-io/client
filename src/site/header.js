@@ -7,7 +7,7 @@ export default class Header {
         this.element = document.createElement('header');
         this.element.className = 'header header--main';
         this.element.innerHTML = `
-            <button class="header__button--back">${getIcon('chevron', 'left')}</button>
+            <button class="header__button--back button--icon">${getIcon('chevron', 'left')}</button>
             <button class="header__button--basement">
                 ${getIcon('hamburger')}
                 <img class="header__logo" src="${headerLogo}"/>

@@ -1,5 +1,6 @@
 import {slide} from '../core/animate';
 import connection from '../firebase/connection';
+import firebase from '../firebase/ref';
 import session from '../firebase/session';
 import transform from '../firebase/transform';
 import {projectTypeHasUpdate} from '../firebase/utility';
@@ -52,8 +53,8 @@ export default class ProjectPage {
             this.sections[i].button = this.footer.children[i];
         }
 
-        this.projectRef = connection.firebase.child('projects/' + projectId);
-        this.userProjectRef = connection.firebase.child('users/' + session.user.id + '/projects/' + projectId);
+        this.projectRef = firebase.root.child('projects/' + projectId);
+        this.userProjectRef = firebase.root.child('users/' + session.user.id + '/projects/' + projectId);
 
         this.projectRef.on('value', this.onProjectChanged, this);
         this.userProjectRef.on('value', this.onUserProjectUpdated, this);

@@ -1,7 +1,7 @@
 button {
     background: var(--button-color);
+    border: 1px solid var(--button-color);
     color: var(--text-inverted);
-    border: none;
     padding: 0 10px;
     min-width: 44px;
     min-height: 44px;
@@ -17,9 +17,9 @@ button {
     margin-right: 5px;
 }
 
-.button--link {
+.button--icon, .button--link {
     background: none;
-    border: none;
+    border-color: transparent;
     color: var(--brand);
     font-weight: bold;
     font-size: 14px;
@@ -30,6 +30,11 @@ button {
     margin: 0 auto 2px auto;
 }
 
-button:focus {
-    outline: 0;
-}
+/*button:focus {*/
+    /*outline: none;*/
+    /*border-color: rgba(0, 0, 0, 0.5);*/
+/*}*/
+
+/*.button--icon:focus, .button--link:focus {*/
+    /*border-color: var(--button-color);*/
+/*}*/

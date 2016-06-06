@@ -1,4 +1,5 @@
 import connection from '../firebase/connection';
+import firebase from '../firebase/ref';
 import transform from '../firebase/transform';
 import List from '../core/sortedElementList';
 import ListItem from '../elements/activityListItem';
@@ -19,7 +20,7 @@ export default class ProjectActivity {
         this.list = new List(this.element.firstElementChild, (a1, a2) => a1.created_at > a2.created_at);
         this.newActivity.addEventListener('submit', this.onNewActivity.bind(this), false);
 
-        this.activityRef = connection.firebase.child('activities/' + project.id);
+        this.activityRef = firebase.root.child('activities/' + project.id);
         this.activityRef.on('child_added', this.onActivityAdded, this);
     }
 

@@ -6,13 +6,13 @@ import userCache from './userCache';
 
 function createProjectItem(projectId, type, data) {
     var itemData = Object.assign({
-        created_at: serverTime,
+        created_at: firebase.serverTime,
         created_by: session.user.id
     }, data);
 
     var projectData = {};
-    projectData.updated_at = serverTime;
-    projectData['updated_' + type] = serverTime;
+    projectData.updated_at = firebase.serverTime;
+    projectData['updated_' + type] = firebase.serverTime;
     firebase.root.child('projects/' + projectId).update(projectData);
     return firebase.root.child(type).child(projectId).push(itemData);
 }
@@ -22,8 +22,8 @@ function updateProjectParticipation(projectId, value) {
     var userId = session.user.id;
     data['users/' + userId + '/projects/' + projectId] = value && {joined: true};
     data['projects/' + projectId + '/people/' + userId] = value;
-    data['projects/' + projectId + '/updated_at'] = serverTime;
-    data['projects/' + projectId + '/updated_people'] = serverTime;
+    data['projects/' + projectId + '/updated_at'] = firebase.serverTime;
+    data['projects/' + projectId + '/updated_people'] = firebase.serverTime;
     return firebase.root.update(data);
 }
 
@@ -62,11 +62,10 @@ export default {
         });
     },
 
-    createUser: function (name, email, password) {
-        var credentials = {email: email, password: password};
-        return firebase.root.createUser(credentials).then(function (userData) {
+    createUser: function ({name, email, password}) {
+        return firebase.auth.createUserWithEmailAndPassword(email, password).then(function (user) {
             // Create a user entry
-            return firebase.root.child('users/' + userData.uid).set({
+            return firebase.root.child('users/' + user.uid).set({
                 provider: 'password',
                 email: email,
                 name: name
@@ -138,7 +137,7 @@ export default {
     },
 
     resetPassword: function (email) {
-        return firebase.root.resetPassword({email: email});
+        return firebase.auth.sendPasswordResetEmail(email);
     },
 
     updateProject: function (projectId, data) {

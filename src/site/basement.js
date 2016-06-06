@@ -1,4 +1,4 @@
-import Firebase from '../firebase/connection';
+import firebase from '../firebase/ref';
 import transform from '../firebase/transform';
 import session from '../firebase/session';
 
@@ -9,7 +9,6 @@ import {projectHasUpdate} from '../firebase/utility';
 import defaultUserImage from '../images/profile-inverted.png';
 import getIcon from '../elements/icon';
 
-var firebaseRoot = Firebase.ref;
 
 export default class Basement {
     constructor(user) {
@@ -41,7 +40,7 @@ export default class Basement {
         this.element.addEventListener('click', this.onItemClicked.bind(this), false);
 
         // Listen to changes to the user
-        this.userRef = firebaseRoot.child('users/' + user.id);
+        this.userRef = firebase.root.child('users/' + user.id);
         this.userRef.child('name').on('value', this.onUserNameChanged, this);
 
         var projectsRef = this.userRef.child('projects');
@@ -94,7 +93,7 @@ export default class Basement {
         var value = snapshot.val();
         if (value && value.joined){
             var projectId = snapshot.key;
-            var ref = firebaseRoot.child('projects/' + projectId);
+            var ref = firebase.root.child('projects/' + projectId);
             this.projects[projectId] = {ref: ref};
             ref.on('value', this.onProjectDataChanged, this);
         }

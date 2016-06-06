@@ -1,20 +1,23 @@
-import {animate} from '../core/animate';
-import session from '../firebase/session';
+import Form from '../forms/form';
+import {getFormField} from '../forms/formField';
 import logoPath from '../images/logo.png';
+import session from '../firebase/session';
 
 export default class LoginPage {
-    constructor(options) {
-        this.router = options.router;
-        options.header.update({style: 'hidden'});
+    constructor({header, router}) {
+        header.update({style: 'hidden'});
 
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
         this.element.innerHTML = `
-            <form class="form-page__form">
-                <img class="login__logo" src="${logoPath}">
-                <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" required/>
-                <input type="password" name="password" placeholder="Password" aria-label="password" autocomplete="current-password" required/>
-                <button class="button--full">Let's Go</button>
+            <form class="form-page__form form--infield">
+                <img class="login__logo" src="${logoPath}" />
+                <div class="form__body">
+                    ${getFormField('email')}
+                    ${getFormField('password')}
+                </div>
+                <p class="form__error"></p>
+                <button class="button--full form__submit">Let's Go</button>
                 <div class="link-section">
                     <a href="#login/register">Register</a>
                     <span class="bullet-separator"></span>
@@ -22,24 +25,10 @@ export default class LoginPage {
                 </div>
             </form>`;
 
-        this.element.firstElementChild.addEventListener('submit', this.onFormSubmit.bind(this), false);
-    }
-
-    onFormSubmit(e) {
-        e.preventDefault();
-
-        var elements = e.target.elements;
-        var email = elements.email.value.trim();
-        var password = elements.password.value.trim();
-
-        if (email && password) {
-            session.login(email, password)
-                .then(function () {
-                    this.router.navigateTo('#', {replace: true});
-                }.bind(this))
-                .catch(function () {
-                    animate(e.target, 'anim--shake');
-                });
-        }
+        var form = new Form(this.element.firstElementChild, function (data) {
+            session.login(data)
+                .then(() => router.navigateTo('#', {replace: true}))
+                .catch(e => form.setError(e.message));
+        });
     }
 }

@@ -1,35 +1,32 @@
-import {animate} from '../core/animate';
+import Form from '../forms/form';
 import connection from '../firebase/connection';
 
 export default class ProjectCreatePage {
-    constructor(options) {
-        this.router = options.router;
-        options.header.update({title: 'New Project', leftAction: 'back'});
+    constructor({header, router}) {
+        header.update({title: 'New Project', leftAction: 'back'});
 
         this.element = document.createElement('div');
         this.element.className = 'project-edit';
         this.element.innerHTML = `
-            <input type="text" placeholder="Untitled Project" aria-label="project name" />
-            <textarea placeholder="Add a short description"></textarea>
-            <button class="button--full">Create</button>`;
+            <form class="form--infield">
+                <div class="form__body">
+                    <div class="form__field">
+                        <label for="name">Project Title</label>
+                        <input id="name" type="text" placeholder="Untitled Project" autocomplete="off" required />
+                    </div>
+                    <div class="form__field">
+                        <label for="description">Description</label>
+                        <textarea id="description" placeholder="Add a short description" autocomplete="off"></textarea>
+                    </div>
+                </div>
+                <p class="form__error"></p>
+                <button class="button--full form__submit">Create</button>
+            </form>`;
 
-        this.nameInput = this.element.firstElementChild;
-        this.descriptionInput = this.nameInput.nextElementSibling;
-        this.element.lastElementChild.addEventListener('click', this.onButtonClick.bind(this));
-    }
-
-    onButtonClick() {
-        var project = {
-            name: this.nameInput.value.trim(),
-            description: this.descriptionInput.value.trim()
-        };
-
-        connection.createProject(project)
-            .then(function (projectId) {
-                this.router.navigateTo('#projects/' + projectId, {replace: true});
-            }.bind(this))
-            .catch(function () {
-                animate(button, 'anim--shake');
-            });
+        var form = new Form(this.element.firstElementChild, function (data) {
+            connection.createProject(data)
+                .then((id) => router.navigateTo('#projects/' + id, {replace: true}))
+                .catch((e) => form.setError(e.message));
+        });
     }
 }

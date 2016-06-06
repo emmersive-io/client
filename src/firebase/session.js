@@ -5,6 +5,7 @@ class Session {
     constructor() {
         this.isAuthenticating = true;
         firebase.auth.onAuthStateChanged(function (user) {
+            this.firebaseUser = user;
             if (user) {
                 firebase.root.child('users/' + user.uid)
                     .on('value', this.onUserChanged, this)
@@ -12,15 +13,24 @@ class Session {
             else {
                 this.onLoggedOut();
             }
-        }, this);
+        }.bind(this));
     }
 
-    login(email, password) {
+    changeEmail(email) {
+        return this.firebaseUser.updateEmail(email);
+    }
+
+    changePassword(password) {
+        return this.firebaseUser.updatePassword(password);
+    }
+
+    login({email, password}) {
         this.isAuthenticating = true;
-        return firebase.auth.signInWithEmailAndPassword({
-            email: email,
-            password: password
-        });
+        return firebase.auth.signInWithEmailAndPassword(email, password)
+            .catch(function (e) {
+                this.isAuthenticating = false;
+                throw e;
+            }.bind(this));
     }
 
     logOut() {
@@ -42,7 +52,7 @@ class Session {
 
         this.user = null;
         this.isAuthenticating = false;
-        location.assign('#login');
+        window.location.assign('#login');
         this.resolveCallback();
     }
 

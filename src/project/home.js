@@ -1,4 +1,5 @@
 import connection from '../firebase/connection';
+import firebase from '../firebase/ref';
 import session from '../firebase/session';
 import userCache from '../firebase/userCache';
 import defaultUserImage from '../images/profile-inverted.png';
@@ -39,7 +40,7 @@ export default class ProjectHome {
         }.bind(this));
 
         this.list = new List(this.element.querySelector('.project__member-list'), (u1, u2) => u1.user.name.localeCompare(u2.user.name) >= 0);
-        this.userRef = connection.firebase.child('projects/' + this.project.id + '/people');
+        this.userRef = firebase.root.child('projects/' + this.project.id + '/people');
         this.userRef.on('child_added', this.onUserAdded, this);
         this.userRef.on('child_removed', this.onUserRemoved, this);
     }

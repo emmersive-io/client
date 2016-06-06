@@ -1,6 +1,7 @@
 import './styles.css';
 import './core/polyfills';
 import './core/platform';
+import './forms/infieldForms';
 import './core/sizeTextarea';
 
 import ChangeEmailPage from './pages/changeEmail';

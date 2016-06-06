@@ -26,6 +26,11 @@
         "webpack": "*"
     },
     "scripts": {
+        "build:dev": "webpack -d --progress",
+        "build:prod": "webpack -p --progress",
+        "server": "http-server ./www -c-1",
+
+        "dev": "webpack -d --watch --progress | http-server ./www -c-1",
         "start": "webpack -d --watch --progress | http-server ./www -c-1"
     },
     "cordovaPlugins": [

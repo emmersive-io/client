@@ -1,4 +1,5 @@
 import connection from '../firebase/connection';
+import firebase from '../firebase/ref';
 import session from '../firebase/session';
 import transform from '../firebase/transform';
 import List from '../core/sortedElementList';
@@ -26,7 +27,7 @@ export default class ProjectTasks {
         this.element.addEventListener('change', this.onStatusChanged.bind(this), true);
         this.element.addEventListener('click', this.onDeleteButtonClick.bind(this), this);
 
-        this.taskRef = connection.firebase.child('tasks/' + project.id);
+        this.taskRef = firebase.root.child('tasks/' + project.id);
         this.taskRef.on('child_added', this.onTaskAdded, this);
         this.taskRef.on('child_changed', this.onTaskChanged, this);
         this.taskRef.on('child_removed', this.onTaskRemoved, this);

@@ -1,6 +1,6 @@
 .project-tasks {
     flex-grow: 1;
-    padding: 10px 0;
+    padding: 20px 0;
 }
 
 .task-list .item__date {
@@ -13,6 +13,10 @@
     border-bottom: 1px solid var(--input-border);
 }
 
+.checkbox-card:first-child {
+    border-top: 1px solid var(--input-border);
+}
+
 .task__foreground {
     position: relative;
     background: #fff;
@@ -22,6 +26,7 @@
 
 .task__foreground.open {
     left: -90px !important;
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.5);
 }
 
 .task__foreground:not(.swiping) {
@@ -36,6 +41,7 @@
     bottom: 0;
     z-index: 0;
     background-color: var(--brand);
+    box-shadow: inset 0 0 6px 1px rgba(0, 0, 0, 0.5);
 }
 
 .task__delete-button {
