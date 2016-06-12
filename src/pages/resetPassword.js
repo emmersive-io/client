@@ -3,6 +3,8 @@ import connection from '../firebase/connection';
 
 export default class ResetPasswordPage {
     constructor(options) {
+        analytics.page("reset_password");
+        
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
         this.element.innerHTML = `

@@ -5,6 +5,8 @@ import validate from '../core/validate';
 
 export default class ChangePasswordPage {
     constructor(options) {
+        analytics.page("change_email"); 
+        
         this.router = options.router;
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';
@@ -15,7 +17,7 @@ export default class ChangePasswordPage {
                 <input type="password" name="password" placeholder="Password" aria-label="password" autocomplete="current-password" required/>
                 <button class="button--full">Change Email</button>
             </form>`;
-
+   
         options.header.update({leftAction: 'back', style: 'transparent-dark'});
         this.element.addEventListener('submit', this.onFormSubmit.bind(this), false);
     }

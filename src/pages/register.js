@@ -4,6 +4,8 @@ import profileImage from '../images/profile.png';
 
 export default class RegisterPage {
     constructor(options) {
+        analytics.page("register");
+        
         this.router = options.router;
         options.header.update({leftAction: 'back', style: 'transparent-dark'});
 

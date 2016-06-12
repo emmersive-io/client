@@ -2,6 +2,8 @@ import imagePath from '../images/no_projects.png';
 
 export default class HomePage {
     constructor(options) {
+        analytics.page("home");
+        
         options.header.update();
 
         this.element = document.createElement('div');

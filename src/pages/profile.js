@@ -4,6 +4,8 @@ import defaultUserImage from '../images/profile.png';
 
 export default class ProfilePage {
     constructor(options) {
+        analytics.page("profile");
+        
         this.header = options.header;
     }
 

@@ -4,6 +4,8 @@ import logoPath from '../images/logo.png';
 
 export default class LoginPage {
     constructor(options) {
+        analytics.page("login");
+        
         this.router = options.router;
         options.header.update({style: 'hidden'});
 
