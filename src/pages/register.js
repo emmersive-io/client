@@ -37,6 +37,11 @@ export default class RegisterPage {
         if (name && email && password && password === password2) {
             connection.createUser(name, email, password)
                 .then(function () {
+                    analytics.identify(name);
+                    analytics.track('Registered', {
+                        name: name,
+                        email: email
+                    });
                     this.router.navigateTo('#', {replace: true});
                 }.bind(this))
                 .catch(function () {
