@@ -3,6 +3,7 @@ import Project from '../elements/projectListItem';
 
 export default class ProjectsPage {
     constructor(options) {
+        analytics.page("project_list");
         this.header = options.header;
     }
 

@@ -4,6 +4,7 @@ import session from '../firebase/session';
 
 export default class ChangePasswordPage {
     constructor({header, router}) {
+        analytics.page("change_password");
         header.update({leftAction: 'back', style: 'transparent-dark'});
 
         this.element = document.createElement('div');

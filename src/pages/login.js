@@ -5,6 +5,7 @@ import session from '../firebase/session';
 
 export default class LoginPage {
     constructor({header, router}) {
+        analytics.page("login");
         header.update({style: 'hidden'});
 
         this.element = document.createElement('div');

@@ -3,6 +3,8 @@ import getIcon from '../elements/icon';
 
 export default class HomePage {
     constructor(options) {
+        analytics.page("home");
+        
         options.header.update();
 
         this.element = document.createElement('div');

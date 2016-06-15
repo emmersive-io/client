@@ -2,6 +2,7 @@ import connection from '../firebase/connection';
 
 export default class ProjectEditPage {
     constructor({header, router}) {
+        analytics.page("project_edit");
         this.header = header;
         this.router = router;
     }

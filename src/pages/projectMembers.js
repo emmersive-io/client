@@ -5,6 +5,8 @@ import ListItem from '../elements/userListItem';
 
 export default class ProjectHome {
     constructor(options) {
+        analytics.page("project_members");
+        
         options.header.update({leftAction: 'back', title: 'Members'});
         this.element = document.createElement('div');
         this.element.className = 'project__members scrollable';

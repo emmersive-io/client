@@ -14,6 +14,8 @@ import TaskPage from '../project/tasks';
 
 export default class ProjectPage {
     constructor(options) {
+        analytics.page("project");
+
         this.header = options.header;
         this.sections = [
             {type: HomePage},

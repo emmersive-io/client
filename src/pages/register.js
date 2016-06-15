@@ -6,6 +6,7 @@ import profileImage from '../images/profile.png';
 
 export default class RegisterPage {
     constructor({header, router}) {
+        analytics.page("register");
         header.update({leftAction: 'back', style: 'transparent-dark'});
 
         this.element = document.createElement('div');
@@ -25,7 +26,15 @@ export default class RegisterPage {
 
         var form = new Form(this.element.firstElementChild, function (data) {
             connection.createUser(data)
-                .then(() => router.navigateTo('#', {replace: true}))
+                .then(() => {
+                    analytics.identify(name);
+                    analytics.track('Registered', {
+                        name: name,
+                        email: email
+                    });
+                    
+                    router.navigateTo('#', {replace: true})
+                })
                 .catch(e => form.setError(e.message));
         });
     }
