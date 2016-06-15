@@ -71,6 +71,21 @@ class Session {
             this.callback = null;
         }
     }
+
+    setProfileImage(file, metadata) {
+        return new Promise((resolve, reject) => {
+            var path = this.user.id + '/image';
+            var uploadTask = firebase.storage.child(path).put(file, metadata);
+
+            uploadTask.on('state_changed', null,
+                (error) => { reject(error); },
+                () => {
+                    var url = uploadTask.snapshot.metadata.downloadURLs[0];
+                    firebase.root.child('users/' + path).set(url);
+                    return resolve(url);
+                });
+        });
+    }
 }
 
 export default new Session();

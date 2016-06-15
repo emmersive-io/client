@@ -62,7 +62,8 @@
 .profile__image {
     display: block;
     height: 150px;
-    margin: 0 auto 20px auto;
+    width: 150px;
+    margin: 20px auto;
 }
 
 .profile-image--small {

@@ -13,14 +13,17 @@ export default {
 
         delete this.auth;
         delete this.root;
+        delete this.storage;
 
         this.auth = firebase.auth();
         this.root = firebase.database().ref();
+        this.storage = firebase.storage().ref();
         return this[property];
     },
 
     get auth() { return this.init('auth'); },
     get root() { return this.init('root'); },
+    get storage() { return this.init('storage'); },
 
     getConfig(){
         var id;
