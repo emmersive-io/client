@@ -2,7 +2,7 @@ import Form from '../forms/form';
 import {getFormField} from '../forms/formField';
 import session from '../firebase/session';
 
-export default class ChangePasswordPage {
+export default class ChangeEmailPage {
     constructor({header, router}) {
         header.update({leftAction: 'back', style: 'transparent-dark'});
 
