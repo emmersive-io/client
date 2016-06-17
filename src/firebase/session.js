@@ -1,4 +1,5 @@
 import firebase from './ref';
+import {storeImage} from './storage';
 import transform from './transform';
 
 class Session {
@@ -73,18 +74,7 @@ class Session {
     }
 
     setProfileImage(file, metadata) {
-        return new Promise((resolve, reject) => {
-            var path = this.user.id + '/image';
-            var uploadTask = firebase.storage.child(path).put(file, metadata);
-
-            uploadTask.on('state_changed', null,
-                (error) => { reject(error); },
-                () => {
-                    var url = uploadTask.snapshot.metadata.downloadURLs[0];
-                    firebase.root.child('users/' + path).set(url);
-                    return resolve(url);
-                });
-        });
+        return storeImage(`users/${this.user.id}/image`, file, metadata);
     }
 }
 

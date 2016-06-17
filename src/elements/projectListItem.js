@@ -7,6 +7,7 @@ export default class ProjectListItem {
 
         this.element.innerHTML = `
             <div class="project__content">
+                <img class="project__image" src="${project.image || ''}"/>
                 <h2 class="project__title">${project.name || 'Untitled'}</h2>
                 <p class="project__description">${project.description || ''}</p>
             </div>`;

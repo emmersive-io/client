@@ -13,8 +13,9 @@ export default class ProjectHome {
         this.project = project;
         this.element = document.createElement('div');
         this.element.className = 'project__home scrollable';
-        this.element.innerHTML = ` 
-                <div class="project__info">
+        this.element.innerHTML = `
+                <img class="project__image" src="${project.image || ''}"/>
+                <div class="project__info">                    
                     <h2 class="project__name">${project.name || 'Untitled Project'}</h2>
                     <p class="project__description">${project.description || ''}</p>
                 </div>
@@ -26,12 +27,13 @@ export default class ProjectHome {
                     </button>
                 </div>`;
 
-        this.nameElement = this.element.children[0];
-        this.descriptionElement = this.element.children[1];
+        var projectInfo = this.element.children[1];
+        this.nameElement = projectInfo.children[1];
+        this.descriptionElement = projectInfo.children[2];
 
         userCache.get(project.created_by).then(function (user) {
             if (user) {
-                this.element.firstElementChild.insertAdjacentHTML('beforeend', `
+                projectInfo.insertAdjacentHTML('beforeend', `
                     <a class="project__owner" href="#profile/${user.id}">
                         <img class="profile-image--small" src="${user.image || defaultUserImage}"/>
                         <span class="project__user-name">${user.name}</span>

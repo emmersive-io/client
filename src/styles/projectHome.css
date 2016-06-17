@@ -2,6 +2,10 @@
     flex-grow: 1;
 }
 
+.project__image {
+    width: 100%;
+}
+
 .project__info {
     padding: 20px;
     background-color: var(--background-dark);

@@ -1,4 +1,5 @@
 import connection from '../firebase/connection';
+import ImageUpload from '../elements/imageUpload';
 
 export default class ProjectEditPage {
     constructor({header, router}) {
@@ -16,7 +17,7 @@ export default class ProjectEditPage {
         }
     }
 
-    onButtonClick() {
+    onDeleteClick() {
         if (confirm('Are you sure you want to delete the project?')) {
             connection.removeProject(this.project.id)
                 .then(() => this.router.navigateTo('#projects', {replace: true}));
@@ -25,7 +26,13 @@ export default class ProjectEditPage {
 
     onRoute(projectId) {
         return connection.getProject(projectId).then(function (project) {
-            this.header.update({title: 'Edit Project', leftAction: 'back'});
+            this.header.update({
+                title: 'Edit Project',
+                leftAction: 'back',
+                action: 'Delete',
+                onAction: this.onDeleteClick.bind(this)
+            });
+
             this.project = project;
             this.render();
         }.bind(this));
@@ -46,10 +53,15 @@ export default class ProjectEditPage {
                         <textarea id="description" placeholder="Add a short description">${this.project.description}</textarea>
                     </div>           
                 </div>
-                <button class="button--full form__submit">Delete Project</button>    
             </div>`;
 
+        var options = {className: 'project__image', src: this.project.image};
+        var imageUpload = new ImageUpload(options, (file, metadata) => {
+            connection.setProjectImage(this.project.id, file, metadata)
+                .then(url => imageUpload.setImage(url))
+        });
+
+        this.element.insertBefore(imageUpload.element, this.element.firstElementChild);
         this.element.addEventListener('blur', this.onBlur.bind(this), true);
-        this.element.querySelector('.form__submit').addEventListener('click', this.onButtonClick.bind(this), false);
     }
 }

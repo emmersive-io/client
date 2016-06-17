@@ -1,5 +1,6 @@
 import firebase from './ref';
 import session from './session';
+import {storeImage} from './storage';
 import transform from './transform';
 import userCache from './userCache';
 
@@ -138,6 +139,10 @@ export default {
 
     resetPassword: function (email) {
         return firebase.auth.sendPasswordResetEmail(email);
+    },
+
+    setProjectImage: function (projectId, file, metadata) {
+        return storeImage(`projects/${projectId}/image`, file, metadata);
     },
 
     updateProject: function (projectId, data) {
