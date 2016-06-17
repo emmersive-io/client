@@ -70,15 +70,16 @@ var test = document.createElement('div');
 test.classList.toggle('test', false);
 
 if (test.classList.contains('test')) {
-    DOMTokenList.prototype.classList.toggle = function (name, isTrue) {
+    DOMTokenList.prototype.toggle = function (name, isTrue) {
         if (isTrue === undefined) {
-            this.classList.toggle(name);
+            isTrue = this.contains(name);
         }
-        else if (isTrue) {
-            this.classList.add(name);
+
+        if (isTrue) {
+            this.add(name);
         }
         else {
-            this.classList.remove(name);
+            this.remove(name);
         }
     }
 }
