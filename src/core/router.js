@@ -165,17 +165,19 @@ export default class Router {
     navigateTo(hash, options = {}) {
         if (hash) {
             this.internalRoute = {historyIndex: this.historyIndex};
-            var index = this.history.findIndex(entry => entry.hash === hash);
-            var indexDelta = index - this.historyIndex;
 
-            if (index >= 0 && Math.abs(indexDelta) < 3) {
-                if (indexDelta) {
-                    this.internalRoute.historyIndex += indexDelta;
-                    this.internalRoute.isMovingForward = indexDelta > 0;
-                    history.go(indexDelta);
-                }
-            }
-            else {
+            // Taking this out for now. It's too buggy.
+            // var index = this.history.findIndex(entry => entry.hash === hash);
+            // var indexDelta = index - this.historyIndex;
+
+            // if (index >= 0 && Math.abs(indexDelta) < 3) {
+            //     if (indexDelta) {
+            //         this.internalRoute.historyIndex += indexDelta;
+            //         this.internalRoute.isMovingForward = indexDelta > 0;
+            //         history.go(indexDelta);
+            //     }
+            // }
+            // else {
                 this.internalRoute.isMovingForward = true;
                 if (options.replace) {
                     location.replace(hash);
@@ -184,7 +186,7 @@ export default class Router {
                     this.internalRoute.historyIndex++;
                     location.assign(hash);
                 }
-            }
+            // }
         }
     }
 }
