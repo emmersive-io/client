@@ -4,12 +4,7 @@ export default {
     serverTime: firebase.database.ServerValue.TIMESTAMP,
 
     init: function (property) {
-        firebase.initializeApp({
-            apiKey: 'AIzaSyDEamVmF67BIhbKFL23O_jgxjTSl1mtDNc',
-            authDomain: 'project-1955571858363412928.firebaseapp.com',
-            databaseURL: 'https://project-1955571858363412928.firebaseio.com',
-            storageBucket: 'project-1955571858363412928.appspot.com'
-        });
+        firebase.initializeApp(this.getConfig());
 
         delete this.auth;
         delete this.root;
@@ -26,23 +21,28 @@ export default {
     get storage() { return this.init('storage'); },
 
     getConfig(){
-        var id;
+        var apiKey, domain;
         var hostname = location.hostname;
 
         if (hostname.indexOf('.emmersive.io') != -1) {
-            id = 'flickering-inferno-1351';
+            // TODO: Connect the imported prod instead of the temp one
+            apiKey = 'AIzaSyDEamVmF67BIhbKFL23O_jgxjTSl1mtDNc';
+            domain = 'project-1955571858363412928';
         }
         else if (hostname.indexOf('.firebaseapp.com') != -1) {
-            id = 'emmersive-stage';
+            apiKey = 'AIzaSyD2rFAQ1bZ0aDUk9A2TOM4BGW-Z0_JlxDc';
+            domain = 'emmersive-stage';
         }
         else {
-            id = 'emmersive-dev';
+            apiKey = 'AIzaSyA2PYSUX1UghQS0PQp38DZ73cz6FQnr4mo';
+            domain = 'emmersive-dev';
         }
 
         return {
-            apiKey: 'apiKey',
-            authDomain: id + '.firebaseapp.com',
-            databaseURL: 'https://' + id + '.firebaseio.com'
+            apiKey: apiKey,
+            authDomain: `${domain}.firebaseapp.com`,
+            databaseURL: `https://${domain}.firebaseio.com`,
+            storageBucket: `${domain}.appspot.com`
         };
     }
 }
