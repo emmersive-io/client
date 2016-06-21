@@ -1,10 +1,19 @@
 {
-    "firebase": "emmersive-dev",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ],
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "hosting": {
     "public": "www",
-    "rules": "rules.json",
-    "ignore": [
-        "firebase.json",
-        "**/.*",
-        "**/node_modules/**"
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
+  }
 }
