@@ -3,6 +3,7 @@ import firebase from '../firebase/ref';
 import session from '../firebase/session';
 import userCache from '../firebase/userCache';
 import defaultUserImage from '../images/profile-inverted.png';
+import {renderIf} from '../core/rendering';
 
 import getIcon from '../elements/icon';
 import List from '../core/sortedElementList';
@@ -14,18 +15,20 @@ export default class ProjectHome {
         this.element = document.createElement('div');
         this.element.className = 'project__home scrollable';
         this.element.innerHTML = `
-                <img class="project__image" src="${project.image || ''}"/>
-                <div class="project__info">                    
-                    <h2 class="project__name">${project.name || 'Untitled Project'}</h2>
-                    <p class="project__description">${project.description || ''}</p>
-                </div>
-                <div class="project__group">
-                    <h3 class="project__header">Members</h3>
-                    <ul class="project__member-list"></ul>                    
-                    <button class="button--link project__nav-button" data-href="#projects/${project.id}/members">
-                        ${getIcon('chevron')}
-                    </button>
-                </div>`;
+            ${renderIf(project.image,
+              `<img class="project__image" src="${project.image}"/>`
+            )}
+            <div class="project__info">                    
+                <h2 class="project__name">${project.name || 'Untitled Project'}</h2>
+                <p class="project__description">${project.description || ''}</p>
+            </div>
+            <div class="project__group">
+                <h3 class="project__header">Members</h3>
+                <ul class="project__member-list"></ul>                    
+                <button class="button--link project__nav-button" data-href="#projects/${project.id}/members">
+                    ${getIcon('chevron')}
+                </button>
+            </div>`;
 
         var projectInfo = this.element.children[1];
         this.nameElement = projectInfo.children[1];
