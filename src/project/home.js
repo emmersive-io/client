@@ -16,8 +16,8 @@ export default class ProjectHome {
         this.element.className = 'project__home scrollable';
         this.element.innerHTML = `
             ${renderIf(project.image,
-              `<img class="project__image" src="${project.image}"/>`
-            )}
+            `<img class="project__image" src="${project.image}"/>`
+        )}
             <div class="project__info">                    
                 <h2 class="project__name">${project.name || 'Untitled Project'}</h2>
                 <p class="project__description">${project.description || ''}</p>
@@ -30,9 +30,9 @@ export default class ProjectHome {
                 </button>
             </div>`;
 
-        var projectInfo = this.element.children[1];
-        this.nameElement = projectInfo.children[1];
-        this.descriptionElement = projectInfo.children[2];
+        var projectInfo = this.element.querySelector('.project__info');
+        this.nameElement = projectInfo.firstElementChild;
+        this.descriptionElement = projectInfo.lastElementChild;
 
         userCache.get(project.created_by).then(function (user) {
             if (user) {
