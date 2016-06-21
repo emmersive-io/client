@@ -5,6 +5,8 @@ import validate from '../core/validate';
 
 export default class ChangePasswordPage {
     constructor(options) {
+        analytics.page("change_password");
+
         this.router = options.router;
         this.element = document.createElement('div');
         this.element.className = 'form-page scrollable';

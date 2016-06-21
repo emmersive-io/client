@@ -4,6 +4,8 @@ import profileImage from '../images/profile.png';
 
 export default class RegisterPage {
     constructor(options) {
+        analytics.page("register");
+        
         this.router = options.router;
         options.header.update({leftAction: 'back', style: 'transparent-dark'});
 
@@ -35,6 +37,11 @@ export default class RegisterPage {
         if (name && email && password && password === password2) {
             connection.createUser(name, email, password)
                 .then(function () {
+                    analytics.identify(name);
+                    analytics.track('Registered', {
+                        name: name,
+                        email: email
+                    });
                     this.router.navigateTo('#', {replace: true});
                 }.bind(this))
                 .catch(function () {

@@ -3,6 +3,7 @@ import connection from '../firebase/connection';
 
 export default class ProjectCreatePage {
     constructor(options) {
+        analytics.page("project_create");
         this.router = options.router;
         options.header.update({title: 'New Project', leftAction: 'back'});
 
