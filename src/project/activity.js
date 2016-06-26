@@ -1,6 +1,5 @@
-import connection from '../firebase/connection';
-import firebase from '../firebase/ref';
-import transform from '../firebase/transform';
+import session from '../firebase/session';
+import {toObj} from '../firebase/utility/transform';
 import List from '../core/sortedElementList';
 import ListItem from '../elements/activityListItem';
 
@@ -20,7 +19,7 @@ export default class ProjectActivity {
         this.list = new List(this.element.firstElementChild, (a1, a2) => a1.created_at > a2.created_at);
         this.newActivity.addEventListener('submit', this.onNewActivity.bind(this), false);
 
-        this.activityRef = firebase.root.child('activities/' + project.id);
+        this.activityRef = session.root.child('activities/' + project.id);
         this.activityRef.on('child_added', this.onActivityAdded, this);
     }
 
@@ -31,8 +30,8 @@ export default class ProjectActivity {
     }
 
     onActivityAdded(snapshot) {
-        var activity = transform.toObj(snapshot);
-        connection.getUser(activity.created_by).then(function (user) {
+        var activity = toObj(snapshot);
+        session.userCache.get(activity.created_by).then(user => {
             var wasAtBottom = this.isAtBottom();
 
             activity.created_by = user;
@@ -41,7 +40,7 @@ export default class ProjectActivity {
             if (wasAtBottom && !this.isAtBottom()) {
                 this.list.element.scrollTop = this.list.element.scrollHeight;
             }
-        }.bind(this));
+        });
     }
 
     onNewActivity(e) {
@@ -49,7 +48,7 @@ export default class ProjectActivity {
 
         var content = this.newActivity.firstElementChild.value.trim();
         if (content) {
-            connection.createActivity(this.project.id, content);
+            session.createActivity(this.project.id, content);
             this.newActivity.reset();
         }
     }

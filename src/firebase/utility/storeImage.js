@@ -1,8 +1,6 @@
-import firebase from './ref';
-
-function storeImage(path, file) {
+function storeImage(session, path, file) {
     return new Promise((resolve, reject) => {
-        var uploadTask = firebase.storage.child(path).put(file, {
+        var uploadTask = session.storage.child(path).put(file, {
             contentType: file.type
         });
 
@@ -10,8 +8,7 @@ function storeImage(path, file) {
             error => reject(error),
             function () {
                 var url = uploadTask.snapshot.metadata.downloadURLs[0];
-                return firebase.root.child(path).set(url)
-                    .then(() => resolve(url));
+                return session.root.child(path).set(url).then(() => resolve(url));
             });
     });
 }

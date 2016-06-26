@@ -4,7 +4,7 @@ import session from '../firebase/session';
 
 export default class ChangePasswordPage {
     constructor({header, router}) {
-        analytics.page("change_password");
+        analytics.page('change_password');
         header.update({leftAction: 'back', style: 'transparent-dark'});
 
         this.element = document.createElement('div');
@@ -19,7 +19,7 @@ export default class ChangePasswordPage {
             </form>`;
 
         var form = new Form(this.element.firstElementChild, function (data) {
-            session.changePassword(data.password)
+            session.user.changePassword(data.password)
                 .then(() => router.navigateTo('#profile/' + session.user.id, {replace: true}))
                 .catch(e => form.setError(e.message));
         });

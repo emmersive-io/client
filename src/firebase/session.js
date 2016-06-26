@@ -1,81 +1,30 @@
-import firebase from './ref';
-import {storeImage} from './storage';
-import transform from './transform';
+import firebase from 'firebase';
+import getConfig from './components/config';
 
-class Session {
-    constructor() {
-        this.isAuthenticating = true;
-        firebase.auth.onAuthStateChanged(function (user) {
-            this.firebaseUser = user;
-            if (user) {
-                firebase.root.child('users/' + user.uid)
-                    .on('value', this.onUserChanged, this)
-            }
-            else {
-                this.onLoggedOut();
-            }
-        }.bind(this));
-    }
+import activity from './components/activity';
+import auth from './components/auth';
+import profile from './components/profile';
+import project from './components/project';
+import tasks from './components/tasks';
 
-    changeEmail(email) {
-        return this.firebaseUser.updateEmail(email);
-    }
+import User from './components/user';
+import UserCache from './components/userCache';
 
-    changePassword(password) {
-        return this.firebaseUser.updatePassword(password);
-    }
 
-    login({email, password}) {
-        this.isAuthenticating = true;
-        return firebase.auth.signInWithEmailAndPassword(email, password)
-            .catch(function (e) {
-                this.isAuthenticating = false;
-                throw e;
-            }.bind(this));
-    }
+// This serves as the common entry point to all server side functionality
+export default {
+    init: function () {
+        firebase.initializeApp(getConfig());
 
-    logOut() {
-        this.isAuthenticating = true;
-        firebase.auth.signOut();
-    }
+        // Alias common firebase references
+        this.auth = firebase.auth();
+        this.root = firebase.database().ref();
+        this.storage = firebase.storage().ref();
+        this.serverTime = firebase.database.ServerValue.TIMESTAMP;
 
-    onUserChanged(snapshot) {
-        this.isAuthenticating = false;
-        this.user = transform.toObj(snapshot);
-        this.resolveCallback();
-    }
-
-    onLoggedOut() {
-        if (this.user) {
-            firebase.root.child('users/' + this.user.id)
-                .off('value', this.onUserChanged, this);
-        }
-
-        this.user = null;
-        this.isAuthenticating = false;
-        window.location.assign('#login');
-        this.resolveCallback();
-    }
-
-    onUser(callback) {
-        if (this.isAuthenticating) {
-            this.callback = callback;
-        }
-        else {
-            callback(this.user);
-        }
-    }
-
-    resolveCallback() {
-        if (this.callback) {
-            this.callback(this.user);
-            this.callback = null;
-        }
-    }
-
-    setProfileImage(file) {
-        return storeImage(`users/${this.user.id}/image`, file);
+        // Tack on functionality from other connection components
+        this.user = new User(this);
+        this.userCache = new UserCache(this);
+        Object.assign(this, activity, auth, profile, project, tasks);
     }
 }
-
-export default new Session();

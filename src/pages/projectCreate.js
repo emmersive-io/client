@@ -1,4 +1,4 @@
-import connection from '../firebase/connection';
+import session from '../firebase/session';
 import Form from '../forms/form';
 import ImageUpload from '../elements/imageUpload';
 
@@ -27,7 +27,7 @@ export default class ProjectCreatePage {
 
         var imageUpload = new ImageUpload({className: 'project__image'});
         var form = new Form(this.element.firstElementChild, function (data) {
-            connection.createProject(data, imageUpload.file)
+            session.createProject(data, imageUpload.file)
                 .then(id => router.navigateTo('#projects/' + id, {replace: true}))
                 .catch(e => form.setError(e.message));
         });

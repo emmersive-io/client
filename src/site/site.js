@@ -17,8 +17,8 @@ export default class Site {
     }
 
     onRouteChanged(Page, options) {
-        session.onUser(function (user) {
-            var isLoggedIn = (user != null);
+        session.user.get(user => {
+            var isLoggedIn = (user.id != null);
             var isLoginScreen = location.hash.indexOf('#login') === 0;
 
             if (isLoggedIn === isLoginScreen) {
@@ -40,11 +40,9 @@ export default class Site {
             var onRoute = page.onRoute && page.onRoute.apply(page, options.path);
             if (page !== this.page) {
                 this.page = page;
-                Promise.resolve(onRoute).then(function () {
-                    this.showPage(page, options);
-                }.bind(this));
+                Promise.resolve(onRoute).then(() => this.showPage(page, options));
             }
-        }.bind(this))
+        });
     }
 
     render() {
@@ -73,12 +71,12 @@ export default class Site {
 
     updateBasement(user) {
         if (this.basement) {
-            if (!user) {
+            if (!user.id) {
                 this.basement.remove();
                 this.basement = null;
             }
         }
-        else if (user) {
+        else if (user.id) {
             this.basement = new Basement(user);
             document.body.appendChild(this.basement.element);
         }

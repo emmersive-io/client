@@ -1,4 +1,4 @@
-import connection from '../firebase/connection';
+import session from '../firebase/session';
 import Project from '../elements/projectListItem';
 
 export default class ProjectsPage {
@@ -8,7 +8,7 @@ export default class ProjectsPage {
     }
 
     onRoute() {
-        return connection.getAllProjects().then(function (projects) {
+        return session.getAllProjects().then(projects => {
             this.header.update({title: 'Find a project'});
 
             this.element = document.createElement('div');
@@ -30,7 +30,7 @@ export default class ProjectsPage {
 
             this.element.lastElementChild.appendChild(fragment);
             this.element.firstElementChild.addEventListener('input', this.onSearchChanged.bind(this), false);
-        }.bind(this));
+        });
     }
 
     onSearchChanged(e) {

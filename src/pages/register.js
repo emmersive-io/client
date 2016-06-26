@@ -1,4 +1,4 @@
-import connection from '../firebase/connection';
+import session from '../firebase/session';
 import Form from '../forms/form';
 import {getFormField} from '../forms/formField';
 import profileImage from '../images/profile.png';
@@ -6,7 +6,7 @@ import profileImage from '../images/profile.png';
 
 export default class RegisterPage {
     constructor({header, router}) {
-        analytics.page("register");
+        analytics.page('register');
         header.update({leftAction: 'back', style: 'transparent-dark'});
 
         this.element = document.createElement('div');
@@ -25,14 +25,14 @@ export default class RegisterPage {
             </form>`;
 
         var form = new Form(this.element.firstElementChild, function (data) {
-            connection.createUser(data)
+            session.createUser(data)
                 .then(() => {
-                    analytics.identify(name);
+                    analytics.identify(data.name);
                     analytics.track('Registered', {
-                        name: name,
-                        email: email
+                        name: data.name,
+                        email: data.email
                     });
-                    
+
                     router.navigateTo('#', {replace: true})
                 })
                 .catch(e => form.setError(e.message));

@@ -1,12 +1,18 @@
+// Bundle all the global stuff
 import './styles.css';
 import './core/polyfills';
 import './core/platform';
 import './forms/infieldForms';
 import './core/sizeTextarea';
 
+// Initialize the app
+import session from  './firebase/session';
 import iconLoader from './core/iconLoader';
+
+session.init();
 iconLoader('icons.svg');
 
+// Load all pages and build a route map
 import ChangeEmailPage from './pages/changeEmail';
 import ChangePasswordPage from './pages/changePassword';
 import EditProjectPage from './pages/projectEdit';

@@ -1,7 +1,4 @@
-import connection from '../firebase/connection';
-import firebase from '../firebase/ref';
 import session from '../firebase/session';
-import userCache from '../firebase/userCache';
 import defaultUserImage from '../images/profile-inverted.png';
 import {renderIf} from '../core/rendering';
 
@@ -34,7 +31,7 @@ export default class ProjectHome {
         this.nameElement = projectInfo.firstElementChild;
         this.descriptionElement = projectInfo.lastElementChild;
 
-        userCache.get(project.created_by).then(function (user) {
+        session.userCache.get(project.created_by).then(user => {
             if (user) {
                 projectInfo.insertAdjacentHTML('beforeend', `
                     <a class="project__owner" href="#profile/${user.id}">
@@ -42,10 +39,10 @@ export default class ProjectHome {
                         <span class="project__user-name">${user.name}</span>
                     </a>`);
             }
-        }.bind(this));
+        });
 
         this.list = new List(this.element.querySelector('.project__member-list'), (u1, u2) => u1.user.name.localeCompare(u2.user.name) >= 0);
-        this.userRef = firebase.root.child('projects/' + this.project.id + '/people');
+        this.userRef = session.root.child('projects/' + this.project.id + '/people');
         this.userRef.on('child_added', this.onUserAdded, this);
         this.userRef.on('child_removed', this.onUserRemoved, this);
     }
@@ -61,13 +58,13 @@ export default class ProjectHome {
         if (this.project.people[session.user.id]) {
             return {
                 action: 'Leave',
-                onAction: connection.leaveProject.bind(connection, this.project.id)
+                onAction: session.leaveProject.bind(session, this.project.id)
             };
         }
 
         return {
             action: 'Join',
-            onAction: connection.joinProject.bind(connection, this.project.id)
+            onAction: session.joinProject.bind(session, this.project.id)
         };
     }
 
@@ -84,10 +81,9 @@ export default class ProjectHome {
     }
 
     onUserAdded(snapshot) {
-        var userId = snapshot.key;
-        connection.getUser(userId).then(function (user) {
+        session.userCache.get(snapshot.key).then(user => {
             this.list.add(new ListItem(user, true));
-        }.bind(this));
+        });
     }
 
     onUserRemoved(snapshot) {

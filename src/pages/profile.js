@@ -1,4 +1,3 @@
-import connection from '../firebase/connection';
 import session from '../firebase/session';
 import ImageUpload from '../elements/imageUpload';
 import defaultUserImage from '../images/profile.png';
@@ -6,25 +5,24 @@ import defaultUserImage from '../images/profile.png';
 
 export default class ProfilePage {
     constructor(options) {
-        analytics.page("profile");
-
+        analytics.page('profile');
         this.header = options.header;
     }
 
     onInputChanged(e) {
         var value = e.target.name && e.target.value.trim();
         if (value) {
-            connection.updateUser({[e.target.name]: value});
+            session.user.update({[e.target.name]: value});
         }
     }
 
     onRoute(userId) {
         this.isCurrentUser = (session.user.id === userId);
         if (this.isCurrentUser) {
-            this.render(session.user);
+            this.render(session.user.data);
         }
         else {
-            return connection.getUser(userId).then(this.render.bind(this));
+            return session.userCache.get(userId).then(this.render.bind(this));
         }
     }
 
@@ -33,9 +31,7 @@ export default class ProfilePage {
             title: 'Profile',
             action: 'Log out',
             leftAction: 'back',
-            onAction: function () {
-                session.logOut();
-            }
+            onAction: () => session.logOut()
         });
 
         this.element = document.createElement('div');

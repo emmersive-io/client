@@ -1,6 +1,6 @@
 import Form from '../forms/form';
 import {getFormField} from '../forms/formField';
-import connection from '../firebase/connection';
+import session from '../firebase/session';
 
 export default class ResetPasswordPage {
     constructor({header}) {
@@ -20,7 +20,7 @@ export default class ResetPasswordPage {
 
         var form = new Form(this.element.firstElementChild, function (data) {
             form.element.innerHTML = `<p class="zero-state-message">We've sent you an email. Please follow the instructions to reset your password.</p>`;
-            connection.resetPassword(data.email);
+            session.resetPassword(data.email);
         });
     }
 }

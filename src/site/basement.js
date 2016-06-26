@@ -1,10 +1,9 @@
-import firebase from '../firebase/ref';
-import transform from '../firebase/transform';
+import {toObj} from '../firebase/utility/transform';
+import {projectHasUpdate} from '../firebase/utility/project';
 import session from '../firebase/session';
 
 import List from '../core/sortedElementList';
 import ListItem from '../elements/basementListItem';
-import {projectHasUpdate} from '../firebase/utility';
 
 import defaultUserImage from '../images/profile-inverted.png';
 import getIcon from '../elements/icon';
@@ -40,7 +39,7 @@ export default class Basement {
         this.element.addEventListener('click', this.onItemClicked.bind(this), false);
 
         // Listen to changes to the user
-        this.userRef = firebase.root.child('users/' + user.id);
+        this.userRef = session.root.child('users/' + user.id);
         this.userRef.child('name').on('value', this.onUserNameChanged, this);
 
         var projectsRef = this.userRef.child('projects');
@@ -57,16 +56,16 @@ export default class Basement {
 
     onUserProjectDataChanged(snapshot) {
         // Delay so the remaining updates can roll in and update session.user
-        setTimeout(function () {
+        setTimeout(() => {
             var project = this.projects[snapshot.key];
             if (project && project.item) {
-                project.item.element.classList.toggle('has-update', projectHasUpdate(project.item.data, session.user));
+                project.item.element.classList.toggle('has-update', projectHasUpdate(project.item.data, session.user.data));
             }
-        }.bind(this), 0);
+        }, 0);
     }
 
     onProjectDataChanged(snapshot) {
-        var projectData = transform.toObj(snapshot);
+        var projectData = toObj(snapshot);
         var project = projectData && this.projects[projectData.id];
         if (!project) {
             return;
@@ -86,14 +85,14 @@ export default class Basement {
             this.list.add(project.item);
         }
 
-        project.item.element.classList.toggle('has-update', projectHasUpdate(projectData, session.user));
+        project.item.element.classList.toggle('has-update', projectHasUpdate(projectData, session.user.data));
     }
 
     onProjectJoin(snapshot) {
         var value = snapshot.val();
         if (value && value.joined){
             var projectId = snapshot.key;
-            var ref = firebase.root.child('projects/' + projectId);
+            var ref = session.root.child('projects/' + projectId);
             this.projects[projectId] = {ref: ref};
             ref.on('value', this.onProjectDataChanged, this);
         }

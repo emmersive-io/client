@@ -1,9 +1,7 @@
 import {slide} from '../core/animate';
-import connection from '../firebase/connection';
-import firebase from '../firebase/ref';
+import {toObj} from '../firebase/utility/transform';
+import {projectTypeHasUpdate} from '../firebase/utility/project';
 import session from '../firebase/session';
-import transform from '../firebase/transform';
-import {projectTypeHasUpdate} from '../firebase/utility';
 import getIcon from '../elements/icon';
 
 import ActivityPage from  '../project/activity';
@@ -14,8 +12,7 @@ import TaskPage from '../project/tasks';
 
 export default class ProjectPage {
     constructor(options) {
-        analytics.page("project");
-
+        analytics.page('project');
         this.header = options.header;
         this.sections = [
             {type: HomePage},
@@ -55,8 +52,8 @@ export default class ProjectPage {
             this.sections[i].button = this.footer.children[i];
         }
 
-        this.projectRef = firebase.root.child('projects/' + projectId);
-        this.userProjectRef = firebase.root.child('users/' + session.user.id + '/projects/' + projectId);
+        this.projectRef = session.root.child(`projects/${projectId}`);
+        this.userProjectRef = session.root.child(`users/${session.user.id}/projects/${projectId}`);
 
         this.projectRef.on('value', this.onProjectChanged, this);
         this.userProjectRef.on('value', this.onUserProjectUpdated, this);
@@ -86,7 +83,7 @@ export default class ProjectPage {
         var oldSection = this.section;
         if (this.section) {
             oldSection.button.classList.remove('selected');
-            connection.viewProject(this.project.id, oldSection.name || 'people');
+            session.viewProject(this.project.id, oldSection.name || 'people');
         }
 
         this.section = this.sections.find(section => section.name === sectionName)
@@ -109,7 +106,7 @@ export default class ProjectPage {
 
             var element = this.section.content.element;
             if (!element.parentNode) {
-                connection.viewProject(this.project.id, this.section.name || 'people');
+                session.viewProject(this.project.id, this.section.name || 'people');
                 this.element.insertBefore(element, this.footer);
             }
 
@@ -118,7 +115,7 @@ export default class ProjectPage {
     }
 
     onProjectChanged(snapshot) {
-        this.project = transform.toObj(snapshot);
+        this.project = toObj(snapshot);
         if (this.project) {
             if (this.section) {
                 this.setSectionElement();
@@ -126,9 +123,10 @@ export default class ProjectPage {
                     this.section.content.onProjectChanged(this.project);
                 }
             }
-
+            
             this.updateHeader();
-            this.updateFooter(session.user.projects && session.user.projects[this.project.id]);
+            var projects = session.user.data.projects;
+            this.updateFooter(projects && projects[this.project.id]);
         }
     }
 

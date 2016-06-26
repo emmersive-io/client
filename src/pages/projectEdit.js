@@ -1,9 +1,9 @@
-import connection from '../firebase/connection';
+import session from '../firebase/session';
 import ImageUpload from '../elements/imageUpload';
 
 export default class ProjectEditPage {
     constructor({header, router}) {
-        analytics.page("project_edit");
+        analytics.page('project_edit');
         this.header = header;
         this.router = router;
     }
@@ -11,7 +11,7 @@ export default class ProjectEditPage {
     onBlur(e) {
         var property = e.target.id;
         if (property) {
-            connection.updateProject(this.project.id, {
+            session.updateProject(this.project.id, {
                 [property]: e.target.value.trim()
             });
         }
@@ -19,13 +19,13 @@ export default class ProjectEditPage {
 
     onDeleteClick() {
         if (confirm('Are you sure you want to delete the project?')) {
-            connection.removeProject(this.project.id)
+            session.removeProject(this.project.id)
                 .then(() => this.router.navigateTo('#projects', {replace: true}));
         }
     }
 
     onRoute(projectId) {
-        return connection.getProject(projectId).then(function (project) {
+        return session.getProject(projectId).then(project => {
             this.header.update({
                 title: 'Edit Project',
                 leftAction: 'back',
@@ -35,7 +35,7 @@ export default class ProjectEditPage {
 
             this.project = project;
             this.render();
-        }.bind(this));
+        });
     }
 
     render() {
@@ -56,7 +56,7 @@ export default class ProjectEditPage {
             </div>`;
 
         var options = {className: 'project__image', src: this.project.image};
-        var imageUpload = new ImageUpload(options, file => connection.setProjectImage(this.project.id, file));
+        var imageUpload = new ImageUpload(options, file => session.setProjectImage(this.project.id, file));
         this.element.insertBefore(imageUpload.element, this.element.firstElementChild);
         this.element.addEventListener('blur', this.onBlur.bind(this), true);
     }

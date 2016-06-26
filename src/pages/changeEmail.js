@@ -4,7 +4,7 @@ import session from '../firebase/session';
 
 export default class ChangeEmailPage {
     constructor({header, router}) {
-        analytics.page("change_email");
+        analytics.page('change_email');
         header.update({leftAction: 'back', style: 'transparent-dark'});
 
         this.element = document.createElement('div');
@@ -19,7 +19,7 @@ export default class ChangeEmailPage {
             </form>`;
 
         var form = new Form(this.element.firstElementChild, function (data) {
-            session.changeEmail(data.email)
+            session.user.changeEmail(data.email)
                 .then(() => router.navigateTo('#profile/' + session.user.id, {replace: true}))
                 .catch(e => form.setError(e.message));
         });

@@ -1,7 +1,5 @@
-import connection from '../firebase/connection';
-import firebase from '../firebase/ref';
 import session from '../firebase/session';
-import transform from '../firebase/transform';
+import {toObj} from '../firebase/utility/transform';
 import List from '../core/sortedElementList';
 import ListItem from '../elements/taskListItem';
 import SwipeHandler from '../core/swipeHandler';
@@ -29,7 +27,7 @@ export default class ProjectTasks {
         this.element.addEventListener('change', this.onStatusChanged.bind(this), true);
         this.element.addEventListener('click', this.onDeleteButtonClick.bind(this), this);
 
-        this.taskRef = firebase.root.child('tasks/' + project.id);
+        this.taskRef = session.root.child('tasks/' + project.id);
         this.taskRef.on('child_added', this.onTaskAdded, this);
         this.taskRef.on('child_changed', this.onTaskChanged, this);
         this.taskRef.on('child_removed', this.onTaskRemoved, this);
@@ -40,7 +38,7 @@ export default class ProjectTasks {
         var taskElement = deleteButton && deleteButton.closest('.checkbox-card');
         if (taskElement) {
             var task = this.list.get(task => task.element === taskElement);
-            connection.removeTask(this.project.id, task.id);
+            session.removeTask(this.project.id, task.id);
         }
     }
 
@@ -48,7 +46,7 @@ export default class ProjectTasks {
         e.preventDefault();
         var content = this.newTaskInput.value.trim();
         if (content) {
-            connection.createTask(this.project.id, content);
+            session.createTask(this.project.id, content);
             this.newTaskForm.reset();
         }
     }
@@ -69,14 +67,14 @@ export default class ProjectTasks {
             }
 
             var task = this.list.get(task => task.element === taskElement);
-            connection.updateTask(this.project.id, task.id, data);
+            session.updateTask(this.project.id, task.id, data);
         }
     }
 
     onTaskAdded(snapshot) {
         var item = new ListItem();
         this.list.add(item);
-        item.update(transform.toObj(snapshot));
+        item.update(toObj(snapshot));
     }
 
     onTaskChanged(snapshot) {

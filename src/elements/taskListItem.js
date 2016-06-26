@@ -1,4 +1,4 @@
-import connection from '../firebase/connection';
+import session from '../firebase/session';
 import {humanizeDate} from '../core/humanize';
 import {sizeToContent} from '../core/sizeTextarea';
 
@@ -58,13 +58,13 @@ export default class TaskListItem {
     set user(value) {
         if (this.actionUser !== value) {
             this.actionUser = value;
-            connection.getUser(value).then(function (user) {
+            session.userCache.get(value).then(user => {
                 if (user && user.id === this.actionUser) {
                     var element = this.header.firstElementChild;
                     element.href = '#profile/' + user.id;
                     element.textContent = user.name;
                 }
-            }.bind(this));
+            });
         }
     }
 
