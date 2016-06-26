@@ -9,14 +9,14 @@
     "whatwg-fetch": "^1.0.0"
   },
   "devDependencies": {
-    "autoprefixer": "*",
+    "autoprefixer": "^6.3.6",
     "babel-loader": "*",
     "clean-webpack-plugin": "*",
     "copy-webpack-plugin": "*",
     "css-loader": "*",
     "extract-text-webpack-plugin": "*",
     "file-loader": "^0.9.0",
-    "firebase-tools": "^3.0.2",
+    "firebase-tools": "^3.0.3",
     "html-loader": "*",
     "html-webpack-plugin": "^2.21.0",
     "http-server": "^0.9.0",
@@ -25,20 +25,18 @@
     "postcss-loader": "*",
     "postcss-nested": "*",
     "style-loader": "*",
-    "webpack": "*"
+    "webpack": "^1.13.1",
+    "webpack-svgstore-plugin": "^2.2.2"
   },
   "scripts": {
     "build:dev": "webpack -d --progress",
     "build:prod": "webpack -p --progress",
-
-    "deploy:auth": "firebase login",
-    "deploy:unauth": "firebase logout",
-    "serve": "firebase serve",
-
+    "deploy:login": "firebase login",
+    "deploy:logout": "firebase logout",
     "deploy:dev": "npm run build:prod && firebase deploy",
-    "deploy:staging": "npm run build:prod && firebase deploy -f emmersive-stage",
     "deploy:prod": "npm run build:prod && firebase deploy -f flickering-inferno-1351",
-
+    "deploy:staging": "npm run build:prod && firebase deploy -f emmersive-stage",
+    "serve": "firebase serve",
     "dev": "webpack -d --watch --progress | http-server ./www -c-1",
     "start": "webpack -d --watch --progress | http-server ./www -c-1"
   },

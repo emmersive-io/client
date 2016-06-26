@@ -2,6 +2,7 @@ var CleanWebpackPlugin = require('clean-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var SvgStore = require('webpack-svgstore-plugin');
 
 var path = require('path');
 var outputPath = path.resolve(__dirname, 'www');
@@ -14,9 +15,9 @@ module.exports = {
     },
     module: {
         loaders: [
-            {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" },
+            {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"},
             {test: /\.html$/, loader: 'html-loader'},
-            {test: /\.(gif|jpg|png|svg|woff|woff2)$/, loader: 'file-loader'},
+            {test: /\.(gif|jpg|png|svg)$/, loader: 'file-loader'},
             {
                 test: /\.css$/,
                 loader: ExtractTextPlugin.extract('style-loader', 'css-loader!postcss-loader')
@@ -25,19 +26,28 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin([outputPath]),
+        new ExtractTextPlugin('styles.[hash].css', {allChunks: true}),
+        new SvgStore(path.join('src', 'icons', '*.svg'), '', {
+            name: 'icons.svg',
+            prefix: '',
+            svgoOptions: {
+                plugins: [
+                    {removeTitle: true}
+                ]
+            }
+        }),
+        new HtmlWebpackPlugin({template: 'src/index.html', inject: 'head'}),
         new CopyWebpackPlugin([
             {from: 'src/resources', to: 'resources'},
             {from: 'src/manifest.json'}
-        ]),
-        new ExtractTextPlugin('styles.[hash].css', {allChunks: true}),
-        new HtmlWebpackPlugin({template: 'src/index.html', inject: 'head'})
+        ])
     ],
     postcss: function (webpack) {
         return [
             require('postcss-import')({addDependencyTo: webpack}),
             require('postcss-custom-properties'),
             require('postcss-nested'),
-            require('autoprefixer')({browsers: ['last 2 versions']})
+            require('autoprefixer')({browsers: ['last 2 version', 'Safari 8', 'iOS 8.4']})
         ];
     }
 };

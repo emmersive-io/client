@@ -4,6 +4,9 @@ import './core/platform';
 import './forms/infieldForms';
 import './core/sizeTextarea';
 
+import iconLoader from './core/iconLoader';
+iconLoader('icons.svg');
+
 import ChangeEmailPage from './pages/changeEmail';
 import ChangePasswordPage from './pages/changePassword';
 import EditProjectPage from './pages/projectEdit';
