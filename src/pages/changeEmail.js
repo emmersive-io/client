@@ -12,7 +12,7 @@ export default class ChangeEmailPage {
         this.element.innerHTML = `
             <form class="form-page__form form--infield">
                 <div class="form__body">
-                    ${getFormField('email')}
+                    ${getFormField({type: 'email', label: 'New Email Address'})}
                 </div>
                 <p class="form__error"></p>
                 <button class="button--full form__submit">Change Email</button>
@@ -21,7 +21,7 @@ export default class ChangeEmailPage {
         var form = new Form(this.element.firstElementChild, function (data) {
             session.changeEmail(data.email)
                 .then(() => router.navigateTo('#profile/' + session.user.id, {replace: true}))
-                .catch((e) => form.setError(e.message));
+                .catch(e => form.setError(e.message));
         });
     }
 }

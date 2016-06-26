@@ -12,7 +12,7 @@ export default class ChangePasswordPage {
         this.element.innerHTML = `
             <form class="form-page__form form--infield">
                 <div class="form__body">
-                    ${getFormField({id: 'password', type: 'passwordNew'})}
+                    ${getFormField({id: 'password', type: 'passwordNew', label: 'New Password'})}
                 </div>
                 <p class="form__error"></p>
                 <button class="button--full form__submit">Change Password</button>
@@ -21,7 +21,7 @@ export default class ChangePasswordPage {
         var form = new Form(this.element.firstElementChild, function (data) {
             session.changePassword(data.password)
                 .then(() => router.navigateTo('#profile/' + session.user.id, {replace: true}))
-                .catch((e) => form.setError(e.message));
+                .catch(e => form.setError(e.message));
         });
     }
 }

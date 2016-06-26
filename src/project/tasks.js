@@ -5,6 +5,7 @@ import transform from '../firebase/transform';
 import List from '../core/sortedElementList';
 import ListItem from '../elements/taskListItem';
 import SwipeHandler from '../core/swipeHandler';
+import getIcon from '../elements/icon';
 
 
 export default class ProjectTasks {
@@ -15,15 +16,16 @@ export default class ProjectTasks {
         this.element.innerHTML = `
             <ul class="task-list"></ul>
             <form class="task--new">
+                <button class="button--icon">${getIcon('plus')}</button>            
                 <input type="text" placeholder="Add a task" aria-label="Add a task"/>
-                <button class="hidden" tabindex="-1" aria-hidden="true"></button>
             </form>`;
 
-        this.newTask = this.element.lastElementChild;
+        this.newTaskForm = this.element.lastElementChild;
         this.list = new List(this.element.firstElementChild);
+        this.newTaskInput = this.newTaskForm.lastElementChild;
         this.swipeHandler = new SwipeHandler(this.element, '.task__foreground');
 
-        this.newTask.addEventListener('submit', this.onNewTask.bind(this), false);
+        this.newTaskForm.addEventListener('submit', this.onNewTask.bind(this), false);
         this.element.addEventListener('change', this.onStatusChanged.bind(this), true);
         this.element.addEventListener('click', this.onDeleteButtonClick.bind(this), this);
 
@@ -44,10 +46,10 @@ export default class ProjectTasks {
 
     onNewTask(e) {
         e.preventDefault();
-        var content = this.newTask.elements[0].value.trim();
+        var content = this.newTaskInput.value.trim();
         if (content) {
             connection.createTask(this.project.id, content);
-            this.newTask.reset();
+            this.newTaskForm.reset();
         }
     }
 
