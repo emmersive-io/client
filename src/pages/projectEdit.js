@@ -56,11 +56,7 @@ export default class ProjectEditPage {
             </div>`;
 
         var options = {className: 'project__image', src: this.project.image};
-        var imageUpload = new ImageUpload(options, (file, metadata) => {
-            connection.setProjectImage(this.project.id, file, metadata)
-                .then(url => imageUpload.setImage(url))
-        });
-
+        var imageUpload = new ImageUpload(options, file => connection.setProjectImage(this.project.id, file));
         this.element.insertBefore(imageUpload.element, this.element.firstElementChild);
         this.element.addEventListener('blur', this.onBlur.bind(this), true);
     }

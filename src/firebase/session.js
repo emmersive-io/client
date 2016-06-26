@@ -73,8 +73,8 @@ class Session {
         }
     }
 
-    setProfileImage(file, metadata) {
-        return storeImage(`users/${this.user.id}/image`, file, metadata);
+    setProfileImage(file) {
+        return storeImage(`users/${this.user.id}/image`, file);
     }
 }
 

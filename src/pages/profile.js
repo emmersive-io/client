@@ -54,11 +54,7 @@ export default class ProfilePage {
                 </div>`;
 
             var options = {className: 'profile__image', src: imageSource};
-            var imageUpload = new ImageUpload(options, function (file, metadata) {
-                session.setProfileImage(file, metadata)
-                    .then(url => imageUpload.setImage(url))
-            });
-
+            var imageUpload = new ImageUpload(options, file => session.setProfileImage(file));
             this.element.insertBefore(imageUpload.element, this.element.firstElementChild);
         }
         else {

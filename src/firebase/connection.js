@@ -37,7 +37,7 @@ export default {
         });
     },
 
-    createProject: function (projectData) {
+    createProject: function (projectData, file) {
         var userId = session.user.id;
         var projectId = firebase.root.child('projects').push().key;
 
@@ -49,9 +49,11 @@ export default {
         }, projectData);
 
         return firebase.root.update({
-            ['projects/' + projectId]: projectData,
-            ['users/' + userId + '/projects/' + projectId]: {joined: true}
-        }).then(function () { return projectId; });
+                ['projects/' + projectId]: projectData,
+                [`users/${userId}/projects/${projectId}`]: {joined: true}
+            })
+            .then(() => this.setProjectImage(projectId, file))
+            .then(() => projectId);
     },
 
     createTask: function (projectId, content) {
@@ -141,8 +143,8 @@ export default {
         return firebase.auth.sendPasswordResetEmail(email);
     },
 
-    setProjectImage: function (projectId, file, metadata) {
-        return storeImage(`projects/${projectId}/image`, file, metadata);
+    setProjectImage: function (projectId, file) {
+        return storeImage(`projects/${projectId}/image`, file);
     },
 
     updateProject: function (projectId, data) {
