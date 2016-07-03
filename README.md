@@ -1,27 +1,26 @@
 [![Build Status](https://semaphoreci.com/api/v1/projects/cae233af-d75e-4ed0-ae50-5c2b95957111/704855/badge.svg)](https://semaphoreci.com/bruceio/client)
 
-## Web interface setup
-Install webpack  
-`npm install -g webpack`  
+#### To develop locally
+* Run `npm install`
+* Run `npm start`
+* Open [localhost:5000](http://localhost:5000)
 
-Install a server, if you don't have one or aren't going to use [webpack-dev-server](https://webpack.github.io/docs/webpack-dev-server.html)  
-`npm install -g http-server`  
+#### List of commands
+Command                | Description
+                   --- | ---
+**npm install**        | Install dependencies
+npm run build:dev      | Output dev codebase 
+npm run build:prod     | Output optimized codebase
+npm run build:watch    | Output dev and watch for changes
+npm run deploy:login   | Login to firebase
+npm run deploy:logout  | Logout of firebase
+**npm run deploy**     | Build and deploy code to dev
+npm run deploy:prod    | Build and deploy code to prod
+npm run deploy:staging | Build and deploy code to staging
+npm run serve          | Start a web server at localhost:5000
+**npm start**          | Shortcut for build:watch and serve
 
-Install application dependencies  
-`npm install`
-
-Run a debug build and starts a server at localhost:8080 using `http-server`  
-`npm start`  
-
-Run a debug build (file watcher, source maps, non-minified)  
-`webpack -d --watch --progress`
-
-Run a release build (minified)  
-`webpack -p --progress`
-
-The build outputs files in the `www` folder, which Cordova uses to create the native installers. Run a server here to access the site locally. 
-
-## Building and running the native interface
+#### Building and running the native interface
 Install Cordova  
 `npm install -g cordova`  
 
@@ -43,20 +42,6 @@ Run an emulator
 `cordova emulate ios`
 `cordova emulate android`
 
-##Deploying to firebase
-Install [firebase tools](https://www.firebase.com/docs/hosting/quickstart.html)
-`npm install -g firebase-tools`
-
-Optimize the codebase  
-`webpack -p`
-
-Upload to firebase  
-`firebase deploy` (to emmersive-dev)
-
-Upload to different environment in firebase  
-`firebase deploy -f emmersive-stage` (staging)  
-`firebase deploy -f flickering-inferno-1351` (production)
-
 #### Other Dependencies
 * Node.js 4.x
 * Android
@@ -71,26 +56,3 @@ Upload to different environment in firebase
     * PATH=$ANDROID_HOME/build-tools/23.0.2:$PATH
     * `android list targets | grep 22` -> get ID for next line
     * `android create avd -n cordova -t 22 -b google_apis/x86_64`
-
-#### Android debug from chrome!
-In chrome, you can load the dev tools and point it at the app just like you
-would normally debug a web page. This will give you access to the javascript
-console, network, dom inspector, etc.
-
-* Become a developer
-  * Go to settings
-  * About phone
-  * Tab the "Build number" about 7 times
-* Enable debug
-  * Go to settings
-  * Developer Options
-  * Enable "USB debugging"
-* Trust your machine
-  * Plug in phone
-  * Accept prompt on phone
-* Point the debugger at your phone
-  * Bring up dev tools as usual (CTRL+SHIFT+I except on mac)
-  * Click the "..." next the the close(x) button on the top right.
-  * Click "Inspect Devices"
-  * Launch app on phone
-  * Click the app on the device list in chrome

@@ -8,14 +8,14 @@ var path = require('path');
 var outputPath = path.resolve(__dirname, 'www');
 
 module.exports = {
-    entry: "./src/app.js",
+    entry: './src/app.js',
     output: {
         path: outputPath,
-        filename: "bundle.[hash].js"
+        filename: 'bundle.[hash].js'
     },
     module: {
         loaders: [
-            {test: /\.js$/, exclude: /node_modules/, loader: "babel-loader"},
+            {test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader'},
             {test: /\.html$/, loader: 'html-loader'},
             {test: /\.(gif|jpg|png|svg)$/, loader: 'file-loader'},
             {
@@ -46,7 +46,6 @@ module.exports = {
         return [
             require('postcss-import')({addDependencyTo: webpack}),
             require('postcss-custom-properties'),
-            require('postcss-nested'),
             require('autoprefixer')({browsers: ['last 2 version', 'Safari 8', 'iOS 8.4']})
         ];
     }
