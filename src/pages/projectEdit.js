@@ -1,5 +1,6 @@
 import session from '../firebase/session';
 import ImageUpload from '../elements/imageUpload';
+import {safeString} from '../core/templateHelpers';
 
 export default class ProjectEditPage {
     constructor({header, router}) {
@@ -41,7 +42,7 @@ export default class ProjectEditPage {
     render() {
         this.element = document.createElement('div');
         this.element.className = 'project-edit';
-        this.element.innerHTML = `
+        this.element.innerHTML = safeString`
             <div class="form--infield">
                 <div class="form__body">
                     <div class="form__field">

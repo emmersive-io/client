@@ -1,8 +1,10 @@
-import {slide} from '../core/animate';
-import {toObj} from '../firebase/utility/transform';
-import {projectTypeHasUpdate} from '../firebase/utility/project';
 import session from '../firebase/session';
+import {projectTypeHasUpdate} from '../firebase/utility/project';
+import {toObj} from '../firebase/utility/transform';
+
 import getIcon from '../elements/icon';
+import {safeString} from '../core/templateHelpers';
+import {slide} from '../core/animate';
 
 import ActivityPage from  '../project/activity';
 import HomePage from '../project/home';
@@ -27,7 +29,7 @@ export default class ProjectPage {
     initialize(projectId) {
         this.element = document.createElement('div');
         this.element.className = 'project';
-        this.element.innerHTML = `
+        this.element.innerHTML = safeString`
             <footer class="footer">
                 <button class="button--stacked" data-href="#projects/${projectId}">
                     ${getIcon('project')}
@@ -123,7 +125,7 @@ export default class ProjectPage {
                     this.section.content.onProjectChanged(this.project);
                 }
             }
-            
+
             this.updateHeader();
             var projects = session.user.data.projects;
             this.updateFooter(projects && projects[this.project.id]);

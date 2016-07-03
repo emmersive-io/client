@@ -1,4 +1,5 @@
 import {humanizeDate} from '../core/humanize';
+import {safeString} from '../core/templateHelpers';
 import defaultUserImage from '../images/profile-red.png';
 
 export default class ActivityListItem {
@@ -10,7 +11,7 @@ export default class ActivityListItem {
         var user = activity.created_by;
         var dateString = humanizeDate(activity.created_at);
 
-        this.element.innerHTML = `
+        this.element.innerHTML = safeString`
             <img class="profile-image--small" src="${user.image || defaultUserImage}"/>
             <a class="user-name" href="#profile/${user.id}">${user.name}</a>
             <span class="item__date">${dateString}</span>

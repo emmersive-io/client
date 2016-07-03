@@ -1,5 +1,6 @@
 import session from '../firebase/session';
 import {humanizeDate} from '../core/humanize';
+import {safeString} from '../core/templateHelpers';
 import {sizeToContent} from '../core/sizeTextarea';
 
 export default class TaskListItem {
@@ -7,7 +8,7 @@ export default class TaskListItem {
         this.task = {};
         this.element = document.createElement('li');
         this.element.className = 'checkbox-card';
-        this.element.innerHTML = `
+        this.element.innerHTML = safeString`
             <div class="task__foreground">
                 <div class="task__header">
                     <a class="user-name"></a>

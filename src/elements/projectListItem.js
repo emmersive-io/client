@@ -1,4 +1,4 @@
-import {renderIf} from '../core/rendering';
+import {ifDefined, safeString} from '../core/templateHelpers';
 
 export default class ProjectListItem {
     constructor(project) {
@@ -7,13 +7,11 @@ export default class ProjectListItem {
         this.element.setAttribute('data-href', '#projects/' + project.id);
         this.element.className = 'project-card';
 
-        this.element.innerHTML = `
+        this.element.innerHTML = safeString`
             <div class="project__content">
-                ${renderIf(project.image,
-                    `<img class="project__image" src="${project.image}"/>`
-                )}
+                ${ifDefined`<img class="project__image" src="${project.image}"/>`}
                 <h2 class="project__title">${project.name || 'Untitled'}</h2>
-                <p class="project__description">${project.description || ''}</p>
+                <p class="project__description">${project.description}</p>
             </div>`;
     }
 

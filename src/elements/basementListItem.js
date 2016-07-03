@@ -1,9 +1,11 @@
+import {safeString} from '../core/templateHelpers';
+
 export default class BasementListItem {
     constructor(project) {
         this.project = project;
         this.element = document.createElement('li');
         this.element.className = 'basement__project';
-        this.element.innerHTML = `<a href="#projects/${project.id}">${project.name}</a>`;
+        this.element.innerHTML = safeString`<a href="#projects/${project.id}">${project.name}</a>`;
     }
 
     get data() {

@@ -1,5 +1,6 @@
 import session from '../firebase/session';
 import ImageUpload from '../elements/imageUpload';
+import {safeString} from '../core/templateHelpers';
 import defaultUserImage from '../images/profile.png';
 
 
@@ -39,7 +40,7 @@ export default class ProfilePage {
 
         var imageSource = user.image || defaultUserImage;
         if (this.isCurrentUser) {
-            this.element.innerHTML = `
+            this.element.innerHTML = safeString`
                 <div class="form-page__form">              
                     <input type="text" name="name" placeholder="Name" aria-label="name" autocomplete="name" value="${user.name}"/>
                     <input type="email" name="email" placeholder="Email" aria-label="email" autocomplete="email" value="${user.email}" readonly/>
@@ -54,7 +55,7 @@ export default class ProfilePage {
             this.element.insertBefore(imageUpload.element, this.element.firstElementChild);
         }
         else {
-            this.element.innerHTML = `
+            this.element.innerHTML = safeString`
                 <div class="form-page__form">
                     <img class="profile__image" src="${imageSource}"/>
                     <h2 class="profile__name">${user.name}</h2>

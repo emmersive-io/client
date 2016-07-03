@@ -1,4 +1,5 @@
 import inputProperties from './inputProperties';
+import {ifDefined, safeString} from '../core/templateHelpers';
 
 function getElement(form, type) {
     var data = inputProperties[type];
@@ -31,7 +32,7 @@ function getFormField(options) {
 }
 
 function renderFormGroup(data) {
-    return data && `
+    return data && safeString`
         <div class="form__field ${data.isRequired ? '' : 'form__group--optional'}">
             <label for="${data.id}">${data.label}</label>
             <input id="${data.id}"
@@ -39,8 +40,8 @@ function renderFormGroup(data) {
                    type="${data.type}"
                    autocomplete="${data.autocomplete}" 
                    ${data.isRequired ? 'required' : ''}
-                   ${(data.pattern && `pattern="${data.pattern}"`) || ''}
-                   ${(data.placeholder && `placeholder="${data.placeholder}"`) || ''} />
+                   ${ifDefined`pattern="${data.pattern}"`}
+                   ${ifDefined`placeholder="${data.placeholder}"`} />
         </div>`;
 }
 

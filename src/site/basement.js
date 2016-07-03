@@ -4,16 +4,16 @@ import session from '../firebase/session';
 
 import List from '../core/sortedElementList';
 import ListItem from '../elements/basementListItem';
-
-import defaultUserImage from '../images/profile-inverted.png';
+import {safeString} from '../core/templateHelpers';
 import getIcon from '../elements/icon';
+import defaultUserImage from '../images/profile-inverted.png';
 
 
 export default class Basement {
     constructor(user) {
         this.element = document.createElement('div');
         this.element.className = 'page page--basement';
-        this.element.innerHTML = `
+        this.element.innerHTML = safeString`
             <header class="header header--basement">
                 <a class="basement__header-link text-truncate" href="#profile/${user.id}">
                     <img class="basement__header-logo" src="${user.image || defaultUserImage}"/>

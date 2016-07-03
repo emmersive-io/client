@@ -1,6 +1,6 @@
 import session from '../firebase/session';
 import defaultUserImage from '../images/profile-inverted.png';
-import {renderIf} from '../core/rendering';
+import {ifDefined, safeString} from '../core/templateHelpers';
 
 import getIcon from '../elements/icon';
 import List from '../core/sortedElementList';
@@ -11,13 +11,12 @@ export default class ProjectHome {
         this.project = project;
         this.element = document.createElement('div');
         this.element.className = 'project__home scrollable';
-        this.element.innerHTML = `
-            ${renderIf(project.image,
-            `<img class="project__image" src="${project.image}"/>`
-        )}
+
+        this.element.innerHTML = safeString`
+            ${ifDefined`<img class="project__image" src="${project.image}"/>`}
             <div class="project__info">                    
                 <h2 class="project__name">${project.name || 'Untitled Project'}</h2>
-                <p class="project__description">${project.description || ''}</p>
+                <p class="project__description">${project.description}</p>
             </div>
             <div class="project__group">
                 <h3 class="project__header">Members</h3>

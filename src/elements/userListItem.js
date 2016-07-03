@@ -1,3 +1,4 @@
+import {safeString} from '../core/templateHelpers';
 import defaultUserImage from '../images/profile-red.png';
 
 export default class UserListItem {
@@ -7,14 +8,14 @@ export default class UserListItem {
 
         if (isPreview === true) {
             this.element.className = 'list-item--thumb';
-            this.element.innerHTML = `
+            this.element.innerHTML = safeString`
                 <a href="#profile/${user.id}" title="${user.name}">
                     <img class="profile-image--medium" src="${user.image || defaultUserImage}"/>
                 </a>`;
         }
         else {
             this.element.className = 'list-item--image';
-            this.element.innerHTML = `
+            this.element.innerHTML = safeString`
                 <a href="#profile/${user.id}">
                     <img class="profile-image--small" src="${user.image || defaultUserImage}"/>
                     <h2 class="user__name">${user.name}</h2>
